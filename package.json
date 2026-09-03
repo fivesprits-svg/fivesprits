@@ -1,0 +1,62 @@
+{
+  "name": "nextjs-enterprise-ai-starter",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Enterprise-grade Next.js master codebase with SEO-first rendering, Strapi-ready blog, localization foundation, and quality gates.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "figma:extract": "node scripts/figma/extract-design-manifest.mjs",
+    "figma:icons": "node scripts/figma/export-navigation-icons.mjs",
+    "figma:references": "node scripts/figma/render-reference-frames.mjs",
+    "test:e2e": "npm run build && playwright test",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "tsc --noEmit",
+    "check": "npm run format:check && npm run lint && npm run typecheck && npm run build",
+    "lighthouse": "npx @lhci/cli autorun --collect.url=http://localhost:3000 --upload.target=temporary-public-storage",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.62.1",
+    "@tailwindcss/postcss": "^4.3.2",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.7",
+    "@types/node": "^20.19.43",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.1.1",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^16.2.10",
+    "eslint-config-prettier": "^10.1.8",
+    "husky": "^9.1.7",
+    "jsdom": "^30.0.1",
+    "lint-staged": "^15.5.2",
+    "next": "^16.2.10",
+    "openfig-core": "^0.4.1",
+    "prettier": "^3.9.5",
+    "prettier-plugin-tailwindcss": "^0.8.0",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "tailwindcss": "^4.3.2",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.11",
+    "zod": "^4.4.3"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx,mjs,cjs}": [
+      "eslint --max-warnings=0",
+      "prettier --write"
+    ],
+    "*.{json,md,css}": [
+      "prettier --write",
+      "node scripts/verify.js"
+    ]
+  }
+}

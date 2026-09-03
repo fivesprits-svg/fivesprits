@@ -1,0 +1,290 @@
+import type { Brand, Category, Product } from "@/features/customer-flow/types";
+
+export const categories: Category[] = [
+  { id: "beer", name: "Beer", image: "/customer-flow/categories/beer.png" },
+  { id: "wine", name: "Wine", image: "/customer-flow/categories/wine.png" },
+  { id: "whisky", name: "Whiskey", image: "/customer-flow/categories/whisky.png" },
+  { id: "scotch", name: "Scotch", image: "/customer-flow/categories/scotch.png" },
+  { id: "gin", name: "Gin", image: "/customer-flow/categories/gin.png" },
+  { id: "rum", name: "Rum", image: "/customer-flow/categories/rum.png" },
+  { id: "tequila", name: "Tequila", image: "/customer-flow/categories/tequila.png" },
+  { id: "brandy", name: "Brandy", image: "/customer-flow/categories/brandy.png" },
+];
+
+export const brands: Brand[] = [
+  {
+    id: "amber-reserve",
+    categoryId: "whisky",
+    name: "Amber Reserve",
+    image: "/customer-flow/brands/brand-one.png",
+  },
+  {
+    id: "five-oak",
+    categoryId: "whisky",
+    name: "Five Oak",
+    image: "/customer-flow/brands/brand-two.png",
+  },
+  {
+    id: "royal-cask",
+    categoryId: "whisky",
+    name: "Royal Cask",
+    image: "/customer-flow/brands/brand-three.png",
+  },
+  {
+    id: "glenfiddich",
+    categoryId: "whisky",
+    name: "Glenfiddich",
+    image: "/customer-flow/brands/brand-one.png",
+  },
+  {
+    id: "old-monk",
+    categoryId: "whisky",
+    name: "Old Monk",
+    image: "/customer-flow/brands/brand-two.png",
+  },
+  {
+    id: "lagavulin",
+    categoryId: "whisky",
+    name: "Lagavulin",
+    image: "/customer-flow/brands/brand-three.png",
+  },
+  {
+    id: "balvenie",
+    categoryId: "whisky",
+    name: "Balvenie",
+    image: "/customer-flow/brands/brand-one.png",
+  },
+  {
+    id: "talisker",
+    categoryId: "whisky",
+    name: "Talisker",
+    image: "/customer-flow/brands/brand-two.png",
+  },
+  {
+    id: "north-star",
+    categoryId: "gin",
+    name: "North Star",
+    image: "/customer-flow/brands/brand-one.png",
+  },
+  {
+    id: "pure-grain",
+    categoryId: "gin",
+    name: "Pure Grain",
+    image: "/customer-flow/brands/brand-two.png",
+  },
+  {
+    id: "vineyard-five",
+    categoryId: "wine",
+    name: "Vineyard Five",
+    image: "/customer-flow/brands/brand-three.png",
+  },
+  {
+    id: "golden-hop",
+    categoryId: "beer",
+    name: "Golden Hop",
+    image: "/customer-flow/brands/brand-one.png",
+  },
+  {
+    id: "island-cask",
+    categoryId: "rum",
+    name: "Island Cask",
+    image: "/customer-flow/brands/brand-two.png",
+  },
+  {
+    id: "botanical-house",
+    categoryId: "gin",
+    name: "Botanical House",
+    image: "/customer-flow/brands/brand-three.png",
+  },
+  {
+    id: "highland-house",
+    categoryId: "scotch",
+    name: "Highland House",
+    image: "/customer-flow/brands/brand-one.png",
+  },
+  {
+    id: "agave-reserve",
+    categoryId: "tequila",
+    name: "Agave Reserve",
+    image: "/customer-flow/brands/brand-two.png",
+  },
+  {
+    id: "heritage-brandy",
+    categoryId: "brandy",
+    name: "Heritage Brandy",
+    image: "/customer-flow/brands/brand-three.png",
+  },
+];
+
+export const products: Product[] = [
+  {
+    id: "old-monk-750",
+    brandId: "old-monk",
+    name: "Old Monk",
+    pack: "12 Year Old • 750ml",
+    mrp: 5150,
+    image: "/customer-flow/figma-images/7f4b6e7de0e280834578ab3b2299472912863eab",
+  },
+  {
+    id: "glenfiddich-solera",
+    brandId: "old-monk",
+    name: "Glenfiddich Solera",
+    pack: "15 Year Old • 750ml",
+    mrp: 4250,
+    image: "/customer-flow/figma-images/d195136c0212d53f31bc11ebd101e6933996feae",
+  },
+  {
+    id: "lagavulin-classic",
+    brandId: "old-monk",
+    name: "Lagavulin Classic",
+    pack: "16 Year Old • 700ml",
+    mrp: 8990,
+    image: "/customer-flow/figma-images/60da6e0114b7ba89bf637d0b3a201421f6a5c12e",
+  },
+  {
+    id: "balvenie-wood",
+    brandId: "old-monk",
+    name: "Balvenie Wood",
+    pack: "DoubleWood 12 • 750ml",
+    mrp: 4750,
+    image: "/customer-flow/figma-images/73df0c99e6acd3f7b7bb5a049588d2c058caf884",
+  },
+  {
+    id: "talisker-storm",
+    brandId: "old-monk",
+    name: "Talisker Storm",
+    pack: "Single Malt • 700ml",
+    mrp: 3890,
+    image: "/customer-flow/figma-images/597748d1399cb30f321880b047cf4523a77fae8b",
+  },
+  {
+    id: "oban-highland",
+    brandId: "old-monk",
+    name: "Oban Highland",
+    pack: "Little Bay • 750ml",
+    mrp: 5190,
+    image: "/customer-flow/figma-images/0e02c81d6221e2bca6ce8df49c5e787f7e3b00e1",
+  },
+  {
+    id: "amber-750",
+    brandId: "amber-reserve",
+    name: "Amber Reserve Whisky",
+    pack: "750 ml",
+    mrp: 2450,
+    image: "/customer-flow/products/reserve-whisky.png",
+  },
+  {
+    id: "amber-375",
+    brandId: "amber-reserve",
+    name: "Amber Reserve Select",
+    pack: "375 ml",
+    mrp: 1320,
+    image: "/customer-flow/products/amber-rum.png",
+  },
+  {
+    id: "amber-solera",
+    brandId: "amber-reserve",
+    name: "Glenfiddich Solera",
+    pack: "15 Year Old • 750 ml",
+    mrp: 5150,
+    image: "/customer-flow/products/reserve-whisky.png",
+  },
+  {
+    id: "amber-lagavulin",
+    brandId: "amber-reserve",
+    name: "Lagavulin Classic",
+    pack: "16 Year Old • 700 ml",
+    mrp: 4750,
+    image: "/customer-flow/products/amber-rum.png",
+  },
+  {
+    id: "amber-balvenie",
+    brandId: "amber-reserve",
+    name: "Balvenie Wood",
+    pack: "DoubleWood 12 • 750 ml",
+    mrp: 4890,
+    image: "/customer-flow/products/reserve-whisky.png",
+  },
+  {
+    id: "amber-talisker",
+    brandId: "amber-reserve",
+    name: "Talisker Storm",
+    pack: "Single Malt • 700 ml",
+    mrp: 3990,
+    image: "/customer-flow/products/amber-rum.png",
+  },
+  {
+    id: "five-oak-750",
+    brandId: "five-oak",
+    name: "Five Oak Classic",
+    pack: "750 ml",
+    mrp: 2180,
+    image: "/customer-flow/products/classic-gin.png",
+  },
+  {
+    id: "royal-750",
+    brandId: "royal-cask",
+    name: "Royal Cask No. 5",
+    pack: "750 ml",
+    mrp: 2890,
+    image: "/customer-flow/products/reserve-whisky.png",
+  },
+  {
+    id: "north-750",
+    brandId: "north-star",
+    name: "North Star Vodka",
+    pack: "750 ml",
+    mrp: 1650,
+    image: "/customer-flow/products/crystal-vodka.png",
+  },
+  {
+    id: "pure-750",
+    brandId: "pure-grain",
+    name: "Pure Grain Vodka",
+    pack: "750 ml",
+    mrp: 1840,
+    image: "/customer-flow/products/crystal-vodka.png",
+  },
+  {
+    id: "vineyard-750",
+    brandId: "vineyard-five",
+    name: "Vineyard Five Red",
+    pack: "750 ml",
+    mrp: 1480,
+    image: "/customer-flow/products/amber-rum.png",
+  },
+  {
+    id: "hop-330",
+    brandId: "golden-hop",
+    name: "Golden Hop Lager",
+    pack: "330 ml",
+    mrp: 220,
+    image: "/customer-flow/products/classic-gin.png",
+  },
+  {
+    id: "island-750",
+    brandId: "island-cask",
+    name: "Island Cask Rum",
+    pack: "750 ml",
+    mrp: 1940,
+    image: "/customer-flow/products/amber-rum.png",
+  },
+  {
+    id: "botanical-750",
+    brandId: "botanical-house",
+    name: "Botanical House Gin",
+    pack: "750 ml",
+    mrp: 2050,
+    image: "/customer-flow/products/classic-gin.png",
+  },
+];
+
+export const getBrandsByCategory = (categoryId: string) =>
+  brands.filter((brand) => brand.categoryId === categoryId);
+export const getProductsByBrand = (brandId: string) =>
+  products.filter((product) => product.brandId === brandId);
+export const getProduct = (productId: string) =>
+  products.find((product) => product.id === productId);
+export const getBrand = (brandId: string) => brands.find((brand) => brand.id === brandId);
+export const getCategory = (categoryId: string) =>
+  categories.find((category) => category.id === categoryId);
