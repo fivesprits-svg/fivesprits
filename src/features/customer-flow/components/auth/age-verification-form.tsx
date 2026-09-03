@@ -15,11 +15,11 @@ export function AgeVerificationForm() {
   }
 
   return (
-    <form onSubmit={submit} className="mt-8 space-y-6">
+    <form onSubmit={submit} className="mt-8 w-full space-y-6 md:mt-10 md:max-w-md md:space-y-8">
       <button
         type="button"
         onClick={() => setConfirmed(!confirmed)}
-        className="border-common-border flex w-full items-start gap-4 rounded-2xl border p-5 text-left"
+        className="border-common-border flex w-full items-start gap-4 rounded-2xl border p-5 text-left md:gap-5 md:p-6"
       >
         <div
           className={`customer-checkbox ${confirmed ? "customer-checkbox-checked" : ""}`}
@@ -30,7 +30,7 @@ export function AgeVerificationForm() {
             <Image src="/customer-flow/icons/success.svg" alt="" width={14} height={14} />
           )}
         </div>
-        <span className="font-geist text-common-black text-[15px] leading-snug">
+        <span className="font-geist text-common-black text-[15px] leading-snug md:text-base md:leading-normal">
           I confirm that I am 25 years of age or older.
         </span>
       </button>
@@ -41,7 +41,7 @@ export function AgeVerificationForm() {
       >
         Continue
       </button>
-      <p className="text-common-gray text-center text-xs">
+      <p className="text-common-gray text-center text-xs md:text-sm">
         By continuing, you agree to our <span className="underline">Terms of Service</span>
       </p>
     </form>

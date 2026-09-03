@@ -12,6 +12,7 @@ export type CustomerFlowState = {
 
 export type CustomerFlowAction =
   | { type: "session/login"; name: string; mobile: string }
+  | { type: "session/login-here"; mobile: string; password: string }
   | { type: "session/verify" }
   | { type: "session/verify-aadhaar"; aadhaarNumber: string }
   | { type: "session/verify-digilocker-otp" }

@@ -18,7 +18,7 @@
   --color-brand-text: #24170e;
   --color-brand-error: #b83a32;
   --color-otp-active-border: #000000;
-  --color-otp-inactive-border: #dddddd;
+  --color-otp-inactive-border: #eaeaea;
   --color-otp-dot: #999999;
   --color-age-checkbox-border: #e5e7eb;
   --color-age-checkbox-checked: #a67854;
@@ -141,7 +141,7 @@
     font-size: 14px;
     line-height: 1.5;
     letter-spacing: 0%;
-    color: var(--color-common-gray);
+    color: var(--color-common-label);
   }
 
   .customer-card {
@@ -263,6 +263,61 @@
     overflow-x: hidden;
   }
 
+  @media (min-width: 640px) {
+    .customer-page-container {
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .customer-page-container {
+      max-width: 600px;
+    }
+
+    .customer-input {
+      height: 56px;
+      padding: 16px 20px;
+      font-size: 16px;
+      border-radius: 18px;
+    }
+
+    .customer-continue-button {
+      height: 68px;
+      font-size: 22px;
+      border-radius: 140px;
+    }
+
+    .customer-otp-box {
+      width: 80px;
+      height: 80px;
+      font-size: 28px;
+      border-radius: 16px;
+    }
+
+    .customer-icon-circle {
+      width: 132px;
+      height: 132px;
+    }
+
+    .customer-icon-circle-lg {
+      width: 160px;
+      height: 160px;
+      border-width: 9px;
+    }
+
+    .customer-logout-button {
+      height: 64px;
+      font-size: 17px;
+    }
+
+    .customer-checkbox {
+      width: 28px;
+      height: 28px;
+    }
+  }
+
   .customer-page-container-lg {
     max-width: none;
     min-height: 100dvh;
@@ -273,11 +328,108 @@
     padding-right: 24px;
   }
 
+  @media (min-width: 768px) {
+    .customer-form-container {
+      padding-left: 40px;
+      padding-right: 40px;
+    }
+  }
+
   .customer-desktop-card {
     background: var(--color-common-white);
     border: 1px solid var(--color-common-border);
     border-radius: 24px;
     padding: 48px;
     box-shadow: 0 24px 80px rgba(0, 0, 0, 0.08);
+  }
+
+  .phone-input-wrapper .react-tel-input {
+    font-family: var(--font-family-geist);
+  }
+
+  .phone-input-wrapper .react-tel-input .form-control {
+    width: 100%;
+    height: 48px;
+    font-size: 15px;
+    font-family: var(--font-family-geist);
+    border-radius: 16px;
+    border: 1px solid var(--color-common-border);
+    padding-left: 48px;
+    transition: border-color 0.15s;
+  }
+
+  .phone-input-wrapper .react-tel-input .form-control:focus {
+    border-color: var(--color-common-black);
+    outline: none;
+    box-shadow: none;
+  }
+
+  .phone-input-wrapper .react-tel-input .flag-dropdown {
+    border: none;
+    border-right: 1px solid var(--color-common-border);
+    border-radius: 16px 0 0 16px;
+    background-color: transparent;
+  }
+
+  .phone-input-wrapper .react-tel-input .flag-dropdown:hover,
+  .phone-input-wrapper .react-tel-input .flag-dropdown.open {
+    background-color: transparent;
+  }
+
+  .phone-input-wrapper .react-tel-input .selected-flag {
+    border-radius: 16px 0 0 16px;
+    padding: 0 8px 0 12px;
+  }
+
+  .phone-input-wrapper .react-tel-input .country-list {
+    border-radius: 12px;
+    border: 1px solid var(--color-common-border);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin-top: 4px;
+  }
+
+  .phone-input-wrapper .react-tel-input .country-list .country {
+    padding: 8px 10px;
+    font-size: 14px;
+    font-family: var(--font-family-geist);
+  }
+
+  .phone-input-wrapper .react-tel-input .country-list .country:hover {
+    background-color: var(--color-brand-light);
+  }
+
+  .phone-input-wrapper .react-tel-input .country-list .country.highlight {
+    background-color: var(--color-brand-light);
+  }
+
+  .phone-input-wrapper .react-tel-input .search {
+    padding: 8px 10px;
+    font-family: var(--font-family-geist);
+    font-size: 14px;
+  }
+
+  .phone-input-wrapper .react-tel-input .search-box {
+    border-radius: 8px;
+    border: 1px solid var(--color-common-border);
+    font-family: var(--font-family-geist);
+    font-size: 14px;
+  }
+
+  @media (min-width: 768px) {
+    .phone-input-wrapper .react-tel-input .form-control {
+      height: 56px;
+      font-size: 16px;
+      padding-left: 52px;
+      border-radius: 18px;
+    }
+
+    .phone-input-wrapper .react-tel-input .selected-flag {
+      padding: 0 10px 0 14px;
+    }
+
+    .phone-input-wrapper .react-tel-input .country-list .country {
+      padding: 10px 12px;
+      font-size: 15px;
+    }
   }
 }

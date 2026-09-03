@@ -26,6 +26,12 @@ function useCustomerFlowValue() {
             name: value.session.name,
             mobile: value.session.mobile,
           });
+        if (value.session?.cameFromLoginHere && value.session.mobile)
+          dispatch({
+            type: "session/login-here",
+            mobile: value.session.mobile,
+            password: "",
+          });
         if (value.session?.verified) dispatch({ type: "session/verify" });
         if (value.session?.aadhaarVerified && value.session.aadhaarNumber)
           dispatch({ type: "session/verify-aadhaar", aadhaarNumber: value.session.aadhaarNumber });
@@ -66,6 +72,8 @@ function useCustomerFlowValue() {
       hydrated,
       cartCount: state.cart.reduce((total, line) => total + line.quantity, 0),
       login: (name: string, mobile: string) => dispatch({ type: "session/login", name, mobile }),
+      loginHere: (mobile: string, password: string) =>
+        dispatch({ type: "session/login-here", mobile, password }),
       verifyOtp: () => dispatch({ type: "session/verify" }),
       verifyAadhaar: (aadhaarNumber: string) =>
         dispatch({ type: "session/verify-aadhaar", aadhaarNumber }),

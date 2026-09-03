@@ -1,10 +1,11 @@
+"use client";
 import Image from "next/image";
-import { LoginForm } from "@/features/customer-flow/components/auth/login-form";
+import { LoginFormHere } from "@/features/customer-flow/components/auth/login-here-form";
 import {
   MobileHomeIndicator,
   MobileStatusBar,
 } from "@/features/customer-flow/components/navigation/mobile-system-chrome";
-export function MobileLoginSection() {
+export function MobileLoginHereSection() {
   return (
     <section className="customer-page-container lg:hidden">
       <MobileStatusBar />
@@ -16,7 +17,7 @@ export function MobileLoginSection() {
         <p className="customer-welcome-description mt-3 max-w-[320px] md:mt-4 md:text-lg md:leading-relaxed">
           Enter your mobile number to verify your identity and get started.
         </p>
-        <LoginForm />
+        <LoginFormHere />
       </div>
       <MobileHomeIndicator />
     </section>

@@ -9,6 +9,7 @@ export type CustomerSession = {
   name: string;
   mobile: string;
   verified: boolean;
+  cameFromLoginHere?: boolean;
   aadhaarNumber?: string;
   aadhaarVerified?: boolean;
   digilockerOtpVerified?: boolean;

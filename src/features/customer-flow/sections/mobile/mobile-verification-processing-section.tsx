@@ -32,7 +32,7 @@ export function MobileVerificationProcessingSection() {
 
   return (
     <AuthPageLayout>
-      <div className="flex min-h-[80dvh] flex-col items-center justify-center px-6 text-center">
+      <div className="flex min-h-[80dvh] flex-col items-center justify-center px-6 text-center md:px-12">
         <IconCircle
           iconSrc="/customer-flow/icons/lock.svg"
           iconAlt="Verification"
@@ -40,12 +40,14 @@ export function MobileVerificationProcessingSection() {
           iconHeight={32}
           variant="large"
         />
-        <h1 className="customer-section-title mt-8">Verification in Progress</h1>
-        <p className="customer-section-description mt-4 max-w-[280px]">
+        <h1 className="customer-section-title mt-8 md:mt-10 md:text-[32px]">
+          Verification in Progress
+        </h1>
+        <p className="customer-section-description mt-4 max-w-[280px] md:mt-5 md:max-w-sm md:text-base md:leading-relaxed">
           Please wait while we securely verify your order details and payment credentials.
         </p>
-        <div className="mt-8">
-          <div className="border-common-border border-t-brand-primary size-8 animate-spin rounded-full border-4" />
+        <div className="mt-8 md:mt-10">
+          <div className="border-common-border border-t-brand-primary size-8 animate-spin rounded-full border-4 md:size-10" />
         </div>
       </div>
     </AuthPageLayout>

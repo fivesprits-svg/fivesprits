@@ -7,6 +7,7 @@ export const SITEMAP_EXCLUDED_PATHS = ["/api", "/_next", "/error", "/not-found"]
 
 const STATIC_SITEMAP_ROUTES = [
   { path: "/", changeFrequency: "weekly", priority: 1 },
+  { path: "/login-here", changeFrequency: "yearly", priority: 0.3 },
   { path: "/otp", changeFrequency: "yearly", priority: 0.3 },
   { path: "/digilocker", changeFrequency: "yearly", priority: 0.3 },
   { path: "/digilocker/otp", changeFrequency: "yearly", priority: 0.3 },

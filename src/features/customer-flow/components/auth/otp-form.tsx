@@ -20,10 +20,12 @@ export function OtpForm() {
           <div className="customer-icon-circle lg:hidden">
             <Image src="/customer-flow/icons/error.svg" alt="" width={24} height={24} />
           </div>
-          <h2 className="mt-8 text-[28px] font-bold lg:mt-0 lg:text-lg">Verification Failed</h2>
+          <h2 className="mt-8 text-[28px] font-bold md:text-3xl lg:mt-0 lg:text-lg">
+            Verification Failed
+          </h2>
           <p
             role="alert"
-            className="text-common-gray lg:text-common-error mt-4 max-w-[280px] text-sm leading-6 lg:max-w-none"
+            className="text-common-gray lg:text-common-error mt-4 max-w-[280px] text-sm leading-6 md:max-w-sm md:text-base lg:max-w-none"
           >
             The verification code is incorrect. Please check the code shared by the administrator
             and try again.
@@ -36,7 +38,7 @@ export function OtpForm() {
               setError("");
               setOtp("");
             }}
-            className="customer-continue-button"
+            className="customer-continue-button md:max-w-sm"
           >
             Try Again
           </button>
@@ -55,11 +57,11 @@ export function OtpForm() {
     router.push("/digilocker");
   }
   return (
-    <form onSubmit={submit} className="mt-10">
+    <form onSubmit={submit} className="mt-10 md:mt-12">
       <label htmlFor="otp" className="sr-only">
         Verification Code
       </label>
-      <div className="relative grid grid-cols-4 gap-3">
+      <div className="relative grid grid-cols-4 gap-3 md:gap-4">
         <input
           id="otp"
           value={otp}
@@ -81,7 +83,7 @@ export function OtpForm() {
         ))}
       </div>
       <p className="sr-only">Prototype code: 1234</p>
-      <button type="submit" className="customer-continue-button mt-10">
+      <button type="submit" className="customer-continue-button mt-10 md:mt-12">
         Verify &amp; Proceed
       </button>
     </form>

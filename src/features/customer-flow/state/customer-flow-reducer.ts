@@ -15,6 +15,16 @@ export function customerFlowReducer(
   switch (action.type) {
     case "session/login":
       return { ...state, session: { name: action.name, mobile: action.mobile, verified: false } };
+    case "session/login-here":
+      return {
+        ...state,
+        session: {
+          name: "",
+          mobile: action.mobile,
+          verified: false,
+          cameFromLoginHere: true,
+        },
+      };
     case "session/verify":
       return state.session ? { ...state, session: { ...state.session, verified: true } } : state;
     case "session/verify-aadhaar":

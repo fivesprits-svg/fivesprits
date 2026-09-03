@@ -40,10 +40,12 @@ export function DigilockerOtpForm() {
           <div className="customer-icon-circle lg:hidden">
             <Image src="/customer-flow/icons/error.svg" alt="" width={24} height={24} />
           </div>
-          <h2 className="mt-8 text-[28px] font-bold lg:mt-0 lg:text-lg">Verification Failed</h2>
+          <h2 className="mt-8 text-[28px] font-bold md:text-3xl lg:mt-0 lg:text-lg">
+            Verification Failed
+          </h2>
           <p
             role="alert"
-            className="text-common-gray lg:text-common-error mt-4 max-w-[280px] text-sm leading-6 lg:max-w-none"
+            className="text-common-gray lg:text-common-error mt-4 max-w-[280px] text-sm leading-6 md:max-w-sm md:text-base lg:max-w-none"
           >
             The verification code is incorrect. Please check the code and try again.
           </p>
@@ -66,11 +68,11 @@ export function DigilockerOtpForm() {
   }
 
   return (
-    <form onSubmit={submit} className="mt-10">
+    <form onSubmit={submit} className="mt-10 md:mt-12">
       <label htmlFor="digilocker-otp" className="sr-only">
         Verification Code
       </label>
-      <div className="relative grid grid-cols-4 gap-3">
+      <div className="relative grid grid-cols-4 gap-3 md:gap-4">
         <input
           id="digilocker-otp"
           value={otp}
@@ -91,10 +93,10 @@ export function DigilockerOtpForm() {
           </span>
         ))}
       </div>
-      <div className="mt-6">
+      <div className="mt-6 md:mt-8">
         <ResendTimer initialSeconds={60} onResend={handleResend} />
       </div>
-      <button type="submit" disabled={loading} className="customer-continue-button mt-8">
+      <button type="submit" disabled={loading} className="customer-continue-button mt-8 md:mt-10">
         {loading ? "Verifying..." : "Verify & Proceed"}
       </button>
     </form>

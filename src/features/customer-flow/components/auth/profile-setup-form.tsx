@@ -18,9 +18,9 @@ export function ProfileSetupForm() {
   }
 
   return (
-    <form onSubmit={submit} className="mt-8 space-y-[15px]" noValidate>
+    <form onSubmit={submit} className="mt-8 space-y-[15px] md:mt-10 md:space-y-5" noValidate>
       <label className="block">
-        <span className="customer-input-label mb-2.5 block">Customer Name</span>
+        <span className="customer-input-label mb-2.5 block md:text-sm">Customer Name</span>
         <input
           value={name}
           onChange={(event) => setName(event.target.value)}
@@ -29,7 +29,7 @@ export function ProfileSetupForm() {
         />
       </label>
       <label className="block">
-        <span className="customer-input-label mb-2.5 block">Mobile Number</span>
+        <span className="customer-input-label mb-2.5 block md:text-sm">Mobile Number</span>
         <input
           defaultValue={state.session?.mobile ?? ""}
           readOnly
@@ -39,7 +39,7 @@ export function ProfileSetupForm() {
       <button
         type="submit"
         disabled={loading || !name.trim()}
-        className="customer-continue-button mt-4"
+        className="customer-continue-button mt-4 md:mt-6"
       >
         {loading ? "Saving..." : "Save & Continue"}
       </button>

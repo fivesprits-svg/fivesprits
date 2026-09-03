@@ -23,9 +23,9 @@ export function AadhaarForm() {
   }
 
   return (
-    <form onSubmit={submit} className="space-y-4" noValidate>
+    <form onSubmit={submit} className="space-y-4 md:space-y-5" noValidate>
       <label className="block">
-        <span className="customer-input-label mb-2.5 block">Aadhaar Card</span>
+        <span className="customer-input-label mb-2.5 block md:text-sm">Aadhaar Card</span>
         <input
           value={aadhaar}
           onChange={(event) => {
@@ -38,12 +38,15 @@ export function AadhaarForm() {
           className="customer-input"
         />
         {errors.aadhaar && (
-          <span role="alert" className="text-common-error mt-1.5 block text-xs font-medium">
+          <span
+            role="alert"
+            className="text-common-error mt-1.5 block text-xs font-medium md:text-sm"
+          >
             {errors.aadhaar}
           </span>
         )}
       </label>
-      <button type="submit" disabled={loading} className="customer-continue-button mt-4">
+      <button type="submit" disabled={loading} className="customer-continue-button mt-4 md:mt-6">
         {loading ? "Processing..." : "Proceed"}
       </button>
     </form>
