@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
-import { validateLogin } from "@/features/customer-flow/utils/validation";
+import { validateLogin } from "@/features/customer-flow/utils/login-validation";
 
 export function LoginForm() {
   const router = useRouter();
@@ -22,38 +22,40 @@ export function LoginForm() {
   return (
     <form onSubmit={submit} className="mt-8 space-y-[15px]" noValidate>
       <label className="block">
-        <span className="mb-2.5 block text-xs text-[#7e7e86]">User Name</span>
+        <span className="customer-input-label mb-2.5 block">User Name</span>
         <input
           value={name}
           onChange={(event) => setName(event.target.value)}
           placeholder="Enter full name"
-          className="h-12 w-full rounded-2xl border border-[#e5e7eb] px-4 text-sm outline-none focus:border-black"
+          aria-invalid={Boolean(errors.name)}
+          className="customer-input"
         />
         {errors.name && (
-          <span role="alert" className="mt-1 block text-xs text-red-600">
+          <span role="alert" className="text-common-error mt-1.5 block text-xs font-medium">
             {errors.name}
           </span>
         )}
       </label>
       <label className="block">
-        <span className="mb-2.5 block text-xs text-[#7e7e86]">Mobile Number</span>
+        <span className="customer-input-label mb-2.5 block">Mobile Number</span>
         <input
           value={mobile}
           onChange={(event) => setMobile(event.target.value.replace(/\D/g, "").slice(0, 10))}
           inputMode="numeric"
           placeholder="Enter mobile number"
-          className="h-12 w-full rounded-2xl border border-[#e5e7eb] px-4 text-sm outline-none focus:border-black"
+          aria-invalid={Boolean(errors.mobile)}
+          className="customer-input"
         />
         {errors.mobile && (
-          <span role="alert" className="mt-1 block text-xs text-red-600">
+          <span role="alert" className="text-common-error mt-1.5 block text-xs font-medium">
             {errors.mobile}
           </span>
         )}
       </label>
-      <button className="mt-4 h-[61px] w-full rounded-full bg-black text-base font-semibold text-white">
+      <button type="submit" className="customer-continue-button mt-4">
         Continue
       </button>
-      <p className="text-center text-[11px] text-[#6b7280]">
+      <p className="font-geist text-common-gray text-center text-[11px]">
         We&apos;ll send you a one-time verification code to Admin.
       </p>
     </form>

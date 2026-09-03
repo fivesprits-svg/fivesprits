@@ -27,6 +27,22 @@ function useCustomerFlowValue() {
             mobile: value.session.mobile,
           });
         if (value.session?.verified) dispatch({ type: "session/verify" });
+        if (value.session?.aadhaarVerified && value.session.aadhaarNumber)
+          dispatch({ type: "session/verify-aadhaar", aadhaarNumber: value.session.aadhaarNumber });
+        if (value.session?.digilockerOtpVerified)
+          dispatch({ type: "session/verify-digilocker-otp" });
+        if (
+          value.session?.verificationComplete &&
+          value.session.dateOfBirth &&
+          value.session.age != null
+        )
+          dispatch({
+            type: "session/verification-complete",
+            dateOfBirth: value.session.dateOfBirth,
+            age: value.session.age,
+          });
+        if (value.session?.ageVerified) dispatch({ type: "session/verify-age" });
+        if (value.session?.profileComplete) dispatch({ type: "session/profile-complete" });
         if (value.selectedCategoryId)
           dispatch({ type: "selection/category", categoryId: value.selectedCategoryId });
         if (value.selectedBrandId)
@@ -51,6 +67,13 @@ function useCustomerFlowValue() {
       cartCount: state.cart.reduce((total, line) => total + line.quantity, 0),
       login: (name: string, mobile: string) => dispatch({ type: "session/login", name, mobile }),
       verifyOtp: () => dispatch({ type: "session/verify" }),
+      verifyAadhaar: (aadhaarNumber: string) =>
+        dispatch({ type: "session/verify-aadhaar", aadhaarNumber }),
+      verifyDigilockerOtp: () => dispatch({ type: "session/verify-digilocker-otp" }),
+      completeVerification: (dateOfBirth: string, age: number) =>
+        dispatch({ type: "session/verification-complete", dateOfBirth, age }),
+      verifyAge: () => dispatch({ type: "session/verify-age" }),
+      completeProfile: () => dispatch({ type: "session/profile-complete" }),
       selectCategory: (categoryId: string) => dispatch({ type: "selection/category", categoryId }),
       selectBrand: (brandId: string) => dispatch({ type: "selection/brand", brandId }),
       addToCart: (productId: string, quantity: number) =>

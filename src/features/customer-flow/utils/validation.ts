@@ -1,8 +1,18 @@
-export type LoginErrors = { name?: string; mobile?: string };
+export type AadhaarErrors = { aadhaar?: string };
 
-export function validateLogin(name: string, mobile: string): LoginErrors {
-  return {
-    name: name.trim() ? undefined : "Please enter your name",
-    mobile: /^\d{10}$/.test(mobile) ? undefined : "Enter a valid 10-digit mobile number",
-  };
+export function validateAadhaar(aadhaar: string): AadhaarErrors {
+  const cleaned = aadhaar.replace(/\s/g, "");
+  if (!cleaned) return { aadhaar: "Please enter your Aadhaar number" };
+  if (!/^\d{12}$/.test(cleaned)) return { aadhaar: "Enter a valid 12-digit Aadhaar number" };
+  return {};
+}
+
+export function formatAadhaar(value: string): string {
+  const digits = value.replace(/\D/g, "").slice(0, 12);
+  return digits.replace(/(\d{4})(?=\d)/g, "$1 ");
+}
+
+export function getLastDigit(aadhaar: string): number {
+  const cleaned = aadhaar.replace(/\s/g, "");
+  return parseInt(cleaned[cleaned.length - 1] || "0", 10);
 }

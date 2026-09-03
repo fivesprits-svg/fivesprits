@@ -1,1 +1,283 @@
 @import "tailwindcss";
+
+@theme {
+  --color-common-black: #000000;
+  --color-common-white: #ffffff;
+  --color-common-gray: #6b7280;
+  --color-common-label: #7e7e86;
+  --color-common-border: #e5e7eb;
+  --color-common-bg: #faf9f6;
+  --color-common-error: #dc2626;
+  --color-common-success: #16a34a;
+  --color-brand-primary: #a67854;
+  --color-brand-dark: #3a281c;
+  --color-brand-accent: #b37a32;
+  --color-brand-light: #f7f4ee;
+  --color-brand-border: #ddcfb8;
+  --color-brand-placeholder: #a49382;
+  --color-brand-text: #24170e;
+  --color-brand-error: #b83a32;
+  --color-otp-active-border: #000000;
+  --color-otp-inactive-border: #dddddd;
+  --color-otp-dot: #999999;
+  --color-age-checkbox-border: #e5e7eb;
+  --color-age-checkbox-checked: #a67854;
+
+  --font-family-unbounded: "Unbounded", sans-serif;
+  --font-family-geist: "Geist", sans-serif;
+  --font-family-outfit: "Outfit", sans-serif;
+}
+
+@layer base {
+  @font-face {
+    font-family: "Unbounded";
+    src: url("https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;700;900&display=swap");
+  }
+}
+
+@layer components {
+  .font-unbounded {
+    font-family: var(--font-family-unbounded);
+  }
+  .font-geist {
+    font-family: var(--font-family-geist);
+  }
+  .font-outfit {
+    font-family: var(--font-family-outfit);
+  }
+  .customer-welcome-title {
+    font-family: var(--font-family-unbounded);
+    font-weight: 900;
+    font-size: 30px;
+    line-height: 1;
+    letter-spacing: 0%;
+    text-transform: uppercase;
+    color: var(--color-common-black);
+  }
+
+  .customer-welcome-description {
+    font-family: var(--font-family-geist);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.5;
+    letter-spacing: 0%;
+    color: var(--color-common-gray);
+  }
+
+  .customer-input-label {
+    font-family: var(--font-family-outfit);
+    font-weight: 600;
+    font-size: 13px;
+    line-height: 1;
+    text-transform: uppercase;
+    color: var(--color-common-label);
+  }
+
+  .customer-input {
+    font-family: var(--font-family-geist);
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 1;
+    letter-spacing: 0%;
+    color: var(--color-common-gray);
+    width: 100%;
+    height: 48px;
+    padding: 14px 16px;
+    border-radius: 16px;
+    border: 1px solid var(--color-common-border);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  .customer-input::placeholder {
+    color: var(--color-common-gray);
+  }
+
+  .customer-input:focus {
+    border-color: var(--color-common-black);
+  }
+
+  .customer-input[aria-invalid="true"] {
+    border-color: var(--color-common-error);
+  }
+
+  .customer-continue-button {
+    font-family: var(--font-family-outfit);
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 1;
+    letter-spacing: 0%;
+    color: var(--color-common-white);
+    width: 100%;
+    height: 61px;
+    border-radius: 130px;
+    background-color: var(--color-common-black);
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+
+  .customer-continue-button:hover {
+    opacity: 0.9;
+  }
+
+  .customer-continue-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .customer-section-title {
+    font-family: var(--font-family-unbounded);
+    font-weight: 900;
+    font-size: 28px;
+    line-height: 1.1;
+    letter-spacing: 0%;
+    color: var(--color-common-black);
+  }
+
+  .customer-section-description {
+    font-family: var(--font-family-geist);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.5;
+    letter-spacing: 0%;
+    color: var(--color-common-gray);
+  }
+
+  .customer-card {
+    background: var(--color-common-white);
+    border: 1px solid var(--color-common-border);
+    border-radius: 16px;
+  }
+
+  .customer-icon-circle {
+    width: 112px;
+    height: 112px;
+    border-radius: 50%;
+    border: 7px solid #efd8d5;
+    display: grid;
+    place-items: center;
+    background: var(--color-common-white);
+  }
+
+  .customer-icon-circle-lg {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    border: 8px solid #e8d5c4;
+    display: grid;
+    place-items: center;
+    background: var(--color-common-white);
+  }
+
+  .customer-otp-box {
+    width: 66px;
+    height: 66px;
+    border-radius: 14px;
+    border: 1.5px solid var(--color-otp-inactive-border);
+    display: grid;
+    place-items: center;
+    font-size: 24px;
+    font-weight: 700;
+    font-family: var(--font-family-geist);
+    color: var(--color-common-black);
+    transition: border-color 0.15s;
+  }
+
+  .customer-otp-box-active {
+    border-color: var(--color-otp-active-border);
+  }
+
+  .customer-otp-box-filled {
+    border-color: var(--color-otp-active-border);
+  }
+
+  .customer-otp-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--color-otp-dot);
+  }
+
+  .customer-back-button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--color-brand-light);
+    display: grid;
+    place-items: center;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.15s;
+  }
+
+  .customer-back-button:hover {
+    background-color: #ece8df;
+  }
+
+  .customer-logout-button {
+    font-family: var(--font-family-outfit);
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--color-common-error);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    height: 56px;
+    border-radius: 130px;
+    border: 1px solid var(--color-common-border);
+    background: var(--color-common-white);
+    cursor: pointer;
+    transition: background-color 0.15s;
+  }
+
+  .customer-logout-button:hover {
+    background-color: #fef2f2;
+  }
+
+  .customer-checkbox {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    border: 2px solid var(--color-age-checkbox-border);
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+
+  .customer-checkbox-checked {
+    border-color: var(--color-age-checkbox-checked);
+    background-color: var(--color-age-checkbox-checked);
+  }
+
+  .customer-page-container {
+    width: 100%;
+    max-width: 390px;
+    min-height: 100dvh;
+    background: var(--color-common-white);
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  .customer-page-container-lg {
+    max-width: none;
+    min-height: 100dvh;
+  }
+
+  .customer-form-container {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .customer-desktop-card {
+    background: var(--color-common-white);
+    border: 1px solid var(--color-common-border);
+    border-radius: 24px;
+    padding: 48px;
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.08);
+  }
+}

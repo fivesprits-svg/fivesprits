@@ -1,5 +1,5 @@
 import { formatMrp } from "@/features/customer-flow/utils/currency";
-import { validateLogin } from "@/features/customer-flow/utils/validation";
+import { validateLogin } from "@/features/customer-flow/utils/login-validation";
 import { buildCartRows } from "@/features/customer-flow/helpers/cart-view-model";
 import { brands, products } from "@/features/customer-flow/data/catalogue";
 import { comboOffers, giftOffer } from "@/features/customer-flow/data/offers";

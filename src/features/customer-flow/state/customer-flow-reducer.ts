@@ -17,6 +17,39 @@ export function customerFlowReducer(
       return { ...state, session: { name: action.name, mobile: action.mobile, verified: false } };
     case "session/verify":
       return state.session ? { ...state, session: { ...state.session, verified: true } } : state;
+    case "session/verify-aadhaar":
+      return state.session
+        ? {
+            ...state,
+            session: {
+              ...state.session,
+              aadhaarNumber: action.aadhaarNumber,
+              aadhaarVerified: true,
+            },
+          }
+        : state;
+    case "session/verify-digilocker-otp":
+      return state.session
+        ? { ...state, session: { ...state.session, digilockerOtpVerified: true } }
+        : state;
+    case "session/verification-complete":
+      return state.session
+        ? {
+            ...state,
+            session: {
+              ...state.session,
+              verificationComplete: true,
+              dateOfBirth: action.dateOfBirth,
+              age: action.age,
+            },
+          }
+        : state;
+    case "session/verify-age":
+      return state.session ? { ...state, session: { ...state.session, ageVerified: true } } : state;
+    case "session/profile-complete":
+      return state.session
+        ? { ...state, session: { ...state.session, profileComplete: true } }
+        : state;
     case "selection/category":
       return { ...state, selectedCategoryId: action.categoryId, selectedBrandId: null };
     case "selection/brand":

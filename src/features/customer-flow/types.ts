@@ -13,6 +13,11 @@ export type CustomerFlowState = {
 export type CustomerFlowAction =
   | { type: "session/login"; name: string; mobile: string }
   | { type: "session/verify" }
+  | { type: "session/verify-aadhaar"; aadhaarNumber: string }
+  | { type: "session/verify-digilocker-otp" }
+  | { type: "session/verification-complete"; dateOfBirth: string; age: number }
+  | { type: "session/verify-age" }
+  | { type: "session/profile-complete" }
   | { type: "selection/category"; categoryId: string }
   | { type: "selection/brand"; brandId: string }
   | {

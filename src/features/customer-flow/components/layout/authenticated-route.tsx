@@ -10,7 +10,7 @@ export function AuthenticatedRoute({ children }: { children: React.ReactNode }) 
   }, [hydrated, router, state.session?.verified]);
   if (!hydrated || !state.session?.verified)
     return (
-      <main className="grid min-h-dvh place-items-center bg-white text-sm text-[#6b7280]">
+      <main className="text-common-gray grid min-h-dvh place-items-center bg-white text-sm">
         Verifying access…
       </main>
     );

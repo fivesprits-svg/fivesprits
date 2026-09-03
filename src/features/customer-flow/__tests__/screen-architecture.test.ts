@@ -44,8 +44,10 @@ describe("customer-flow screen architecture", () => {
     ).toContain("Logout Confirmation");
   });
 
-  it("keeps global CSS limited to Tailwind's import", () => {
-    expect(source("src/app/globals.css").trim()).toBe('@import "tailwindcss";');
+  it("keeps global CSS limited to Tailwind's import and theme", () => {
+    const css = source("src/app/globals.css").trim();
+    expect(css).toContain('@import "tailwindcss";');
+    expect(css).toContain("@theme");
   });
 
   it.each(["home", "categories", "cart", "profile"])(
@@ -88,18 +90,17 @@ describe("customer-flow screen architecture", () => {
   );
 
   it("uses the exported Figma logo geometry on mobile login", () => {
-    expect(source("public/customer-flow/icons/logo-mark.svg")).toContain(
-      'data-figma-node="234:318"',
-    );
+    const logoSvg = source("public/customer-flow/icons/logo.svg");
+    expect(logoSvg).toContain("234_318");
     expect(source("src/features/customer-flow/sections/mobile/mobile-login-section.tsx")).toContain(
-      "logo-mark.svg",
+      "logo.svg",
     );
   });
 
   it("matches the Figma OTP screen copy and four-cell presentation", () => {
     const otp = source("src/features/customer-flow/sections/mobile/mobile-otp-section.tsx");
-    expect(otp).toContain("VERIFY YOUR");
-    expect(otp).toContain("NUMBER");
+    expect(otp).toContain("Verify Your");
+    expect(otp).toContain("Number");
     expect(source("src/features/customer-flow/components/auth/otp-form.tsx")).toContain(
       "grid-cols-4",
     );

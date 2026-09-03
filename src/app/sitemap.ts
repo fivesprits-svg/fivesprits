@@ -8,6 +8,12 @@ export const SITEMAP_EXCLUDED_PATHS = ["/api", "/_next", "/error", "/not-found"]
 const STATIC_SITEMAP_ROUTES = [
   { path: "/", changeFrequency: "weekly", priority: 1 },
   { path: "/otp", changeFrequency: "yearly", priority: 0.3 },
+  { path: "/digilocker", changeFrequency: "yearly", priority: 0.3 },
+  { path: "/digilocker/otp", changeFrequency: "yearly", priority: 0.3 },
+  { path: "/digilocker/verification", changeFrequency: "yearly", priority: 0.3 },
+  { path: "/digilocker/verification-failed", changeFrequency: "yearly", priority: 0.3 },
+  { path: "/age-verification", changeFrequency: "yearly", priority: 0.3 },
+  { path: "/profile-setup", changeFrequency: "yearly", priority: 0.3 },
   { path: "/categories", changeFrequency: "weekly", priority: 0.9 },
   { path: "/brands", changeFrequency: "weekly", priority: 0.8 },
   { path: "/products", changeFrequency: "weekly", priority: 0.8 },

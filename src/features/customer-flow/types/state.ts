@@ -5,4 +5,16 @@ export type CartLine = {
   itemType?: CartItemType;
   selectedProductIds?: string[];
 };
-export type CustomerSession = { name: string; mobile: string; verified: boolean };
+export type CustomerSession = {
+  name: string;
+  mobile: string;
+  verified: boolean;
+  aadhaarNumber?: string;
+  aadhaarVerified?: boolean;
+  digilockerOtpVerified?: boolean;
+  verificationComplete?: boolean;
+  dateOfBirth?: string;
+  age?: number;
+  ageVerified?: boolean;
+  profileComplete?: boolean;
+};
