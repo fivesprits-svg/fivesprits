@@ -17,7 +17,7 @@
   --color-brand-placeholder: #a49382;
   --color-brand-text: #24170e;
   --color-brand-error: #b83a32;
-  --color-otp-active-border: #000000;
+  --color-otp-active-border: #c9a07e;
   --color-otp-inactive-border: #eaeaea;
   --color-otp-dot: #999999;
   --color-age-checkbox-border: #e5e7eb;
@@ -173,23 +173,27 @@
   .customer-otp-box {
     width: 66px;
     height: 66px;
-    border-radius: 14px;
+    border-radius: 16px;
     border: 1.5px solid var(--color-otp-inactive-border);
     display: grid;
     place-items: center;
     font-size: 24px;
     font-weight: 700;
     font-family: var(--font-family-geist);
-    color: var(--color-common-black);
+    color: var(--color-common-label);
     transition: border-color 0.15s;
+    background-color: #f9f9fb;
   }
 
   .customer-otp-box-active {
+    border: 2px solid;
     border-color: var(--color-otp-active-border);
+    background-color: #faf3eb;
   }
 
   .customer-otp-box-filled {
-    border-color: var(--color-otp-active-border);
+    border-color: var(--color-otp-inactive-border);
+    color: var(--color-common-black);
   }
 
   .customer-otp-dot {

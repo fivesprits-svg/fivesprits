@@ -11,7 +11,7 @@ export function MobileDigilockerSection() {
     <AuthPageLayout>
       <div className="flex flex-col items-center px-6 pt-6 pb-24 md:px-12 md:pt-8 md:pb-28">
         <div className="w-full text-left">
-          <h1 className="font-unbounded text-common-black text-[22px] font-bold md:text-[26px]">
+          <h1 className="font-unbounded text-common-black text-[24px] font-extrabold md:text-[26px]">
             Welcome
           </h1>
           <p className="font-outfit text-common-gray mt-1 text-sm md:mt-1.5 md:text-base">
