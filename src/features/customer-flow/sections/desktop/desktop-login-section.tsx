@@ -27,7 +27,7 @@ export function DesktopLoginSection() {
             Welcome
           </h2>
           <p className="customer-section-description mt-3">
-            Enter your details to access the Five Spirits catalogue.
+            Enter your mobile number to verify your identity and get started.{" "}
           </p>
           <LoginForm />
         </div>

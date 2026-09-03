@@ -105,6 +105,17 @@ export function LoginFormHere() {
       <button type="submit" className="customer-continue-button mt-4 md:mt-6">
         Continue
       </button>
+      <p className="mt-2 text-center text-sm text-gray-500">
+        Don&apos;t have an account?{" "}
+        <button
+          type="button"
+          onClick={() => router.push("/")}
+          className="font-medium text-black underline underline-offset-2"
+        >
+          {" "}
+          Register{" "}
+        </button>{" "}
+      </p>
     </form>
   );
 }
