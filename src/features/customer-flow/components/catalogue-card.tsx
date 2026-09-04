@@ -82,6 +82,7 @@ export function CatalogueCard({
     <article className="catalogue-card-product">
       <div className="catalogue-card-product-image">
         {badge && <span className="catalogue-card-product-badge">{badge}</span>}
+
         <Image
           src={image}
           alt={title}
@@ -91,18 +92,24 @@ export function CatalogueCard({
           className="object-contain"
         />
       </div>
+
       <div className="catalogue-card-product-info">
         <h2 className="catalogue-card-product-name">{title}</h2>
+
         {subtitle && <p className="catalogue-card-product-pack">{subtitle}</p>}
+
         <div className="catalogue-card-product-price-row">
           {originalPrice && (
             <span className="catalogue-card-product-original-price">{originalPrice}</span>
           )}
+
           {price && <span className="catalogue-card-product-price">{price}</span>}
         </div>
       </div>
+
       <div className="catalogue-card-product-actions">
-        {actionLabel && onAction && (
+        {/* Show Add/Request button only when product is NOT in cart */}
+        {quantity == null && actionLabel && onAction && (
           <button
             type="button"
             onClick={onAction}
@@ -117,32 +124,45 @@ export function CatalogueCard({
             {actionLabel}
           </button>
         )}
+
+        {/* Show quantity controls only after product is added */}
         {quantity != null && onQuantityChange && (
           <div className="catalogue-card-product-quantity">
             <button
               type="button"
               onClick={() => onQuantityChange(Math.max(1, quantity - 1))}
               className="catalogue-card-product-quantity-btn"
+              aria-label="Decrease quantity"
             >
               −
             </button>
+
             <span className="catalogue-card-product-quantity-value">
               {String(quantity).padStart(2, "0")}
             </span>
+
             <button
               type="button"
               onClick={() => onQuantityChange(quantity + 1)}
               className="catalogue-card-product-quantity-btn"
+              aria-label="Increase quantity"
             >
               +
             </button>
+
             {onRemove && (
               <button
                 type="button"
                 onClick={onRemove}
                 className="catalogue-card-product-remove-btn"
+                aria-label="Remove product"
               >
-                🗑
+                <Image
+                  src="/customer-flow/icons/delete-btn.svg"
+                  alt="Remove product"
+                  width={26}
+                  height={26}
+                />
               </button>
             )}
           </div>

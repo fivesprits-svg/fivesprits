@@ -23,12 +23,6 @@ export function MobileProductsSection() {
     <div className="min-h-dvh bg-white pb-28 lg:hidden">
       <MobileHeader title={brand?.name ?? "Products"} backHref={`/brands?categoryId=whisky`} />
       <main className="mx-auto w-full max-w-[390px] px-6 pt-5">
-        <div className="mb-5 flex items-center gap-2">
-          <span className="inline-block h-6 w-6 rounded bg-black text-center text-xs leading-6 font-bold text-white">
-            +
-          </span>
-          <span className="text-sm font-semibold">Request Your Products</span>
-        </div>
         <div className="grid grid-cols-2 gap-3">
           {products.map((product) => {
             const quantity = 1;
