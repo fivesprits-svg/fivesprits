@@ -7,10 +7,11 @@ export function MobileAgeVerificationSection() {
     <AuthPageLayout>
       <div className="flex min-h-[80dvh] flex-col items-center px-6 pt-12 pb-24 md:px-10 md:pt-16">
         <IconCircle
-          iconSrc="/customer-flow/icons/lock.svg"
+          iconSrc="/customer-flow/icons/age-verification.svg"
           iconAlt="Age verification"
-          iconWidth={24}
-          iconHeight={24}
+          iconWidth={64}
+          iconHeight={64}
+          className="border-none"
         />
         <div className="mt-8 text-center md:mt-10">
           <h1 className="customer-section-title md:text-3xl">Age Verification</h1>

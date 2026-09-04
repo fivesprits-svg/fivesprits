@@ -41,8 +41,9 @@ export function AgeVerificationForm() {
       >
         Continue
       </button>
-      <p className="text-common-gray text-center text-xs md:text-sm">
-        By continuing, you agree to our <span className="underline">Terms of Service</span>
+      <p className="font-geist text-common-gray text-center text-xs md:text-sm">
+        By continuing, you agree to our{" "}
+        <span className="text-common-black text-md font-semibold underline">Terms of Service</span>
       </p>
     </form>
   );

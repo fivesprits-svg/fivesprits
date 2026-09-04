@@ -105,7 +105,7 @@ export function LoginFormHere() {
       <button type="submit" className="customer-continue-button mt-4 md:mt-6">
         Continue
       </button>
-      <p className="mt-2 text-center text-sm text-gray-500">
+      <p className="font-geist text-common-gray text-center text-sm md:text-base">
         Don&apos;t have an account?{" "}
         <button
           type="button"

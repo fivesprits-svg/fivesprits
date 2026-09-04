@@ -21,10 +21,10 @@ export function MobileDigilockerSection() {
 
         <div className="my-6 md:my-8">
           <IconCircle
-            iconSrc="/customer-flow/icons/lock.svg"
+            iconSrc="/customer-flow/icons/shield-badge.svg"
             iconAlt="Shield"
-            iconWidth={32}
-            iconHeight={32}
+            iconWidth={100}
+            iconHeight={100}
           />
         </div>
 
@@ -39,7 +39,12 @@ export function MobileDigilockerSection() {
         <div className="border-common-border mt-4 w-full rounded-2xl border p-3 md:mx-auto md:mt-6 md:max-w-md md:p-5">
           <div className="flex items-center gap-3 md:gap-4">
             <div className="bg-brand-light grid size-11 place-items-center rounded-xl md:size-12">
-              <Image src="/customer-flow/icons/lock.svg" alt="" width={20} height={20} />
+              <Image
+                src="/customer-flow/icons/digilocker-badge-icon.svg"
+                alt=""
+                width={48}
+                height={48}
+              />
             </div>
             <div>
               <h3 className="font-outfit text-common-black text-sm font-semibold md:text-base">
@@ -57,7 +62,7 @@ export function MobileDigilockerSection() {
         </div>
 
         <button type="button" onClick={logout} className="customer-logout-button mt-4 md:mt-6">
-          <Image src="/customer-flow/icons/error.svg" alt="" width={18} height={18} />
+          <Image src="/customer-flow/icons/log-out.svg" alt="" width={18} height={18} />
           Logout
         </button>
       </div>
