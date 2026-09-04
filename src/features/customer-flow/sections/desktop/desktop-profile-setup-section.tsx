@@ -10,37 +10,38 @@ export function DesktopProfileSetupSection() {
   const isLoginHereFlow = state.session?.cameFromLoginHere === true;
 
   return (
-    <DesktopAuthPageLayout>
-      <div className="customer-desktop-card">
-        {isLoginHereFlow ? (
-          <>
-            <div className="mb-6 flex items-center justify-center gap-2">
-              <div className="bg-brand-primary size-3 rounded-full" />
-              <span className="font-outfit text-common-black text-lg font-bold">FIVE SPIRIT</span>
-            </div>
-            <h1 className="customer-section-title text-center">Profile Setup</h1>
-            <p className="customer-section-description mt-3 text-center">
-              Please provide your delivery and permit details to unlock fast checkout.
-            </p>
-            <ProfileSetupHereForm />
-          </>
-        ) : (
-          <>
-            <div className="mb-4 flex justify-center">
-              <Image
-                src="/customer-flow/icons/logo.svg"
-                alt="Five Spirits"
-                width={44}
-                height={76}
-              />
-            </div>
-            <h1 className="customer-section-title text-center">Profile Setup</h1>
-            <p className="customer-section-description mt-3 text-center">
-              Please provide your delivery and permit details to unlock fast checkout.
-            </p>
-            <ProfileSetupForm />
-          </>
-        )}
+    <DesktopAuthPageLayout maxWidth={isLoginHereFlow ? "max-w-4xl" : "max-w-xl"}>
+      <div className="rounded-3xl border border-gray-200/80 bg-white p-4 shadow-xl shadow-black/5 md:p-8">
+        {/* Header Branding */}
+        <div className="flex flex-col items-center text-center">
+          <div className="mb-2 flex items-center justify-center gap-2">
+            <Image
+              src="/customer-flow/icons/logo.svg"
+              alt="Five Spirits"
+              width={32}
+              height={55}
+              className="h-10 w-auto"
+            />
+          </div>
+
+          <div className="inline-flex items-center gap-1.5 rounded-full bg-[#f7f4ee] px-3 py-1 text-[11px] font-bold tracking-wider text-[#a67854] uppercase">
+            <span>Customer Onboarding</span>
+          </div>
+
+          <h1 className="font-unbounded mt-2 text-2xl font-black text-gray-900 md:text-3xl">
+            Profile Setup
+          </h1>
+          <p className="font-geist mt-1.5 max-w-lg text-xs leading-relaxed text-gray-500 md:text-sm">
+            {isLoginHereFlow
+              ? "Provide your delivery and permit credentials to unlock fast, authorized checkout."
+              : "Confirm your customer profile information to get started."}
+          </p>
+        </div>
+
+        {/* Dynamic Form */}
+        <div className="mt-3">
+          {isLoginHereFlow ? <ProfileSetupHereForm /> : <ProfileSetupForm />}
+        </div>
       </div>
     </DesktopAuthPageLayout>
   );
