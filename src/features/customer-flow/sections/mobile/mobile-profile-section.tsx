@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { MobileBottomNav } from "@/features/customer-flow/components/navigation/mobile-bottom-nav";
 import { MobileHeader } from "@/features/customer-flow/components/navigation/mobile-header";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
+import { formatDisplayMobile } from "@/features/customer-flow/utils/validation";
 
 export function MobileProfileSection() {
   const router = useRouter();
@@ -20,7 +21,7 @@ export function MobileProfileSection() {
 
   const profileData = {
     name: state.session?.name || "Rajesh Kumar",
-    mobile: state.session?.mobile || "9876543210",
+    mobile: formatDisplayMobile(state.session?.mobile),
     permitNumber: "PRM-2024-00587",
     address: "42, MG Road, Sector 15, Gurugram, Haryana",
     pincode: "122001",
@@ -87,7 +88,7 @@ export function MobileProfileSection() {
           <div>
             <span className="profile-field-label mb-2 block">Mobile Number</span>
             <div className="profile-field-value">
-              <span className="flex-1 truncate">+91 {profileData.mobile}</span>
+              <span className="flex-1 truncate">{profileData.mobile}</span>
               <Image
                 src="/customer-flow/icons/lock.svg"
                 alt="Locked"

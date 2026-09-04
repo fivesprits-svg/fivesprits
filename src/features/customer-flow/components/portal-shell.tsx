@@ -5,33 +5,25 @@ import { MobileHeader } from "@/features/customer-flow/components/navigation/mob
 // import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 export function PortalShell({
   title,
-  // eyebrow,
   backHref,
+  className,
   children,
 }: {
   title: string;
   eyebrow?: string;
   backHref?: string;
+  className?: string;
   children: React.ReactNode;
 }) {
-  // const { state } = useCustomerFlow();
   return (
     <div className="min-h-dvh bg-white text-[#111] lg:bg-[#f7f7f5]">
       <MobileHeader title={title} backHref={backHref} />
       <DesktopHeader />
       <main
         id="main-content"
-        className="mx-auto w-full max-w-[390px] px-6 pt-5 pb-28 lg:max-w-7xl lg:px-6 lg:py-10"
+        className={`mx-auto w-full max-w-[390px] px-6 pt-5 pb-28 lg:max-w-7xl lg:px-6 lg:py-6 ${className || ""}`}
       >
-        {/* {state.session && (
-          <p className="mb-2 text-xs text-[#7e7e86] lg:text-sm">Hello, {state.session.name}</p>
-        )}
-        {eyebrow && (
-          <p className="hidden text-xs font-bold tracking-[0.2em] text-[#a67854] uppercase lg:block">
-            {eyebrow}
-          </p>
-        )} */}
-        <div className="lg:mt-2">{children}</div>
+        <div className="lg:mt-1">{children}</div>
       </main>
       <MobileBottomNav active={title === "Your Cart" ? "Cart" : "Product"} />
     </div>

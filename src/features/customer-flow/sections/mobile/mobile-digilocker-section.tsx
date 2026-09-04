@@ -4,6 +4,7 @@ import { AadhaarForm } from "@/features/customer-flow/components/auth/aadhaar-fo
 import { AuthPageLayout } from "@/features/customer-flow/components/ui/auth-page-layout";
 import { IconCircle } from "@/features/customer-flow/components/ui/icon-circle";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
+import { formatDisplayMobile } from "@/features/customer-flow/utils/validation";
 
 export function MobileDigilockerSection() {
   const { state, logout } = useCustomerFlow();
@@ -15,7 +16,7 @@ export function MobileDigilockerSection() {
             Welcome
           </h1>
           <p className="font-outfit text-common-gray mt-1 text-sm md:mt-1.5 md:text-base">
-            +91 {state.session?.mobile}
+            {formatDisplayMobile(state.session?.mobile)}
           </p>
         </div>
 
