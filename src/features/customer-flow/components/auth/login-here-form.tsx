@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
+import { customerLoginApi } from "@/features/customer-flow/services/auth-api";
 
 export function LoginFormHere() {
   const router = useRouter();
@@ -14,6 +15,8 @@ export function LoginFormHere() {
     dialCode: string;
   }>({ countryCode: "in", dialCode: "91" });
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [apiError, setApiError] = useState("");
   const [errors, setErrors] = useState<{ mobile?: string; password?: string }>({});
 
   function handlePhoneChange(
@@ -23,19 +26,52 @@ export function LoginFormHere() {
     setPhoneValue(value);
     setCountryData({ countryCode: data.countryCode, dialCode: data.dialCode });
     if (errors.mobile) setErrors((prev) => ({ ...prev, mobile: undefined }));
+    setApiError("");
   }
 
-  function submit(event: React.FormEvent) {
+  async function submit(event: React.FormEvent) {
     event.preventDefault();
+    setApiError("");
     const next: { mobile?: string; password?: string } = {};
+    const cleanDigits = phoneValue.replace(/\D/g, "");
     const fullPhone = `+${countryData.dialCode}${phoneValue}`;
+    const normalizedMobile = cleanDigits.length >= 10 ? cleanDigits.slice(-10) : cleanDigits;
+
     if (!phoneValue.trim()) next.mobile = "Please enter your mobile number";
-    else if (phoneValue.replace(/\D/g, "").length < 7) next.mobile = "Enter a valid phone number";
+    else if (cleanDigits.length < 7) next.mobile = "Enter a valid phone number";
     if (!password.trim()) next.password = "Please enter your password";
     setErrors(next);
+
     if (!next.mobile && !next.password) {
-      loginHere(fullPhone, password);
-      router.push("/digilocker");
+      setLoading(true);
+      try {
+        let res;
+        try {
+          res = await customerLoginApi({
+            mobileNumber: normalizedMobile,
+            password,
+          });
+        } catch {
+          // Fallback with full digits if not found with 10 digits
+          res = await customerLoginApi({
+            mobileNumber: cleanDigits,
+            password,
+          });
+        }
+
+        if (typeof window !== "undefined" && res.data?.accessToken) {
+          window.localStorage.setItem("customer_access_token", res.data.accessToken);
+          window.localStorage.setItem("customer_user", JSON.stringify(res.data.user));
+        }
+
+        loginHere(fullPhone, password);
+        router.push("/digilocker");
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : "Invalid mobile number or password.";
+        setApiError(message);
+      } finally {
+        setLoading(false);
+      }
     }
   }
 
@@ -102,8 +138,29 @@ export function LoginFormHere() {
           </span>
         )}
       </label>
-      <button type="submit" className="customer-continue-button mt-4 md:mt-6">
-        Continue
+
+      {apiError && (
+        <div
+          role="alert"
+          className="rounded-xl border border-red-200 bg-red-50 p-3 text-center text-xs font-medium text-red-700 md:text-sm"
+        >
+          {apiError}
+        </div>
+      )}
+
+      <button
+        type="submit"
+        disabled={loading}
+        className="customer-continue-button mt-4 flex items-center justify-center gap-2 disabled:opacity-60 md:mt-6"
+      >
+        {loading ? (
+          <>
+            <span className="inline-block size-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+            <span>Signing in...</span>
+          </>
+        ) : (
+          <span>Continue</span>
+        )}
       </button>
       <p className="font-geist text-common-gray text-center text-sm md:text-base">
         Don&apos;t have an account?{" "}

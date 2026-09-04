@@ -3,15 +3,19 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
+import { verifyOtpApi } from "@/features/customer-flow/services/auth-api";
 import {
   MobileHomeIndicator,
   // MobileStatusBar,
 } from "@/features/customer-flow/components/navigation/mobile-system-chrome";
+
 export function OtpForm() {
   const router = useRouter();
-  const { verifyOtp } = useCustomerFlow();
+  const { state, verifyOtp } = useCustomerFlow();
   const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
   if (error) {
     return (
       <div className="fixed inset-0 z-50 flex min-h-dvh flex-col bg-[#faf9f6] lg:static lg:mt-8 lg:block lg:min-h-0 lg:bg-transparent">
@@ -27,8 +31,7 @@ export function OtpForm() {
             role="alert"
             className="text-common-gray lg:text-common-error mt-4 max-w-[280px] text-sm leading-6 md:max-w-sm md:text-base lg:max-w-none"
           >
-            The verification code is incorrect. Please check the code shared by the administrator
-            and try again.
+            {error}
           </p>
         </div>
         <div className="px-6 pb-10 lg:px-0 lg:pb-0">
@@ -47,14 +50,38 @@ export function OtpForm() {
       </div>
     );
   }
-  function submit(event: React.FormEvent) {
+
+  async function submit(event: React.FormEvent) {
     event.preventDefault();
-    if (otp !== "1234") {
-      setError("The verification code is incorrect. Please try again.");
+    if (otp.length < 4) {
+      setError("Please enter the complete 4-digit verification code.");
       return;
     }
-    verifyOtp();
-    router.push("/digilocker");
+
+    setLoading(true);
+    try {
+      const res = await verifyOtpApi({
+        username: state.session?.name || "",
+        mobileNumber: state.session?.mobile || "",
+        otp,
+      });
+
+      if (typeof window !== "undefined" && res.data?.accessToken) {
+        window.localStorage.setItem("customer_access_token", res.data.accessToken);
+        window.localStorage.setItem("customer_user", JSON.stringify(res.data.user));
+      }
+
+      verifyOtp();
+      router.push("/digilocker");
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error
+          ? err.message
+          : "The verification code is incorrect. Please check the code shared by the administrator and try again.";
+      setError(message);
+    } finally {
+      setLoading(false);
+    }
   }
   return (
     <form onSubmit={submit} className="mt-10 md:mt-12">
@@ -82,9 +109,19 @@ export function OtpForm() {
           </span>
         ))}
       </div>
-      <p className="sr-only">Prototype code: 1234</p>
-      <button type="submit" className="customer-continue-button mt-10 md:mt-12">
-        Verify &amp; Proceed
+      <button
+        type="submit"
+        disabled={loading || otp.length < 4}
+        className="customer-continue-button mt-10 flex items-center justify-center gap-2 disabled:opacity-60 md:mt-12"
+      >
+        {loading ? (
+          <>
+            <span className="inline-block size-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+            <span>Verifying...</span>
+          </>
+        ) : (
+          <span>Verify &amp; Proceed</span>
+        )}
       </button>
     </form>
   );
