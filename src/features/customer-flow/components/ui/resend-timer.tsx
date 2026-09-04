@@ -36,12 +36,14 @@ export function ResendTimer({ initialSeconds = 60, onResend }: ResendTimerProps)
         <button
           type="button"
           onClick={handleResend}
-          className="text-common-black font-semibold underline"
+          className="font-geist rounded-xl bg-[#FAF3EB] p-1.5 text-[12px] font-bold text-[#C9A07E] underline"
         >
           Resend
         </button>
       ) : (
-        <span className="text-common-black font-semibold">Resend in {display}</span>
+        <span className="font-geist rounded-xl bg-[#FAF3EB] p-1.5 text-[12px] font-bold text-[#C9A07E]">
+          Resend in {display}
+        </span>
       )}
     </p>
   );

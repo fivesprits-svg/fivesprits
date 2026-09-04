@@ -7,10 +7,11 @@ export function DesktopAgeVerificationSection() {
     <DesktopAuthPageLayout>
       <div className="customer-desktop-card flex flex-col items-center text-center">
         <IconCircle
-          iconSrc="/customer-flow/icons/lock.svg"
+          iconSrc="/customer-flow/icons/age-verification.svg"
           iconAlt="Age verification"
-          iconWidth={24}
-          iconHeight={24}
+          iconWidth={78}
+          iconHeight={78}
+          className="border-none"
         />
         <h1 className="customer-section-title mt-8">Age Verification</h1>
         <p className="customer-section-description mt-3 max-w-[360px]">

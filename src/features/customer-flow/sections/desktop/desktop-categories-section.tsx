@@ -3,7 +3,9 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { categories } from "@/features/customer-flow/data/catalogue";
 import { DesktopHeader } from "@/features/customer-flow/components/layout/desktop-header";
+import { CatalogueCard } from "@/features/customer-flow/components/catalogue-card";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
+
 export function DesktopCategoriesSection() {
   const router = useRouter();
   const { selectCategory } = useCustomerFlow();
@@ -40,30 +42,18 @@ export function DesktopCategoriesSection() {
           </div>
           <p className="text-sm text-[#6b7280]">{categories.length} curated collections</p>
         </div>
-        <div className="mt-7 grid grid-cols-4 gap-5">
+        <div className="mt-7 grid grid-cols-4 justify-items-center gap-5">
           {categories.map((category) => (
-            <button
+            <CatalogueCard
               key={category.id}
+              variant="category"
+              image={category.image}
+              title={category.name}
               onClick={() => {
                 selectCategory(category.id);
-                router.push("/brands");
+                router.push(`/brands?categoryId=${category.id}`);
               }}
-              className="group cursor-pointer overflow-hidden rounded-2xl border border-black/10 bg-white text-left"
-            >
-              <span className="relative block aspect-[4/3] overflow-hidden bg-[#eeeae4]">
-                <Image
-                  src={category.image}
-                  alt=""
-                  fill
-                  sizes="25vw"
-                  className="object-cover transition duration-500 group-hover:scale-105"
-                />
-              </span>
-              <span className="flex items-center justify-between p-5 text-base font-bold">
-                {category.name}
-                <span>→</span>
-              </span>
-            </button>
+            />
           ))}
         </div>
       </main>
