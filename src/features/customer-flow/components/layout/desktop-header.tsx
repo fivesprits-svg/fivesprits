@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 
@@ -46,15 +47,32 @@ export function DesktopHeader() {
             Cart ({cartCount})
           </Link>
         </nav>
-        <button
-          onClick={() => {
-            logout();
-            router.push("/");
-          }}
-          className="cursor-pointer rounded-full border border-black/15 px-5 py-2.5 text-sm font-semibold"
-        >
-          Logout
-        </button>
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => {
+              logout();
+              router.push("/");
+            }}
+            className="cursor-pointer rounded-full border border-[#C9A07E] bg-[#f7f4ee] px-5 py-2.5 text-sm font-semibold"
+          >
+            Logout
+          </button>
+          <Link
+            href="/profile"
+            className={
+              "flex size-10 items-center justify-center rounded-full border border-[#C9A07E] bg-[#f7f4ee] transition-colors"
+            }
+            aria-label="Profile"
+          >
+            <Image
+              src="/customer-flow/icons/profile.svg"
+              alt=""
+              width={20}
+              height={20}
+              className={"brightness-0"}
+            />
+          </Link>
+        </div>
       </div>
     </header>
   );
