@@ -39,7 +39,7 @@ export function MobileProfileSection() {
   }
 
   return (
-    <div className="min-h-dvh bg-white pb-28 lg:hidden">
+    <div className="min-h-dvh bg-white pb-28 md:hidden">
       <MobileHeader title="My Profile" backHref="/categories" />
       <main className="mx-auto w-full max-w-[390px] px-6 pt-6">
         <div className="text-center">

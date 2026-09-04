@@ -86,7 +86,7 @@ export function CatalogueCard({
     <article className="group flex h-full w-full flex-col justify-between rounded-xl border border-gray-200/80 bg-white p-2.5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-[#a67854]/40 hover:shadow-md sm:rounded-2xl sm:p-3.5">
       <div>
         {/* Product Image Box */}
-        <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg bg-[#f8f6f2] p-1.5 transition-colors group-hover:bg-[#f3eee7] sm:rounded-xl sm:p-2">
+        <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg bg-gray-50 p-1.5 transition-colors group-hover:bg-gray-100 sm:rounded-xl sm:p-2">
           {badge && (
             <span className="font-outfit absolute top-1.5 right-1.5 z-10 rounded-md bg-[#dc2626] px-1.5 py-0.5 text-[9px] font-bold tracking-wider text-white uppercase shadow-sm sm:top-2 sm:right-2 sm:text-[10px]">
               {badge}

@@ -33,7 +33,7 @@ export function DesktopHeader() {
   const userMobile = formatDisplayMobile(state.session?.mobile);
 
   return (
-    <header className="hidden border-b border-black/10 bg-white lg:block">
+    <header className="hidden border-b border-black/10 bg-white md:block">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
         <Link href="/categories" className="flex items-baseline gap-2">
           <span className="text-xl font-black tracking-tight text-gray-900">FIVE</span>
@@ -72,11 +72,11 @@ export function DesktopHeader() {
           <button
             type="button"
             onClick={() => setDropdownOpen((prev) => !prev)}
-            className="flex items-center gap-2 rounded-full border border-gray-200 bg-[#fbf9f6] py-1.5 pr-3 pl-1.5 transition-colors hover:border-[#a67854]/50 hover:bg-[#f7f4ee]"
+            className="flex items-center gap-2 rounded-full border border-gray-200 bg-gray-50 py-1.5 pr-3 pl-1.5 transition-colors hover:border-gray-400 hover:bg-gray-100"
             aria-expanded={dropdownOpen}
             aria-haspopup="true"
           >
-            <div className="grid size-7 place-items-center rounded-full bg-[#ece7e1] text-xs font-bold text-gray-800">
+            <div className="grid size-7 place-items-center rounded-full bg-gray-200 text-xs font-bold text-gray-800">
               {userName.slice(0, 1).toUpperCase()}
             </div>
             <span className="font-geist max-w-[120px] truncate text-xs font-semibold text-gray-800">

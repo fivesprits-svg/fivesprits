@@ -17,7 +17,7 @@ export function MobileCartSection() {
     useCustomerFlow();
   const rows = buildCartRows(state.cart, products, brands, comboOffers, giftOffer);
   return (
-    <div className="min-h-dvh bg-white pb-52 lg:hidden">
+    <div className="min-h-dvh bg-white pb-52 md:hidden">
       <div className="mx-auto max-w-[390px]">{/* <MobileStatusBar /> */}</div>
       <header className="mx-auto w-full max-w-[390px] px-6 pt-4 pb-4">
         <h1 className="text-[32px] leading-none font-black uppercase">Requirement</h1>

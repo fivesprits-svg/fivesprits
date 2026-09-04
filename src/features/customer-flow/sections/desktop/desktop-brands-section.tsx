@@ -16,7 +16,7 @@ export function DesktopBrandsSection() {
   const brands = getBrandsByCategory(categoryId);
 
   return (
-    <div className="hidden lg:block">
+    <div className="hidden md:block">
       <PortalShell title="Brands" eyebrow="Catalogue" backHref="/categories">
         <div className="mx-auto max-w-7xl">
           {/* Breadcrumb Navigation */}

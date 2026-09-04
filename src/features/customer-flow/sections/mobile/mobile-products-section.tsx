@@ -20,7 +20,7 @@ export function MobileProductsSection() {
   const requestedIds = new Set(cartLines.map((line) => line.productId).filter((id) => id != null));
 
   return (
-    <div className="min-h-dvh bg-white pb-28 lg:hidden">
+    <div className="min-h-dvh bg-white pb-28 md:hidden">
       <MobileHeader title={brand?.name ?? "Products"} backHref={`/brands?categoryId=whisky`} />
       <main className="mx-auto w-full max-w-[390px] px-6 pt-5">
         <div className="grid grid-cols-2 gap-3">

@@ -19,7 +19,7 @@ export function DesktopCartSection() {
   const rows = buildCartRows(state.cart, products, brands, comboOffers, giftOffer);
 
   return (
-    <div className="hidden lg:block">
+    <div className="hidden md:block">
       <PortalShell title="Your Cart" eyebrow="Requirement list" backHref="/products">
         <div className="mx-auto max-w-7xl">
           {/* Breadcrumb Navigation */}
@@ -65,7 +65,7 @@ export function DesktopCartSection() {
                       className="group flex items-center justify-between gap-5 rounded-2xl border border-gray-200/80 bg-white p-4 shadow-sm transition hover:border-[#a67854]/40 hover:shadow-md"
                     >
                       <div className="flex items-center gap-4">
-                        <div className="relative size-20 shrink-0 overflow-hidden rounded-xl bg-[#f8f6f2] p-2">
+                        <div className="relative size-20 shrink-0 overflow-hidden rounded-xl bg-gray-50 p-2">
                           <Image
                             src={image}
                             alt={name}

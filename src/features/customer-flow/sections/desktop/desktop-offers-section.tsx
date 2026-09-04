@@ -11,7 +11,7 @@ import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-co
 export function DesktopOffersSection() {
   const { addComboToCart } = useCustomerFlow();
   return (
-    <div className="hidden lg:block">
+    <div className="hidden md:block">
       <PortalShell title="Offers" eyebrow="Limited time">
         <div className="mx-auto max-w-7xl">
           {/* Breadcrumb Navigation */}
@@ -51,7 +51,7 @@ export function DesktopOffersSection() {
                 key={offer.id}
                 className="group flex flex-col justify-between overflow-hidden rounded-2xl border border-gray-200/80 bg-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-[#a67854]/40 hover:shadow-md"
               >
-                <div className="relative h-60 bg-[#f8f6f2] transition-colors group-hover:bg-[#f3eee7]">
+                <div className="relative h-60 bg-gray-50 transition-colors group-hover:bg-gray-100">
                   <Image
                     src={offer.image}
                     alt={offer.title}

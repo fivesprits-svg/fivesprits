@@ -5,7 +5,7 @@ import { giftOffer } from "@/features/customer-flow/data/offers";
 
 export function DesktopGiftOffersSection() {
   return (
-    <div className="hidden lg:block">
+    <div className="hidden md:block">
       <PortalShell title="Offers" eyebrow="Exclusive rewards">
         <div className="flex items-end justify-between border-b border-black/10 pb-8">
           <div>

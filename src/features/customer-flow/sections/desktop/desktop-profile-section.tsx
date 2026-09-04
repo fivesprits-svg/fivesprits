@@ -47,7 +47,7 @@ export function DesktopProfileSection() {
   }
 
   return (
-    <div className="hidden lg:block">
+    <div className="hidden md:block">
       <PortalShell title="My Profile" eyebrow="Account Settings">
         <div className="mx-auto max-w-7xl">
           {/* Header Title & Subtitle */}

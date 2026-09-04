@@ -19,7 +19,7 @@ export function DesktopProductsSection() {
   const cartLines = state.cart;
 
   return (
-    <div className="hidden lg:block">
+    <div className="hidden md:block">
       <PortalShell
         title="Products"
         eyebrow="Collection"

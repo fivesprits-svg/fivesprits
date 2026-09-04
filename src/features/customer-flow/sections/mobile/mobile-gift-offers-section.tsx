@@ -8,7 +8,7 @@ import { giftOffer } from "@/features/customer-flow/data/offers";
 
 export function MobileGiftOffersSection() {
   return (
-    <div className="min-h-dvh bg-white pb-28 lg:hidden">
+    <div className="min-h-dvh bg-white pb-28 md:hidden">
       <MobileHeader title="Offers" />
       <main className="mx-auto w-full max-w-[390px] px-6">
         <OfferTabs active="gift" />

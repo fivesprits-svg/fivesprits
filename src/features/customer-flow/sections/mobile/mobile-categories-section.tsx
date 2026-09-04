@@ -10,7 +10,7 @@ export function MobileCategoriesSection() {
   const router = useRouter();
   const { selectCategory } = useCustomerFlow();
   return (
-    <section className="mx-auto min-h-dvh w-full max-w-[390px] overflow-hidden bg-white pb-28 lg:hidden">
+    <section className="mx-auto min-h-dvh w-full max-w-[390px] overflow-hidden bg-white pb-28 md:hidden">
       <div className="relative h-[310px] px-6 pt-8">
         <div className="relative z-10">
           <p className="text-sm text-[#7e7e86]">Welcome to</p>

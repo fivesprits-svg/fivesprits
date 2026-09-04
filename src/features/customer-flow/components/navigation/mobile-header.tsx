@@ -4,7 +4,7 @@ import Image from "next/image";
 // import { MobileStatusBar } from "@/features/customer-flow/components/navigation/mobile-system-chrome";
 export function MobileHeader({ title, backHref }: { title: string; backHref?: string }) {
   return (
-    <header className="lg:hidden">
+    <header className="md:hidden">
       {/* <MobileStatusBar /> */}
       <div className="relative flex h-14 items-center justify-center px-6 md:px-10">
         {backHref && (
