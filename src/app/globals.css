@@ -7,7 +7,7 @@
   --color-common-label: #7e7e86;
   --color-common-border: #e5e7eb;
   --color-common-bg: #faf9f6;
-  --color-common-error: #dc2626;
+  --color-common-error: #ff3b30;
   --color-common-success: #16a34a;
   --color-brand-primary: #a67854;
   --color-brand-dark: #3a281c;
@@ -221,8 +221,8 @@
 
   .customer-logout-button {
     font-family: var(--font-family-outfit);
-    font-weight: 600;
-    font-size: 16px;
+    font-weight: 700;
+    font-size: 15px;
     color: var(--color-common-error);
     display: flex;
     align-items: center;
@@ -345,6 +345,172 @@
     border-radius: 24px;
     padding: 48px;
     box-shadow: 0 24px 80px rgba(0, 0, 0, 0.08);
+  }
+
+  .profile-field-label {
+    font-family: var(--font-family-outfit);
+    font-weight: 600;
+    font-size: 11px;
+    line-height: 1;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-common-label);
+  }
+
+  .profile-field-value {
+    font-family: var(--font-family-geist);
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 1;
+    color: var(--color-common-black);
+    width: 100%;
+    height: 52px;
+    padding: 0 16px;
+    border-radius: 14px;
+    border: 1px solid var(--color-common-border);
+    display: flex;
+    align-items: center;
+    background: var(--color-common-white);
+  }
+
+  .profile-edit-btn {
+    font-family: var(--font-family-outfit);
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--color-brand-primary);
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .profile-upload-btn {
+    font-family: var(--font-family-geist);
+    font-weight: 500;
+    font-size: 14px;
+    color: var(--color-common-gray);
+    width: 100%;
+    height: 52px;
+    border-radius: 14px;
+    border: 1.5px dashed var(--color-common-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    background: var(--color-common-white);
+    transition: border-color 0.15s;
+  }
+
+  .profile-upload-btn:hover {
+    border-color: var(--color-brand-primary);
+  }
+
+  .profile-doc-chip {
+    font-family: var(--font-family-geist);
+    font-weight: 500;
+    font-size: 14px;
+    color: var(--color-common-black);
+    width: 100%;
+    height: 52px;
+    border-radius: 14px;
+    border: 1.5px dashed var(--color-brand-primary);
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    gap: 8px;
+    background: #fdf8f3;
+  }
+
+  .profile-popup-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: grid;
+    place-items: center;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 24px;
+  }
+
+  .profile-popup-card {
+    width: 100%;
+    max-width: 380px;
+    border-radius: 20px;
+    background: var(--color-common-white);
+    padding: 28px 24px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  }
+
+  .profile-popup-title {
+    font-family: var(--font-family-unbounded);
+    font-weight: 800;
+    font-size: 20px;
+    color: var(--color-common-black);
+  }
+
+  .profile-popup-subtitle {
+    font-family: var(--font-family-outfit);
+    font-weight: 500;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-brand-primary);
+  }
+
+  .profile-popup-input {
+    font-family: var(--font-family-geist);
+    font-weight: 400;
+    font-size: 15px;
+    width: 100%;
+    height: 52px;
+    padding: 0 16px;
+    border-radius: 14px;
+    border: 1px solid var(--color-common-border);
+    outline: none;
+    color: var(--color-common-black);
+    transition: border-color 0.15s;
+  }
+
+  .profile-popup-input:focus {
+    border-color: var(--color-common-black);
+  }
+
+  .profile-popup-save-btn {
+    font-family: var(--font-family-outfit);
+    font-weight: 600;
+    font-size: 15px;
+    height: 44px;
+    padding: 0 28px;
+    border-radius: 130px;
+    background: var(--color-brand-primary);
+    color: var(--color-common-white);
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+
+  .profile-popup-save-btn:hover {
+    opacity: 0.9;
+  }
+
+  .profile-popup-cancel-btn {
+    font-family: var(--font-family-outfit);
+    font-weight: 600;
+    font-size: 15px;
+    height: 44px;
+    padding: 0 28px;
+    border-radius: 130px;
+    background: var(--color-common-white);
+    color: var(--color-common-black);
+    border: 1px solid var(--color-common-border);
+    cursor: pointer;
+    transition: background-color 0.15s;
+  }
+
+  .profile-popup-cancel-btn:hover {
+    background: var(--color-common-bg);
   }
 
   .phone-input-wrapper .react-tel-input {
