@@ -104,12 +104,12 @@
   .customer-continue-button {
     font-family: var(--font-family-outfit);
     font-weight: 600;
-    font-size: 20px;
+    font-size: 18px;
     line-height: 1;
     letter-spacing: 0%;
     color: var(--color-common-white);
     width: 100%;
-    height: 61px;
+    height: 50px;
     border-radius: 130px;
     background-color: var(--color-common-black);
     border: none;
@@ -161,8 +161,8 @@
   }
 
   .customer-icon-circle-lg {
-    width: 140px;
-    height: 140px;
+    width: 120px;
+    height: 120px;
     border-radius: 50%;
     border: 8px solid #e8d5c4;
     display: grid;
@@ -171,8 +171,8 @@
   }
 
   .customer-otp-box {
-    width: 66px;
-    height: 66px;
+    width: 62px;
+    height: 62px;
     border-radius: 16px;
     border: 1.5px solid var(--color-otp-inactive-border);
     display: grid;
@@ -229,7 +229,7 @@
     justify-content: center;
     gap: 8px;
     width: 100%;
-    height: 56px;
+    height: 50px;
     border-radius: 130px;
     border: 1px solid var(--color-common-border);
     background: var(--color-common-white);
@@ -288,14 +288,14 @@
     }
 
     .customer-continue-button {
-      height: 68px;
-      font-size: 22px;
+      height: 50px;
+      font-size: 18px;
       border-radius: 140px;
     }
 
     .customer-otp-box {
-      width: 80px;
-      height: 80px;
+      width: 76px;
+      height: 76px;
       font-size: 28px;
       border-radius: 16px;
     }
@@ -306,13 +306,13 @@
     }
 
     .customer-icon-circle-lg {
-      width: 160px;
-      height: 160px;
+      width: 140px;
+      height: 140px;
       border-width: 9px;
     }
 
     .customer-logout-button {
-      height: 64px;
+      height: 50px;
       font-size: 17px;
     }
 

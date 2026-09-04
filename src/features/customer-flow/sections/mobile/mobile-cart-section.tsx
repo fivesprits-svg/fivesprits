@@ -10,7 +10,7 @@ import { comboOffers, giftOffer } from "@/features/customer-flow/data/offers";
 import { buildCartRows } from "@/features/customer-flow/helpers/cart-view-model";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import { formatMrp } from "@/features/customer-flow/utils/currency";
-import { MobileStatusBar } from "@/features/customer-flow/components/navigation/mobile-system-chrome";
+// import { MobileStatusBar } from "@/features/customer-flow/components/navigation/mobile-system-chrome";
 export function MobileCartSection() {
   const router = useRouter();
   const { state, setCartQuantity, removeFromCart, submitRequirement, dismissConfirmation } =
@@ -18,9 +18,7 @@ export function MobileCartSection() {
   const rows = buildCartRows(state.cart, products, brands, comboOffers, giftOffer);
   return (
     <div className="min-h-dvh bg-white pb-52 lg:hidden">
-      <div className="mx-auto max-w-[390px]">
-        <MobileStatusBar />
-      </div>
+      <div className="mx-auto max-w-[390px]">{/* <MobileStatusBar /> */}</div>
       <header className="mx-auto w-full max-w-[390px] px-6 pt-4 pb-4">
         <h1 className="text-[32px] leading-none font-black uppercase">Requirement</h1>
         <p className="mt-2 text-[13px] text-[#777]">Checklist</p>

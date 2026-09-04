@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import {
   MobileHomeIndicator,
-  MobileStatusBar,
+  // MobileStatusBar,
 } from "@/features/customer-flow/components/navigation/mobile-system-chrome";
 export function OtpForm() {
   const router = useRouter();
@@ -15,7 +15,7 @@ export function OtpForm() {
   if (error) {
     return (
       <div className="fixed inset-0 z-50 flex min-h-dvh flex-col bg-[#faf9f6] lg:static lg:mt-8 lg:block lg:min-h-0 lg:bg-transparent">
-        <MobileStatusBar />
+        {/* <MobileStatusBar /> */}
         <div className="flex flex-1 flex-col items-center justify-center px-10 text-center lg:block lg:px-0 lg:text-left">
           <div className="customer-icon-circle lg:hidden">
             <Image src="/customer-flow/icons/error.svg" alt="" width={24} height={24} />

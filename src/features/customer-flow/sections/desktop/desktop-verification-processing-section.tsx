@@ -8,9 +8,11 @@ import { IconCircle } from "@/features/customer-flow/components/ui/icon-circle";
 
 export function DesktopVerificationProcessingSection() {
   const router = useRouter();
-  const { state, completeVerification } = useCustomerFlow();
+  const { state, hydrated, completeVerification } = useCustomerFlow();
 
   useEffect(() => {
+    if (!hydrated) return;
+
     if (!state.session?.aadhaarNumber) {
       router.replace("/digilocker");
       return;
@@ -28,7 +30,7 @@ export function DesktopVerificationProcessingSection() {
     }, 3000);
 
     return () => clearTimeout(timer);
-  }, [state.session, completeVerification, router]);
+  }, [hydrated, state.session, completeVerification, router]);
 
   return (
     <DesktopAuthPageLayout>

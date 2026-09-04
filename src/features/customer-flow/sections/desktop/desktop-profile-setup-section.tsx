@@ -26,7 +26,7 @@ export function DesktopProfileSetupSection() {
           </>
         ) : (
           <>
-            <div className="mb-6 flex justify-center">
+            <div className="mb-4 flex justify-center">
               <Image
                 src="/customer-flow/icons/logo.svg"
                 alt="Five Spirits"
