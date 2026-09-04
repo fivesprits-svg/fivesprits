@@ -48,7 +48,7 @@ export function DesktopCategoriesSection() {
                 selectCategory(category.id);
                 router.push("/brands");
               }}
-              className="group overflow-hidden rounded-2xl border border-black/10 bg-white text-left"
+              className="group cursor-pointer overflow-hidden rounded-2xl border border-black/10 bg-white text-left"
             >
               <span className="relative block aspect-[4/3] overflow-hidden bg-[#eeeae4]">
                 <Image

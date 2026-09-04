@@ -41,7 +41,7 @@ export function MobileCategoriesSection() {
                 selectCategory(category.id);
                 router.push("/brands");
               }}
-              className="text-center"
+              className="cursor-pointer text-center"
             >
               <span className="relative mx-auto block size-[72px] overflow-hidden rounded-full bg-[#f6f1eb]">
                 <Image

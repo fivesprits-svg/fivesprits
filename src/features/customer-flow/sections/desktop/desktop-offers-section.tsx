@@ -14,7 +14,7 @@ export function DesktopOffersSection() {
       <PortalShell title="Offers" eyebrow="Limited time">
         <div className="flex items-end justify-between border-b border-black/10 pb-8">
           <div>
-            <h1 className="text-5xl font-black tracking-[-0.04em]">Exclusive Offers</h1>
+            <h1 className="text-4xl font-black tracking-[-0.04em]">Exclusive Offers</h1>
             <p className="mt-3 text-[#6f6f70]">Best deals on your favorite premium brands.</p>
           </div>
           <div className="flex rounded-full border border-black/10 bg-white p-1 text-sm font-bold">

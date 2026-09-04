@@ -14,7 +14,7 @@ export function DesktopBrandsSection() {
       <PortalShell title="Brands" eyebrow="Catalogue" backHref="/categories">
         <div className="flex items-end justify-between border-b border-black/10 pb-8">
           <div>
-            <h1 className="text-5xl font-black tracking-[-0.04em]">Explore {category?.name}</h1>
+            <h1 className="text-4xl font-black tracking-[-0.04em]">Explore {category?.name}</h1>
             <p className="mt-3 text-[#6f6f70]">Select a house to view its available collection.</p>
           </div>
           <p className="text-sm font-semibold text-[#8b6545]">
@@ -30,7 +30,7 @@ export function DesktopBrandsSection() {
                 selectBrand(brand.id);
                 router.push("/products");
               }}
-              className="group overflow-hidden rounded-[24px] border border-black/10 bg-white text-left shadow-[0_12px_40px_rgba(25,20,15,0.05)] transition hover:-translate-y-1 hover:shadow-xl"
+              className="group cursor-pointer overflow-hidden rounded-[24px] border border-black/10 bg-white text-left shadow-[0_12px_40px_rgba(25,20,15,0.05)] transition hover:-translate-y-1 hover:shadow-xl"
             >
               <span className="relative block aspect-[4/3] overflow-hidden bg-[#f0ede8]">
                 <Image

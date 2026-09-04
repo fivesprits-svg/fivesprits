@@ -21,7 +21,7 @@ export function MobileProductsSection() {
           return (
             <article
               key={product.id}
-              className="flex min-h-[318px] flex-col rounded-[14px] border border-black/10 bg-white p-3"
+              className="flex min-h-[318px] cursor-pointer flex-col rounded-[14px] border border-black/10 bg-white p-3"
             >
               <div className="relative h-40 rounded-[10px] bg-[#f5f3ef]">
                 <Image

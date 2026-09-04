@@ -16,7 +16,7 @@ export function DesktopProductsSection() {
       <PortalShell title="Products" eyebrow="Collection" backHref="/brands">
         <div className="flex items-end justify-between border-b border-black/10 pb-8">
           <div>
-            <h1 className="text-5xl font-black tracking-[-0.04em]">{brand?.name}</h1>
+            <h1 className="text-4xl font-black tracking-[-0.04em]">{brand?.name}</h1>
             <p className="mt-3 text-[#6f6f70]">
               Choose quantities and add products to your requirement list.
             </p>
@@ -31,7 +31,7 @@ export function DesktopProductsSection() {
             return (
               <article
                 key={product.id}
-                className="flex flex-col overflow-hidden rounded-[24px] border border-black/10 bg-white p-5 shadow-[0_12px_40px_rgba(25,20,15,0.05)]"
+                className="flex cursor-pointer flex-col overflow-hidden rounded-[24px] border border-black/10 bg-white p-5 shadow-[0_12px_40px_rgba(25,20,15,0.05)]"
               >
                 <div className="relative aspect-square rounded-[18px] bg-[#f3f0eb]">
                   <Image
@@ -59,7 +59,7 @@ export function DesktopProductsSection() {
                     onClick={() => addToCart(product.id, quantity)}
                     className="min-h-11 flex-1 rounded-full bg-black px-4 text-sm font-bold text-white"
                   >
-                    Add to Cart
+                    Add
                   </button>
                 </div>
               </article>
