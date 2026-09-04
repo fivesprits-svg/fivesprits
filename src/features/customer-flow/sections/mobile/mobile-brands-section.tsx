@@ -24,7 +24,7 @@ export function MobileBrandsSection() {
                 selectBrand(brand.id);
                 router.push("/products");
               }}
-              className="group text-center focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-black"
+              className="group cursor-pointer text-center focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-black"
             >
               <span className="relative block h-28 overflow-hidden rounded-[14px] bg-[#f4f1ec]">
                 <Image

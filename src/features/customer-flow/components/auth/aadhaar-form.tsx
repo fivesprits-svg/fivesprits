@@ -46,7 +46,7 @@ export function AadhaarForm() {
           </span>
         )}
       </label>
-      <button type="submit" disabled={loading} className="customer-continue-button mt-4 md:mt-6">
+      <button type="submit" disabled={loading} className="customer-continue-button">
         {loading ? "Processing..." : "Proceed"}
       </button>
     </form>

@@ -3,12 +3,12 @@ import Image from "next/image";
 import { LoginFormHere } from "@/features/customer-flow/components/auth/login-here-form";
 import {
   MobileHomeIndicator,
-  MobileStatusBar,
+  // MobileStatusBar,
 } from "@/features/customer-flow/components/navigation/mobile-system-chrome";
 export function MobileLoginHereSection() {
   return (
     <section className="customer-page-container lg:hidden">
-      <MobileStatusBar />
+      {/* <MobileStatusBar /> */}
       <div className="flex h-[108px] items-center gap-3 px-6 pt-4 md:h-[120px] md:justify-center md:px-12 md:pt-6">
         <Image src="/customer-flow/icons/logo.svg" alt="Five Spirits" width={44} height={76} />
       </div>

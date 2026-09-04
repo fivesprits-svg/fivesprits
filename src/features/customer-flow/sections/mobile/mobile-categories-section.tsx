@@ -4,13 +4,13 @@ import { useRouter } from "next/navigation";
 import { categories } from "@/features/customer-flow/data/catalogue";
 import { MobileBottomNav } from "@/features/customer-flow/components/navigation/mobile-bottom-nav";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
-import { MobileStatusBar } from "@/features/customer-flow/components/navigation/mobile-system-chrome";
+// import { MobileStatusBar } from "@/features/customer-flow/components/navigation/mobile-system-chrome";
 export function MobileCategoriesSection() {
   const router = useRouter();
   const { selectCategory } = useCustomerFlow();
   return (
     <section className="mx-auto min-h-dvh w-full max-w-[390px] overflow-hidden bg-white pb-28 lg:hidden">
-      <MobileStatusBar />
+      {/* <MobileStatusBar /> */}
       <div className="relative h-[310px] px-6 pt-8">
         <div className="relative z-10">
           <p className="text-sm text-[#7e7e86]">Welcome to</p>
@@ -41,7 +41,7 @@ export function MobileCategoriesSection() {
                 selectCategory(category.id);
                 router.push("/brands");
               }}
-              className="text-center"
+              className="cursor-pointer text-center"
             >
               <span className="relative mx-auto block size-[72px] overflow-hidden rounded-full bg-[#f6f1eb]">
                 <Image

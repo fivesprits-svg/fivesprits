@@ -6,7 +6,7 @@ import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-co
 import { ResendTimer } from "@/features/customer-flow/components/ui/resend-timer";
 import {
   MobileHomeIndicator,
-  MobileStatusBar,
+  // MobileStatusBar,
 } from "@/features/customer-flow/components/navigation/mobile-system-chrome";
 
 export function DigilockerOtpForm() {
@@ -35,7 +35,7 @@ export function DigilockerOtpForm() {
   if (error) {
     return (
       <div className="fixed inset-0 z-50 flex min-h-dvh flex-col bg-[#faf9f6] lg:static lg:mt-8 lg:block lg:min-h-0 lg:bg-transparent">
-        <MobileStatusBar />
+        {/* <MobileStatusBar /> */}
         <div className="flex flex-1 flex-col items-center justify-center px-10 text-center lg:block lg:px-0 lg:text-left">
           <div className="customer-icon-circle lg:hidden">
             <Image src="/customer-flow/icons/error.svg" alt="" width={24} height={24} />
@@ -68,7 +68,7 @@ export function DigilockerOtpForm() {
   }
 
   return (
-    <form onSubmit={submit} className="mt-10 md:mt-12">
+    <form onSubmit={submit} className="mt-8 md:mt-10">
       <label htmlFor="digilocker-otp" className="sr-only">
         Verification Code
       </label>

@@ -1,13 +1,10 @@
 "use client";
-import {
-  MobileStatusBar,
-  MobileHomeIndicator,
-} from "@/features/customer-flow/components/navigation/mobile-system-chrome";
+import { MobileHomeIndicator } from "@/features/customer-flow/components/navigation/mobile-system-chrome";
 
 export function AuthPageLayout({ children }: { children: React.ReactNode }) {
   return (
     <section className="customer-page-container lg:hidden">
-      <MobileStatusBar />
+      {/* <MobileStatusBar /> */}
       {children}
       <MobileHomeIndicator />
     </section>

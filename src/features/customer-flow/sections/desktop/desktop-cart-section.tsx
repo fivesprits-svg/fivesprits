@@ -20,7 +20,7 @@ export function DesktopCartSection() {
       <PortalShell title="Your Cart" eyebrow="Requirement list" backHref="/products">
         <div className="grid grid-cols-[1fr_360px] gap-10">
           <section>
-            <h1 className="text-5xl font-black tracking-[-0.04em]">Review your selection</h1>
+            <h1 className="text-4xl font-black tracking-[-0.04em]">Review your selection</h1>
             <p className="mt-3 text-[#6f6f70]">
               Update quantities before sending this list to the administrator.
             </p>
