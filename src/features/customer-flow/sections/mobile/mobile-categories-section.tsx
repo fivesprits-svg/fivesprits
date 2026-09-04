@@ -3,14 +3,14 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { categories } from "@/features/customer-flow/data/catalogue";
 import { MobileBottomNav } from "@/features/customer-flow/components/navigation/mobile-bottom-nav";
+import { CatalogueCard } from "@/features/customer-flow/components/catalogue-card";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
-// import { MobileStatusBar } from "@/features/customer-flow/components/navigation/mobile-system-chrome";
+
 export function MobileCategoriesSection() {
   const router = useRouter();
   const { selectCategory } = useCustomerFlow();
   return (
     <section className="mx-auto min-h-dvh w-full max-w-[390px] overflow-hidden bg-white pb-28 lg:hidden">
-      {/* <MobileStatusBar /> */}
       <div className="relative h-[310px] px-6 pt-8">
         <div className="relative z-10">
           <p className="text-sm text-[#7e7e86]">Welcome to</p>
@@ -33,28 +33,18 @@ export function MobileCategoriesSection() {
       </div>
       <div className="px-6">
         <h2 className="text-xl font-bold">Categories</h2>
-        <div className="mt-4 grid grid-cols-4 gap-x-2 gap-y-5">
+        <div className="mt-4 grid grid-cols-4 justify-items-center gap-x-2 gap-y-5">
           {categories.map((category) => (
-            <button
+            <CatalogueCard
               key={category.id}
+              variant="category"
+              image={category.image}
+              title={category.name}
               onClick={() => {
                 selectCategory(category.id);
-                router.push("/brands");
+                router.push(`/brands?categoryId=${category.id}`);
               }}
-              className="cursor-pointer text-center"
-            >
-              <span className="relative mx-auto block size-[72px] overflow-hidden rounded-full bg-[#f6f1eb]">
-                <Image
-                  src={category.image}
-                  alt=""
-                  fill
-                  sizes="50vw"
-                  loading="eager"
-                  className="object-cover"
-                />
-              </span>
-              <span className="mt-2 block text-[11px] font-medium">{category.name}</span>
-            </button>
+            />
           ))}
         </div>
       </div>

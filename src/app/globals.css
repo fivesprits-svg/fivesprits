@@ -602,4 +602,290 @@
       font-size: 15px;
     }
   }
+
+  .catalogue-card-category {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+  }
+
+  .catalogue-card-category-image {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #f6f1eb;
+    flex-shrink: 0;
+    transition: transform 0.2s;
+  }
+
+  .catalogue-card-category:hover .catalogue-card-category-image {
+    transform: scale(1.05);
+  }
+
+  .catalogue-card-category-title {
+    font-family: var(--font-family-geist);
+    font-weight: 500;
+    font-size: 11px;
+    color: var(--color-common-black);
+  }
+
+  @media (min-width: 768px) {
+    .catalogue-card-category-image {
+      width: 100px;
+      height: 100px;
+    }
+    .catalogue-card-category-title {
+      font-size: 13px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .catalogue-card-category-image {
+      width: 110px;
+      height: 110px;
+    }
+    .catalogue-card-category-title {
+      font-size: 14px;
+    }
+  }
+
+  .catalogue-card-brand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    text-align: center;
+  }
+
+  .catalogue-card-brand-image {
+    position: relative;
+    width: 140px;
+    height: 100px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #f4f1ec;
+    flex-shrink: 0;
+    transition: transform 0.2s;
+  }
+
+  .catalogue-card-brand:hover .catalogue-card-brand-image {
+    transform: scale(1.03);
+  }
+
+  .catalogue-card-brand-title {
+    font-family: var(--font-family-geist);
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--color-common-black);
+  }
+
+  @media (min-width: 768px) {
+    .catalogue-card-brand-image {
+      width: 160px;
+      height: 115px;
+    }
+    .catalogue-card-brand-title {
+      font-size: 14px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .catalogue-card-brand-image {
+      width: 180px;
+      height: 130px;
+    }
+    .catalogue-card-brand-title {
+      font-size: 15px;
+    }
+  }
+
+  .catalogue-card-product {
+    display: flex;
+    flex-direction: column;
+    border-radius: 14px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    background: var(--color-common-white);
+    overflow: hidden;
+    padding: 12px;
+  }
+
+  .catalogue-card-product-image {
+    position: relative;
+    width: 100%;
+    height: 150px;
+    border-radius: 10px;
+    background: #f5f3ef;
+    overflow: hidden;
+  }
+
+  @media (min-width: 768px) {
+    .catalogue-card-product-image {
+      height: 180px;
+    }
+    .catalogue-card-product-name {
+      font-size: 15px;
+      line-height: 20px;
+    }
+    .catalogue-card-product-pack {
+      font-size: 13px;
+    }
+    .catalogue-card-product-price {
+      font-size: 16px;
+    }
+  }
+
+  .catalogue-card-product-badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 1;
+    background: #dc2626;
+    color: white;
+    font-family: var(--font-family-outfit);
+    font-weight: 600;
+    font-size: 10px;
+    padding: 4px 8px;
+    border-radius: 6px;
+  }
+
+  .catalogue-card-product-info {
+    flex: 1;
+    padding-top: 12px;
+  }
+
+  .catalogue-card-product-name {
+    font-family: var(--font-family-geist);
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 18px;
+    color: var(--color-common-black);
+    min-height: 36px;
+  }
+
+  .catalogue-card-product-pack {
+    font-family: var(--font-family-geist);
+    font-weight: 400;
+    font-size: 12px;
+    color: #777;
+    margin-top: 4px;
+  }
+
+  .catalogue-card-product-price-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 4px;
+  }
+
+  .catalogue-card-product-original-price {
+    font-family: var(--font-family-geist);
+    font-weight: 400;
+    font-size: 13px;
+    color: #999;
+    text-decoration: line-through;
+  }
+
+  .catalogue-card-product-price {
+    font-family: var(--font-family-geist);
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--color-common-black);
+  }
+
+  .catalogue-card-product-actions {
+    margin-top: auto;
+    padding-top: 12px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .catalogue-card-product-action-btn {
+    width: 100%;
+    height: 36px;
+    border-radius: 10px;
+    border: none;
+    font-family: var(--font-family-outfit);
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+
+  .catalogue-card-product-action-btn:hover {
+    opacity: 0.9;
+  }
+
+  .catalogue-card-product-action-add {
+    background: var(--color-common-black);
+    color: var(--color-common-white);
+  }
+
+  .catalogue-card-product-action-request {
+    background: var(--color-brand-primary);
+    color: var(--color-common-white);
+  }
+
+  .catalogue-card-product-action-requested {
+    background: #16a34a;
+    color: var(--color-common-white);
+  }
+
+  .catalogue-card-product-quantity {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .catalogue-card-product-quantity-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: 1px solid var(--color-common-border);
+    background: var(--color-common-white);
+    font-size: 16px;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    transition: background-color 0.15s;
+  }
+
+  .catalogue-card-product-quantity-btn:hover {
+    background: var(--color-common-bg);
+  }
+
+  .catalogue-card-product-quantity-value {
+    font-family: var(--font-family-geist);
+    font-weight: 600;
+    font-size: 14px;
+    min-width: 28px;
+    text-align: center;
+  }
+
+  .catalogue-card-product-remove-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: 1px solid var(--color-common-border);
+    background: var(--color-common-white);
+    font-size: 14px;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    margin-left: auto;
+    transition: background-color 0.15s;
+  }
+
+  .catalogue-card-product-remove-btn:hover {
+    background: #fef2f2;
+  }
 }
