@@ -110,7 +110,7 @@ export function LoginFormHere() {
         <button
           type="button"
           onClick={() => router.push("/")}
-          className="font-medium text-black underline underline-offset-2"
+          className="text-common-black font-semibold underline"
         >
           {" "}
           Register{" "}
