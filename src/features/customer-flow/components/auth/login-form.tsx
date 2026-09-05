@@ -81,7 +81,7 @@ export function LoginForm() {
         <button
           type="button"
           onClick={() => router.push("/login-here")}
-          className="text-common-black font-semibold underline"
+          className="text-common-black cursor-pointer font-semibold underline"
         >
           {" "}
           Login here{" "}
