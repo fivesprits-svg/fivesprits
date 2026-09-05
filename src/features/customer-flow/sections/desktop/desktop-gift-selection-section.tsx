@@ -6,6 +6,7 @@ import { useMemo, useState } from "react";
 import { PortalShell } from "@/features/customer-flow/components/portal-shell";
 import { Breadcrumb } from "@/features/customer-flow/components/navigation/breadcrumb";
 import { QuantityStepper } from "@/features/customer-flow/components/quantity-stepper";
+import { MaxLimitDialog } from "@/features/customer-flow/components/offers/max-limit-dialog";
 import { giftOffer, giftProducts } from "@/features/customer-flow/data/offers";
 import { formatMrp } from "@/features/customer-flow/utils/currency";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
@@ -16,6 +17,7 @@ import {
 
 export function DesktopGiftSelectionSection() {
   const { state, addGiftToCart } = useCustomerFlow();
+  const [showMaxLimitDialog, setShowMaxLimitDialog] = useState(false);
   const savedSelection = state.cart.find(
     (line) => line.productId === giftOffer.id,
   )?.selectedProductIds;
@@ -26,6 +28,16 @@ export function DesktopGiftSelectionSection() {
     () => Object.values(quantities).reduce((sum, value) => sum + value, 0),
     [quantities],
   );
+
+  const handleUpdateQuantity = (productId: string, newQuantity: number) => {
+    const currentQuantity = quantities[productId] ?? 0;
+    const delta = newQuantity - currentQuantity;
+    if (delta > 0 && selected + delta > 6) {
+      setShowMaxLimitDialog(true);
+      return;
+    }
+    setQuantities((current) => ({ ...current, [productId]: newQuantity }));
+  };
 
   return (
     <div className="hidden md:block">
@@ -101,9 +113,7 @@ export function DesktopGiftSelectionSection() {
                         <QuantityStepper
                           compact
                           value={quantity}
-                          onChange={(value) =>
-                            setQuantities((current) => ({ ...current, [product.id]: value }))
-                          }
+                          onChange={(value) => handleUpdateQuantity(product.id, value)}
                           onRemove={() =>
                             setQuantities((current) => ({ ...current, [product.id]: 0 }))
                           }
@@ -111,9 +121,7 @@ export function DesktopGiftSelectionSection() {
                       ) : (
                         <button
                           type="button"
-                          onClick={() =>
-                            setQuantities((current) => ({ ...current, [product.id]: 1 }))
-                          }
+                          onClick={() => handleUpdateQuantity(product.id, 1)}
                           className="font-outfit flex h-8 items-center justify-center rounded-full bg-black px-5 text-xs font-bold text-white transition hover:bg-gray-800 active:scale-[0.99] sm:h-9"
                         >
                           Add
@@ -159,6 +167,14 @@ export function DesktopGiftSelectionSection() {
           </div>
         </div>
       </PortalShell>
+
+      {/* Max 6 Items Validation Popup Dialog */}
+      <MaxLimitDialog
+        open={showMaxLimitDialog}
+        onClose={() => setShowMaxLimitDialog(false)}
+        maxLimit={6}
+        giftName={giftOffer.gift}
+      />
     </div>
   );
 }

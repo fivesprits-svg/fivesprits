@@ -6,6 +6,7 @@ import { useMemo, useState } from "react";
 import { MobileBottomNav } from "@/features/customer-flow/components/navigation/mobile-bottom-nav";
 import { MobileHeader } from "@/features/customer-flow/components/navigation/mobile-header";
 import { QuantityStepper } from "@/features/customer-flow/components/quantity-stepper";
+import { MaxLimitDialog } from "@/features/customer-flow/components/offers/max-limit-dialog";
 import { giftOffer, giftProducts } from "@/features/customer-flow/data/offers";
 import { formatMrp } from "@/features/customer-flow/utils/currency";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
@@ -16,6 +17,7 @@ import {
 
 export function MobileGiftSelectionSection() {
   const { state, addGiftToCart } = useCustomerFlow();
+  const [showMaxLimitDialog, setShowMaxLimitDialog] = useState(false);
   const savedSelection = state.cart.find(
     (line) => line.productId === giftOffer.id,
   )?.selectedProductIds;
@@ -26,6 +28,16 @@ export function MobileGiftSelectionSection() {
     () => Object.values(quantities).reduce((total, quantity) => total + quantity, 0),
     [quantities],
   );
+
+  const handleUpdateQuantity = (productId: string, newQuantity: number) => {
+    const currentQuantity = quantities[productId] ?? 0;
+    const delta = newQuantity - currentQuantity;
+    if (delta > 0 && selected + delta > 6) {
+      setShowMaxLimitDialog(true);
+      return;
+    }
+    setQuantities((current) => ({ ...current, [productId]: newQuantity }));
+  };
 
   return (
     <div className="min-h-dvh bg-white pb-48 md:hidden">
@@ -78,9 +90,7 @@ export function MobileGiftSelectionSection() {
                       <QuantityStepper
                         compact
                         value={quantity}
-                        onChange={(value) =>
-                          setQuantities((current) => ({ ...current, [product.id]: value }))
-                        }
+                        onChange={(value) => handleUpdateQuantity(product.id, value)}
                         onRemove={() =>
                           setQuantities((current) => ({ ...current, [product.id]: 0 }))
                         }
@@ -88,9 +98,7 @@ export function MobileGiftSelectionSection() {
                     ) : (
                       <button
                         type="button"
-                        onClick={() =>
-                          setQuantities((current) => ({ ...current, [product.id]: 1 }))
-                        }
+                        onClick={() => handleUpdateQuantity(product.id, 1)}
                         className="font-outfit flex h-8 w-full items-center justify-center rounded-full bg-black text-xs font-bold text-white transition hover:bg-gray-800"
                       >
                         Add
@@ -130,6 +138,14 @@ export function MobileGiftSelectionSection() {
         </Link>
       </div>
       <MobileBottomNav active="Offer" />
+
+      {/* Max 6 Items Validation Popup Dialog */}
+      <MaxLimitDialog
+        open={showMaxLimitDialog}
+        onClose={() => setShowMaxLimitDialog(false)}
+        maxLimit={6}
+        giftName={giftOffer.gift}
+      />
     </div>
   );
 }

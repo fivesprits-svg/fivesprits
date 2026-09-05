@@ -1,4 +1,4 @@
-export type CartItemType = "product" | "combo" | "gift";
+export type CartItemType = "product" | "combo" | "gift" | "request";
 export type CartLine = {
   productId: string;
   quantity: number;

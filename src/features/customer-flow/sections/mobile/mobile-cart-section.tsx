@@ -7,14 +7,23 @@ import { ConfirmationDialog } from "@/features/customer-flow/components/confirma
 import { MobileBottomNav } from "@/features/customer-flow/components/navigation/mobile-bottom-nav";
 import { brands, products } from "@/features/customer-flow/data/catalogue";
 import { comboOffers, giftOffer } from "@/features/customer-flow/data/offers";
+import { sampleRequirementHistory } from "@/features/customer-flow/data/requirements-history";
 import { buildStructuredCart } from "@/features/customer-flow/helpers/cart-view-model";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import { formatMrp } from "@/features/customer-flow/utils/currency";
 
 export function MobileCartSection() {
   const router = useRouter();
-  const { state, setCartQuantity, removeFromCart, submitRequirement, dismissConfirmation } =
-    useCustomerFlow();
+  const {
+    state,
+    addToCart,
+    setCartQuantity,
+    removeFromCart,
+    submitRequirement,
+    dismissConfirmation,
+  } = useCustomerFlow();
+
+  const isRegularUser = Boolean(state.session?.cameFromLoginHere || state.session?.mobile);
 
   const {
     regularItems,
@@ -24,6 +33,11 @@ export function MobileCartSection() {
     totalOriginalMrp,
     totalSalePrice,
     availableItemsCount,
+    availableOriginalMrp,
+    availableSalePrice,
+    requestedItemsCount,
+    requestedOriginalMrp,
+    requestedSalePrice,
   } = buildStructuredCart(state.cart, products, brands, comboOffers, giftOffer);
 
   return (
@@ -40,20 +54,121 @@ export function MobileCartSection() {
 
       <main className="mx-auto w-full max-w-[390px] px-6 pt-3">
         {totalItemsCount === 0 ? (
-          <div className="pt-16 text-center">
-            <div className="mx-auto grid size-20 place-items-center rounded-full bg-[#f4f1ec]">
-              <Image src="/customer-flow/icons/empty.svg" alt="" width={40} height={40} />
+          <div className="space-y-8">
+            <div className="rounded-3xl border border-gray-100 bg-[#FAF9F7] p-8 text-center shadow-2xs">
+              <div className="mx-auto grid size-16 place-items-center rounded-full bg-white shadow-xs">
+                <Image src="/customer-flow/icons/empty.svg" alt="" width={32} height={32} />
+              </div>
+              <h2 className="font-unbounded mt-4 text-base font-bold text-gray-950">
+                Your requirement list is empty
+              </h2>
+              <p className="font-geist mx-auto mt-1.5 max-w-[240px] text-xs leading-relaxed text-gray-500">
+                Browse the catalogue and add items or curated offers to your checklist.
+              </p>
+              <Link
+                href="/categories"
+                className="font-outfit mt-5 inline-flex h-11 items-center rounded-full bg-black px-6 text-xs font-bold tracking-wider text-white uppercase"
+              >
+                Browse Catalogue
+              </Link>
             </div>
-            <h2 className="font-geist mt-6 text-xl font-bold text-gray-950">Your cart is empty</h2>
-            <p className="font-geist mx-auto mt-2 max-w-[260px] text-xs leading-relaxed text-gray-500">
-              Browse the catalogue and add products or curated offers to your requirement list.
-            </p>
-            <Link
-              href="/categories"
-              className="font-outfit mt-6 inline-flex h-12 items-center rounded-full bg-black px-7 text-xs font-bold tracking-wider text-white uppercase"
-            >
-              Browse Catalogue
-            </Link>
+
+            {/* Requirement History (shown for regular / logged-in users) */}
+            {isRegularUser && (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="font-unbounded text-sm font-bold text-gray-950">
+                      Requirement History
+                    </h2>
+                    <p className="font-geist text-[11px] text-gray-400">Past submitted inquiries</p>
+                  </div>
+                </div>
+
+                <div className="space-y-3.5">
+                  {sampleRequirementHistory.map((history) => (
+                    <article
+                      key={history.id}
+                      className="rounded-[24px] border border-gray-200/80 bg-[#FAF9F7] p-4 shadow-xs"
+                    >
+                      <div className="flex items-center justify-between border-b border-gray-200/60 pb-2.5">
+                        <div className="flex items-center gap-2">
+                          <span className="font-geist text-xs font-extrabold text-gray-950">
+                            #{history.requirementNo}
+                          </span>
+                          <span className="text-gray-300">•</span>
+                          <span className="font-geist text-[11px] text-gray-500">
+                            {history.date}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Items list */}
+                      <div className="mt-3 space-y-2">
+                        {history.items.map((item, idx) => (
+                          <div
+                            key={idx}
+                            className="flex items-center justify-between rounded-xl bg-white p-2 text-xs shadow-2xs"
+                          >
+                            <div className="flex min-w-0 items-center gap-2">
+                              <div className="relative size-8 shrink-0 overflow-hidden rounded-lg bg-[#FAF6F0]">
+                                <Image
+                                  src={item.image}
+                                  alt={item.name}
+                                  fill
+                                  sizes="32px"
+                                  className="object-contain p-0.5"
+                                />
+                              </div>
+                              <div className="min-w-0">
+                                <p className="font-geist truncate font-bold text-gray-950">
+                                  {item.name}
+                                </p>
+                                <p className="text-[10px] text-gray-400">{item.pack}</p>
+                              </div>
+                            </div>
+                            <div className="text-right">
+                              <span className="font-geist text-[11px] font-bold text-gray-700">
+                                x{item.quantity}
+                              </span>
+                              <p className="font-geist text-[11px] font-bold text-[#a67854]">
+                                {formatMrp(item.price)}
+                              </p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Summary & Repeat */}
+                      <div className="mt-3 flex items-center justify-between border-t border-gray-200/60 pt-2.5">
+                        <div>
+                          <p className="font-geist text-[10px] text-gray-500">
+                            {history.totalItems} Items Total
+                          </p>
+                          <p className="font-geist text-sm font-black text-gray-950">
+                            {formatMrp(history.totalSalePrice)}
+                          </p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            history.items.forEach((item) => {
+                              const found = products.find((p) => p.name === item.name);
+                              if (found) {
+                                addToCart(found.id, item.quantity);
+                              }
+                            });
+                          }}
+                          className="font-outfit rounded-full bg-black px-4 py-1.5 text-[11px] font-bold text-white transition hover:bg-gray-800"
+                        >
+                          Repeat Inquiry
+                        </button>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         ) : (
           <div className="space-y-6">
@@ -374,31 +489,37 @@ export function MobileCartSection() {
             {/* 4. SUMMARY BOX */}
             <div className="rounded-[26px] border border-[#E8E8E8] bg-[#F8F8F8] p-5 shadow-xs">
               <div className="space-y-2.5">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-baseline gap-2">
-                    <span className="font-geist text-sm font-semibold text-[#8C827A] line-through">
-                      {formatMrp(totalOriginalMrp)}
-                    </span>
-                    <span className="font-geist text-sm font-bold text-[#a67854]">
-                      {formatMrp(totalSalePrice)}
+                {availableItemsCount > 0 && (
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-baseline gap-2">
+                      <span className="font-geist text-sm font-semibold text-[#8C827A] line-through">
+                        {formatMrp(availableOriginalMrp)}
+                      </span>
+                      <span className="font-geist text-sm font-bold text-[#a67854]">
+                        {formatMrp(availableSalePrice)}
+                      </span>
+                    </div>
+                    <span className="font-geist text-sm font-semibold text-[#8C827A]">
+                      {availableItemsCount} Available {availableItemsCount === 1 ? "item" : "items"}
                     </span>
                   </div>
-                  <span className="font-geist text-sm font-semibold text-[#8C827A]">
-                    {availableItemsCount} Available items
-                  </span>
-                </div>
+                )}
 
-                <div className="flex items-center justify-between">
-                  <div className="flex items-baseline gap-2">
-                    <span className="font-geist text-sm font-semibold text-[#8C827A] line-through">
-                      ₹645
+                {requestedItemsCount > 0 && (
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-baseline gap-2">
+                      <span className="font-geist text-sm font-semibold text-[#8C827A] line-through">
+                        {formatMrp(requestedOriginalMrp)}
+                      </span>
+                      <span className="font-geist text-sm font-bold text-[#a67854]">
+                        {formatMrp(requestedSalePrice)}
+                      </span>
+                    </div>
+                    <span className="font-geist text-sm font-bold text-[#a67854]">
+                      {requestedItemsCount} Requested {requestedItemsCount === 1 ? "item" : "items"}
                     </span>
-                    <span className="font-geist text-sm font-bold text-[#a67854]">₹645</span>
                   </div>
-                  <span className="font-geist text-sm font-bold text-[#a67854]">
-                    1 Requested item
-                  </span>
-                </div>
+                )}
               </div>
 
               <div className="my-3.5 h-px bg-[#E8E3DC]" />
@@ -406,15 +527,116 @@ export function MobileCartSection() {
               <div className="flex items-center justify-between">
                 <div className="flex items-baseline gap-3">
                   <span className="font-geist text-lg font-bold text-[#8C827A] line-through">
-                    {formatMrp(totalOriginalMrp + 645)}
+                    {formatMrp(totalOriginalMrp)}
                   </span>
                   <span className="font-geist text-2xl font-black tracking-tight text-gray-950">
-                    {formatMrp(totalSalePrice + 645)}
+                    {formatMrp(totalSalePrice)}
                   </span>
                 </div>
                 <span className="font-geist text-xl font-black text-gray-950">Total</span>
               </div>
             </div>
+
+            {/* Requirement History (Shown below active checklist for regular users) */}
+            {isRegularUser && (
+              <div className="mt-8 space-y-4 border-t border-gray-100 pt-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="font-unbounded text-sm font-bold text-gray-950">
+                      Requirement History
+                    </h2>
+                    <p className="font-geist text-[11px] text-gray-400">Past submitted inquiries</p>
+                  </div>
+                </div>
+
+                <div className="space-y-3.5">
+                  {sampleRequirementHistory.map((history) => (
+                    <article
+                      key={history.id}
+                      className="rounded-[24px] border border-gray-200/80 bg-[#FAF9F7] p-4 shadow-xs"
+                    >
+                      <div className="flex items-center justify-between border-b border-gray-200/60 pb-2.5">
+                        <div className="flex items-center gap-2">
+                          <span className="font-geist text-xs font-extrabold text-gray-950">
+                            #{history.requirementNo}
+                          </span>
+                          <span className="text-gray-300">•</span>
+                          <span className="font-geist text-[11px] text-gray-500">
+                            {history.date}
+                          </span>
+                        </div>
+                        <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-700">
+                          <span className="size-1 rounded-full bg-emerald-500" />
+                          {history.status}
+                        </span>
+                      </div>
+
+                      {/* Items list */}
+                      <div className="mt-3 space-y-2">
+                        {history.items.map((item, idx) => (
+                          <div
+                            key={idx}
+                            className="flex items-center justify-between rounded-xl bg-white p-2 text-xs shadow-2xs"
+                          >
+                            <div className="flex min-w-0 items-center gap-2">
+                              <div className="relative size-8 shrink-0 overflow-hidden rounded-lg bg-[#FAF6F0]">
+                                <Image
+                                  src={item.image}
+                                  alt={item.name}
+                                  fill
+                                  sizes="32px"
+                                  className="object-contain p-0.5"
+                                />
+                              </div>
+                              <div className="min-w-0">
+                                <p className="font-geist truncate font-bold text-gray-950">
+                                  {item.name}
+                                </p>
+                                <p className="text-[10px] text-gray-400">{item.pack}</p>
+                              </div>
+                            </div>
+                            <div className="text-right">
+                              <span className="font-geist text-[11px] font-bold text-gray-700">
+                                x{item.quantity}
+                              </span>
+                              <p className="font-geist text-[11px] font-bold text-[#a67854]">
+                                {formatMrp(item.price)}
+                              </p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Summary */}
+                      <div className="mt-3 flex items-center justify-between border-t border-gray-200/60 pt-2.5">
+                        <div>
+                          <p className="font-geist text-[10px] text-gray-500">
+                            {history.totalItems} Items Total
+                          </p>
+                          <p className="font-geist text-sm font-black text-gray-950">
+                            {formatMrp(history.totalSalePrice)}
+                          </p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            history.items.forEach((item) => {
+                              const found = products.find((p) => p.name === item.name);
+                              if (found) {
+                                addToCart(found.id, item.quantity);
+                              }
+                            });
+                          }}
+                          className="font-outfit rounded-full bg-black px-4 py-1.5 text-[11px] font-bold text-white transition hover:bg-gray-800"
+                        >
+                          Repeat Inquiry
+                        </button>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
       </main>

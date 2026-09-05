@@ -56,7 +56,7 @@ export function DesktopHeader() {
               isActive("/cart") ? "border-b-2 border-black text-black" : "text-gray-500"
             }`}
           >
-            Cart ({cartCount})
+            Request ({cartCount})
           </Link>
         </nav>
 

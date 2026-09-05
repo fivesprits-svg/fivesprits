@@ -12,7 +12,7 @@ type GiftOffer = {
 
 export type CartRow = {
   id: string;
-  type: "product" | "combo" | "gift";
+  type: "product" | "combo" | "gift" | "request";
   name: string;
   detail: string;
   price: number;
@@ -56,7 +56,11 @@ export type StructuredCart = {
   totalOriginalMrp: number;
   totalSalePrice: number;
   availableItemsCount: number;
+  availableOriginalMrp: number;
+  availableSalePrice: number;
   requestedItemsCount: number;
+  requestedOriginalMrp: number;
+  requestedSalePrice: number;
 };
 
 export function buildCartRows(
@@ -127,10 +131,13 @@ export function buildStructuredCart(
   const comboItems: ComboCartItem[] = [];
   const giftItems: GiftCartItem[] = [];
 
-  let totalOriginalMrp = 0;
-  let totalSalePrice = 0;
+  let availableOriginalMrp = 0;
+  let availableSalePrice = 0;
   let availableItemsCount = 0;
-  const requestedItemsCount = 0;
+
+  let requestedOriginalMrp = 0;
+  let requestedSalePrice = 0;
+  let requestedItemsCount = 0;
 
   lines.forEach((line) => {
     const type = line.itemType ?? "product";
@@ -143,8 +150,8 @@ export function buildStructuredCart(
           offer,
           quantity: line.quantity,
         });
-        totalOriginalMrp += offer.mrp * line.quantity;
-        totalSalePrice += offer.salePrice * line.quantity;
+        availableOriginalMrp += offer.mrp * line.quantity;
+        availableSalePrice += offer.salePrice * line.quantity;
         availableItemsCount += line.quantity;
       }
       return;
@@ -189,8 +196,8 @@ export function buildStructuredCart(
           quantity: line.quantity,
         });
 
-        totalOriginalMrp += giftMrp * line.quantity;
-        totalSalePrice += giftSale * line.quantity;
+        availableOriginalMrp += giftMrp * line.quantity;
+        availableSalePrice += giftSale * line.quantity;
         availableItemsCount += (line.selectedProductIds?.length ?? 0) * line.quantity;
       }
       return;
@@ -200,16 +207,25 @@ export function buildStructuredCart(
     const product = products.find((item) => item.id === line.productId);
     if (product) {
       const brand = brands.find((item) => item.id === product.brandId);
+      const isRequested = line.itemType === "request";
+
       regularItems.push({
         id: product.id,
         product,
         brand,
         quantity: line.quantity,
+        isRequested,
       });
 
-      totalOriginalMrp += product.mrp * line.quantity;
-      totalSalePrice += product.mrp * line.quantity;
-      availableItemsCount += line.quantity;
+      if (isRequested) {
+        requestedOriginalMrp += product.mrp * line.quantity;
+        requestedSalePrice += product.mrp * line.quantity;
+        requestedItemsCount += line.quantity;
+      } else {
+        availableOriginalMrp += product.mrp * line.quantity;
+        availableSalePrice += product.mrp * line.quantity;
+        availableItemsCount += line.quantity;
+      }
     }
   });
 
@@ -217,6 +233,9 @@ export function buildStructuredCart(
     regularItems.reduce((sum, item) => sum + item.quantity, 0) +
     comboItems.reduce((sum, item) => sum + item.quantity, 0) +
     giftItems.reduce((sum, item) => sum + item.quantity, 0);
+
+  const totalOriginalMrp = availableOriginalMrp + requestedOriginalMrp;
+  const totalSalePrice = availableSalePrice + requestedSalePrice;
 
   return {
     regularItems,
@@ -226,6 +245,10 @@ export function buildStructuredCart(
     totalOriginalMrp,
     totalSalePrice,
     availableItemsCount,
+    availableOriginalMrp,
+    availableSalePrice,
     requestedItemsCount,
+    requestedOriginalMrp,
+    requestedSalePrice,
   };
 }

@@ -8,14 +8,23 @@ import { PortalShell } from "@/features/customer-flow/components/portal-shell";
 import { Breadcrumb } from "@/features/customer-flow/components/navigation/breadcrumb";
 import { brands, products } from "@/features/customer-flow/data/catalogue";
 import { comboOffers, giftOffer } from "@/features/customer-flow/data/offers";
+import { sampleRequirementHistory } from "@/features/customer-flow/data/requirements-history";
 import { buildStructuredCart } from "@/features/customer-flow/helpers/cart-view-model";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import { formatMrp } from "@/features/customer-flow/utils/currency";
 
 export function DesktopCartSection() {
   const router = useRouter();
-  const { state, setCartQuantity, removeFromCart, submitRequirement, dismissConfirmation } =
-    useCustomerFlow();
+  const {
+    state,
+    addToCart,
+    setCartQuantity,
+    removeFromCart,
+    submitRequirement,
+    dismissConfirmation,
+  } = useCustomerFlow();
+
+  const isRegularUser = Boolean(state.session?.cameFromLoginHere || state.session?.mobile);
 
   const {
     regularItems,
@@ -25,6 +34,11 @@ export function DesktopCartSection() {
     totalOriginalMrp,
     totalSalePrice,
     availableItemsCount,
+    availableOriginalMrp,
+    availableSalePrice,
+    requestedItemsCount,
+    requestedOriginalMrp,
+    requestedSalePrice,
   } = buildStructuredCart(state.cart, products, brands, comboOffers, giftOffer);
 
   return (
@@ -54,19 +68,125 @@ export function DesktopCartSection() {
               </div>
 
               {totalItemsCount === 0 ? (
-                <div className="mt-6 rounded-2xl border border-gray-200/80 bg-white p-12 text-center shadow-sm">
-                  <h2 className="font-unbounded text-lg font-bold text-gray-900">
-                    Your requirement list is empty
-                  </h2>
-                  <p className="font-geist mt-1 text-xs text-gray-500">
-                    Explore categories and add your preferred bottles or offers to this list.
-                  </p>
-                  <Link
-                    href="/categories"
-                    className="font-outfit mt-5 inline-flex h-11 items-center rounded-full bg-black px-6 text-xs font-bold tracking-wider text-white uppercase transition hover:bg-[#a67854]"
-                  >
-                    Browse Categories
-                  </Link>
+                <div className="space-y-8">
+                  <div className="rounded-2xl border border-gray-200/80 bg-white p-12 text-center shadow-sm">
+                    <h2 className="font-unbounded text-lg font-bold text-gray-900">
+                      Your requirement list is empty
+                    </h2>
+                    <p className="font-geist mt-1 text-xs text-gray-500">
+                      Explore categories and add your preferred bottles or offers to this list.
+                    </p>
+                    <Link
+                      href="/categories"
+                      className="font-outfit mt-5 inline-flex h-11 items-center rounded-full bg-black px-6 text-xs font-bold tracking-wider text-white uppercase transition hover:bg-[#a67854]"
+                    >
+                      Browse Categories
+                    </Link>
+                  </div>
+
+                  {/* Requirement History for Regular Users when cart is empty */}
+                  {isRegularUser && (
+                    <div className="space-y-4 pt-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h2 className="font-unbounded text-lg font-bold text-gray-950">
+                            Requirement History
+                          </h2>
+                          <p className="font-geist text-xs text-gray-500">
+                            Quickly re-order or review your past submitted inquiries
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="space-y-4">
+                        {sampleRequirementHistory.map((history) => (
+                          <article
+                            key={history.id}
+                            className="rounded-[24px] border border-gray-200/85 bg-[#FAF9F7] p-5 shadow-xs transition hover:border-[#a67854]/40"
+                          >
+                            <div className="flex items-center justify-between border-b border-gray-200/70 pb-3">
+                              <div className="flex items-center gap-3">
+                                <span className="font-geist text-sm font-black text-gray-950">
+                                  #{history.requirementNo}
+                                </span>
+                                <span className="text-gray-300">•</span>
+                                <span className="font-geist text-xs text-gray-500">
+                                  {history.date}
+                                </span>
+                                {history.permitNumber && (
+                                  <>
+                                    <span className="text-gray-300">•</span>
+                                  </>
+                                )}
+                              </div>
+                            </div>
+
+                            {/* Items list */}
+                            <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2">
+                              {history.items.map((item, idx) => (
+                                <div
+                                  key={idx}
+                                  className="flex items-center justify-between rounded-xl bg-white p-3 text-xs shadow-2xs"
+                                >
+                                  <div className="flex min-w-0 items-center gap-3">
+                                    <div className="relative size-11 shrink-0 overflow-hidden rounded-lg bg-[#FAF6F0]">
+                                      <Image
+                                        src={item.image}
+                                        alt={item.name}
+                                        fill
+                                        sizes="44px"
+                                        className="object-contain p-1"
+                                      />
+                                    </div>
+                                    <div className="min-w-0">
+                                      <p className="font-geist truncate font-bold text-gray-950">
+                                        {item.name}
+                                      </p>
+                                      <p className="text-[11px] text-gray-400">{item.pack}</p>
+                                    </div>
+                                  </div>
+                                  <div className="shrink-0 text-right">
+                                    <span className="font-geist text-xs font-bold text-gray-700">
+                                      x{item.quantity}
+                                    </span>
+                                    <p className="font-geist text-xs font-bold text-[#a67854]">
+                                      {formatMrp(item.price)}
+                                    </p>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+
+                            {/* Summary & Repeat Button */}
+                            <div className="mt-4 flex items-center justify-between border-t border-gray-200/70 pt-3">
+                              <div className="flex items-center gap-4">
+                                <span className="font-geist text-xs text-gray-500">
+                                  {history.totalItems} Items Total
+                                </span>
+                                <span className="font-geist text-base font-black text-gray-950">
+                                  {formatMrp(history.totalSalePrice)}
+                                </span>
+                              </div>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  history.items.forEach((item) => {
+                                    const found = products.find((p) => p.name === item.name);
+                                    if (found) {
+                                      addToCart(found.id, item.quantity);
+                                    }
+                                  });
+                                }}
+                                className="font-outfit rounded-full bg-black px-5 py-2 text-xs font-bold text-white transition hover:bg-[#a67854]"
+                              >
+                                Repeat Inquiry
+                              </button>
+                            </div>
+                          </article>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <div className="space-y-8">
@@ -388,6 +508,114 @@ export function DesktopCartSection() {
                       </div>
                     </div>
                   )}
+
+                  {/* Requirement History for Regular Users when cart is populated */}
+                  {isRegularUser && (
+                    <div className="space-y-4 border-t border-gray-200/70 pt-6">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h2 className="font-unbounded text-lg font-bold text-gray-950">
+                            Requirement History
+                          </h2>
+                          <p className="font-geist text-xs text-gray-500">
+                            Quickly re-order or review your past submitted inquiries
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="space-y-4">
+                        {sampleRequirementHistory.map((history) => (
+                          <article
+                            key={history.id}
+                            className="rounded-[24px] border border-gray-200/85 bg-[#FAF9F7] p-5 shadow-xs transition hover:border-[#a67854]/40"
+                          >
+                            <div className="flex items-center justify-between border-b border-gray-200/70 pb-3">
+                              <div className="flex items-center gap-3">
+                                <span className="font-geist text-sm font-black text-gray-950">
+                                  #{history.requirementNo}
+                                </span>
+                                <span className="text-gray-300">•</span>
+                                <span className="font-geist text-xs text-gray-500">
+                                  {history.date}
+                                </span>
+                                {history.permitNumber && (
+                                  <>
+                                    <span className="text-gray-300">•</span>
+                                  </>
+                                )}
+                              </div>
+                              <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700">
+                                <span className="size-1.5 rounded-full bg-emerald-500" />
+                                {history.status}
+                              </span>
+                            </div>
+
+                            {/* Items list */}
+                            <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2">
+                              {history.items.map((item, idx) => (
+                                <div
+                                  key={idx}
+                                  className="flex items-center justify-between rounded-xl bg-white p-3 text-xs shadow-2xs"
+                                >
+                                  <div className="flex min-w-0 items-center gap-3">
+                                    <div className="relative size-11 shrink-0 overflow-hidden rounded-lg bg-[#FAF6F0]">
+                                      <Image
+                                        src={item.image}
+                                        alt={item.name}
+                                        fill
+                                        sizes="44px"
+                                        className="object-contain p-1"
+                                      />
+                                    </div>
+                                    <div className="min-w-0">
+                                      <p className="font-geist truncate font-bold text-gray-950">
+                                        {item.name}
+                                      </p>
+                                      <p className="text-[11px] text-gray-400">{item.pack}</p>
+                                    </div>
+                                  </div>
+                                  <div className="shrink-0 text-right">
+                                    <span className="font-geist text-xs font-bold text-gray-700">
+                                      x{item.quantity}
+                                    </span>
+                                    <p className="font-geist text-xs font-bold text-[#a67854]">
+                                      {formatMrp(item.price)}
+                                    </p>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+
+                            {/* Summary & Repeat Button */}
+                            <div className="mt-4 flex items-center justify-between border-t border-gray-200/70 pt-3">
+                              <div className="flex items-center gap-4">
+                                <span className="font-geist text-xs text-gray-500">
+                                  {history.totalItems} Items Total
+                                </span>
+                                <span className="font-geist text-base font-black text-gray-950">
+                                  {formatMrp(history.totalSalePrice)}
+                                </span>
+                              </div>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  history.items.forEach((item) => {
+                                    const found = products.find((p) => p.name === item.name);
+                                    if (found) {
+                                      addToCart(found.id, item.quantity);
+                                    }
+                                  });
+                                }}
+                                className="font-outfit rounded-full bg-black px-5 py-2 text-xs font-bold text-white transition hover:bg-[#a67854]"
+                              >
+                                Repeat Inquiry
+                              </button>
+                            </div>
+                          </article>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
             </section>
@@ -395,31 +623,37 @@ export function DesktopCartSection() {
             {/* Sidebar Summary Card */}
             <aside className="sticky top-24 rounded-[28px] border border-[#E8E8E8] bg-[#F8F8F8] p-6 shadow-xs">
               <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-baseline gap-2">
-                    <span className="font-geist text-base font-semibold text-[#8C827A] line-through">
-                      {formatMrp(totalOriginalMrp)}
-                    </span>
-                    <span className="font-geist text-base font-bold text-[#a67854]">
-                      {formatMrp(totalSalePrice)}
+                {availableItemsCount > 0 && (
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-baseline gap-2">
+                      <span className="font-geist text-base font-semibold text-[#8C827A] line-through">
+                        {formatMrp(availableOriginalMrp)}
+                      </span>
+                      <span className="font-geist text-base font-bold text-[#a67854]">
+                        {formatMrp(availableSalePrice)}
+                      </span>
+                    </div>
+                    <span className="font-geist text-base font-semibold text-[#8C827A]">
+                      {availableItemsCount} Available {availableItemsCount === 1 ? "item" : "items"}
                     </span>
                   </div>
-                  <span className="font-geist text-base font-semibold text-[#8C827A]">
-                    {availableItemsCount} Available items
-                  </span>
-                </div>
+                )}
 
-                <div className="flex items-center justify-between">
-                  <div className="flex items-baseline gap-2">
-                    <span className="font-geist text-base font-semibold text-[#8C827A] line-through">
-                      ₹645
+                {requestedItemsCount > 0 && (
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-baseline gap-2">
+                      <span className="font-geist text-base font-semibold text-[#8C827A] line-through">
+                        {formatMrp(requestedOriginalMrp)}
+                      </span>
+                      <span className="font-geist text-base font-bold text-[#a67854]">
+                        {formatMrp(requestedSalePrice)}
+                      </span>
+                    </div>
+                    <span className="font-geist text-base font-bold text-[#a67854]">
+                      {requestedItemsCount} Requested {requestedItemsCount === 1 ? "item" : "items"}
                     </span>
-                    <span className="font-geist text-base font-bold text-[#a67854]">₹645</span>
                   </div>
-                  <span className="font-geist text-base font-bold text-[#a67854]">
-                    1 Requested item
-                  </span>
-                </div>
+                )}
               </div>
 
               <div className="my-4 h-px bg-[#E8E3DC]" />
@@ -427,10 +661,10 @@ export function DesktopCartSection() {
               <div className="flex items-center justify-between">
                 <div className="flex items-baseline gap-3">
                   <span className="font-geist text-xl font-bold text-[#8C827A] line-through">
-                    {formatMrp(totalOriginalMrp + 645)}
+                    {formatMrp(totalOriginalMrp)}
                   </span>
                   <span className="font-geist text-3xl font-black tracking-tight text-gray-950">
-                    {formatMrp(totalSalePrice + 645)}
+                    {formatMrp(totalSalePrice)}
                   </span>
                 </div>
                 <span className="font-geist text-2xl font-black text-gray-950">Total</span>
