@@ -26,7 +26,7 @@ export function DesktopGiftSelectionSection() {
     [quantities],
   );
   return (
-    <div className="hidden lg:block">
+    <div className="hidden md:block">
       <PortalShell title="Select Products" eyebrow="Gift offer" backHref="/offers/gifts">
         <div className="flex items-end justify-between border-b border-black/10 pb-8">
           <div>

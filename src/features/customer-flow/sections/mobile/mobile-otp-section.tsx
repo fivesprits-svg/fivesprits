@@ -3,7 +3,7 @@ import { MobileHeader } from "@/features/customer-flow/components/navigation/mob
 import { MobileHomeIndicator } from "@/features/customer-flow/components/navigation/mobile-system-chrome";
 export function MobileOtpSection() {
   return (
-    <section className="customer-page-container lg:hidden">
+    <section className="customer-page-container md:hidden">
       <MobileHeader title="" backHref="/" />
       <div className="px-6 pt-12 md:px-10">
         <h1 className="font-unbounded text-common-black text-[30px] leading-tight font-black uppercase md:text-[40px]">

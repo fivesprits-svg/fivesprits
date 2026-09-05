@@ -15,7 +15,7 @@ export function MobileBrandsSection() {
   const category = getCategory(categoryId);
 
   return (
-    <div className="min-h-dvh bg-white pb-28 text-[#101010] lg:hidden">
+    <div className="min-h-dvh bg-white pb-28 text-[#101010] md:hidden">
       <MobileHeader title={category?.name ?? "Whiskey"} backHref="/categories" />
       <main className="mx-auto w-full max-w-[390px] px-6 pt-5">
         <p className="text-[13px] text-[#777]">Choose your brand</p>

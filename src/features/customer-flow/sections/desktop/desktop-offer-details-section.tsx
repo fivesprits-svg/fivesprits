@@ -12,7 +12,7 @@ export function DesktopOfferDetailsSection({ offer }: { offer: ComboOffer }) {
   const [quantity, setQuantity] = useState(1);
   const { addComboToCart } = useCustomerFlow();
   return (
-    <div className="hidden lg:block">
+    <div className="hidden md:block">
       <PortalShell title="Offer Details" eyebrow="Combo offer" backHref="/offers">
         <article className="grid overflow-hidden rounded-[30px] border border-black/10 bg-white shadow-[0_12px_40px_rgba(25,20,15,0.05)] lg:grid-cols-[1.1fr_1fr]">
           <div className="relative min-h-[540px] bg-[#f3f0eb]">

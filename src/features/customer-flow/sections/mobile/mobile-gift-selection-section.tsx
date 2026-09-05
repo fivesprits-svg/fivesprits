@@ -27,7 +27,7 @@ export function MobileGiftSelectionSection() {
     [quantities],
   );
   return (
-    <div className="min-h-dvh bg-white pb-48 lg:hidden">
+    <div className="min-h-dvh bg-white pb-48 md:hidden">
       <MobileHeader title="Select Product" backHref="/offers/gifts" />
       <main className="mx-auto w-full max-w-[390px] px-6">
         <p className="text-center text-[12px] text-[#777]">Choose any 6 items</p>

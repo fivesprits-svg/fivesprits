@@ -3,7 +3,7 @@ import { MobileHomeIndicator } from "@/features/customer-flow/components/navigat
 
 export function AuthPageLayout({ children }: { children: React.ReactNode }) {
   return (
-    <section className="customer-page-container lg:hidden">
+    <section className="customer-page-container md:hidden">
       {/* <MobileStatusBar /> */}
       {children}
       <MobileHomeIndicator />
@@ -21,7 +21,7 @@ export function DesktopAuthPageLayout({
   className?: string;
 }) {
   return (
-    <section className="hidden min-h-dvh items-center justify-center bg-[#f7f7f5] px-6 py-8 lg:flex">
+    <section className="hidden min-h-dvh items-center justify-center bg-[#f8f9fa] px-6 py-8 md:flex">
       <div className={`w-full ${maxWidth} ${className}`}>{children}</div>
     </section>
   );

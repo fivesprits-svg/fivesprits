@@ -3,7 +3,7 @@ import Image from "next/image";
 import { LoginFormHere } from "@/features/customer-flow/components/auth/login-here-form";
 export function DesktopLoginHereSection() {
   return (
-    <section className="hidden min-h-dvh grid-cols-2 bg-white lg:grid">
+    <section className="hidden min-h-dvh grid-cols-2 bg-white md:grid">
       <div className="relative overflow-hidden bg-black">
         <Image
           src="/customer-flow/categories/whisky.png"

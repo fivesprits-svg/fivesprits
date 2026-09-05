@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
+import { formatDisplayMobile } from "@/features/customer-flow/utils/validation";
 
 export function ProfileSetupHereForm() {
   const router = useRouter();
@@ -79,9 +80,7 @@ export function ProfileSetupHereForm() {
             </span>
             <div className="relative">
               <input
-                defaultValue={
-                  state.session?.mobile ? `+91 ${state.session.mobile}` : "+91 98450 12345"
-                }
+                defaultValue={formatDisplayMobile(state.session?.mobile)}
                 readOnly
                 className="customer-input cursor-not-allowed bg-gray-50/80 pr-10 text-sm font-medium text-gray-700"
               />
