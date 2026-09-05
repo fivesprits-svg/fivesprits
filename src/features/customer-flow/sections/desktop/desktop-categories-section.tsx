@@ -226,9 +226,17 @@ export function DesktopCategoriesSection() {
         <footer className="mt-20 border-t border-gray-200 pt-12 pb-6">
           <div className="grid grid-cols-12 gap-8 pb-10">
             <div className="col-span-12 md:col-span-5">
-              <div className="flex items-baseline gap-2">
-                <span className="text-xl font-black tracking-tight text-gray-900">FIVE</span>
-                <span className="text-xs font-bold tracking-[0.24em] text-[#a67854]">SPIRITS</span>
+              <div className="flex items-center gap-3">
+                <Image
+                  src="/logo.svg"
+                  alt="Five Spirit"
+                  width={32}
+                  height={53}
+                  className="h-10 w-auto object-contain"
+                />
+                <span className="font-unbounded text-xl font-black tracking-tight text-black">
+                  Five Spirit
+                </span>
               </div>
               <p className="font-geist mt-3 max-w-sm text-xs leading-relaxed text-gray-500">
                 Discovers the world&apos;s finest selection of spirits and beverages. Curated with

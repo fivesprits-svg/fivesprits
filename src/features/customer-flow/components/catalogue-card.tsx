@@ -63,7 +63,7 @@ export function CatalogueCard({
       <button
         type="button"
         onClick={onClick}
-        className="group flex h-full w-full cursor-pointer flex-col items-center justify-between rounded-xl border border-gray-200/80 bg-white p-2.5 text-center shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-[#a67854]/50 hover:shadow-md sm:rounded-2xl sm:p-4"
+        className="group flex w-full cursor-pointer flex-col items-center rounded-xl border border-gray-200/80 bg-white p-2.5 text-center shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-[#a67854]/50 hover:shadow-md sm:rounded-2xl sm:p-4"
       >
         <div className="relative aspect-[16/10] w-full overflow-hidden rounded-lg bg-[#f7f5f0] p-2 transition-colors group-hover:bg-[#f2ede4] sm:rounded-xl sm:p-3">
           <Image
@@ -75,7 +75,7 @@ export function CatalogueCard({
             className="object-contain p-1 transition-transform duration-300 group-hover:scale-105 sm:p-2"
           />
         </div>
-        <span className="font-geist mt-2 max-w-full truncate text-xs font-bold tracking-tight text-gray-900 transition-colors group-hover:text-[#a67854] sm:mt-3 sm:text-sm">
+        <span className="font-geist mt-2.5 max-w-full truncate text-xs font-bold tracking-tight text-gray-900 transition-colors group-hover:text-[#a67854] sm:mt-3 sm:text-sm">
           {title}
         </span>
       </button>
@@ -105,7 +105,7 @@ export function CatalogueCard({
 
         {/* Product Info */}
         <div className="mt-2 sm:mt-2.5">
-          <h2 className="font-geist line-clamp-2 min-h-[32px] text-xs leading-snug font-semibold text-gray-900 sm:min-h-[38px] sm:text-sm">
+          <h2 className="font-geist text-xs leading-snug font-semibold text-gray-900 sm:text-sm">
             {title}
           </h2>
 
@@ -115,7 +115,7 @@ export function CatalogueCard({
             </p>
           )}
 
-          <div className="mt-1.5 flex items-baseline gap-1.5 sm:mt-2 sm:gap-2">
+          <div className="mt-1 flex items-baseline gap-1.5 sm:gap-2">
             {originalPrice && (
               <span className="font-geist text-[11px] text-gray-400 line-through sm:text-xs">
                 {originalPrice}
@@ -132,7 +132,7 @@ export function CatalogueCard({
       </div>
 
       {/* Actions / Add to Cart */}
-      <div className="mt-2.5 border-t border-gray-100 pt-2 sm:mt-3.5 sm:pt-3">
+      <div className="mt-2 border-t border-gray-100 pt-2 sm:mt-2.5 sm:pt-2.5">
         {/* Show Add/Request button only when product is NOT in cart */}
         {quantity == null && actionLabel && onAction && (
           <button

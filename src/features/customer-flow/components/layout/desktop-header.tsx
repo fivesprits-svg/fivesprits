@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 
@@ -18,9 +19,18 @@ export function DesktopHeader() {
   return (
     <header className="hidden border-b border-black/10 bg-white md:block">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
-        <Link href="/categories" className="flex items-baseline gap-2">
-          <span className="text-xl font-black tracking-tight text-gray-900">FIVE</span>
-          <span className="text-xs font-bold tracking-[0.24em] text-[#a67854]">SPIRITS</span>
+        <Link href="/categories" className="flex items-center gap-3">
+          <Image
+            src="/logo.svg"
+            alt="Five Spirit"
+            width={32}
+            height={53}
+            className="h-10 w-auto object-contain"
+            priority
+          />
+          <span className="font-unbounded text-xl font-black tracking-tight text-black">
+            Five Spirit
+          </span>
         </Link>
 
         <nav className="flex items-center gap-8 text-xs font-bold tracking-wider uppercase">
