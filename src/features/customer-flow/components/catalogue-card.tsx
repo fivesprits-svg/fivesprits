@@ -138,7 +138,7 @@ export function CatalogueCard({
           <button
             type="button"
             onClick={onAction}
-            className={`font-outfit flex h-8 w-full items-center justify-center rounded-lg text-[11px] font-bold tracking-wider uppercase transition-all duration-150 sm:h-9 sm:rounded-xl sm:text-xs ${
+            className={`font-outfit flex h-9 w-full items-center justify-center rounded-xl text-[11px] font-bold tracking-wider uppercase transition-all duration-150 sm:h-10 sm:text-xs ${
               actionVariant === "request"
                 ? "bg-[#a67854] text-white hover:bg-[#8f6442]"
                 : actionVariant === "requested"
@@ -152,41 +152,45 @@ export function CatalogueCard({
 
         {/* Show quantity controls only after product is added */}
         {quantity != null && onQuantityChange && (
-          <div className="flex h-8 w-full items-center justify-between rounded-lg border border-gray-200 bg-gray-50 p-0.5 sm:h-9 sm:rounded-xl sm:p-1">
-            <button
-              type="button"
-              onClick={() => onQuantityChange(Math.max(1, quantity - 1))}
-              className="grid size-6 place-items-center rounded-md border border-gray-200 bg-white text-xs font-bold text-gray-700 transition hover:bg-gray-100 sm:size-7 sm:rounded-lg"
-              aria-label="Decrease quantity"
-            >
-              −
-            </button>
+          <div className="flex h-9 w-full items-center gap-2 sm:h-10">
+            <div className="flex h-full flex-1 items-center justify-between rounded-full bg-[#FAF6F0] px-3.5 sm:px-4">
+              <button
+                type="button"
+                onClick={() => onQuantityChange(Math.max(1, quantity - 1))}
+                className="grid size-7 place-items-center text-lg font-semibold text-[#a67854] transition hover:scale-110 active:scale-95 disabled:opacity-40"
+                aria-label="Decrease quantity"
+                disabled={quantity <= 1}
+              >
+                −
+              </button>
 
-            <span className="font-geist px-1 text-[11px] font-bold text-gray-900 sm:px-2 sm:text-xs">
-              {String(quantity).padStart(2, "0")}
-            </span>
+              <span className="font-geist text-xs font-black text-black sm:text-sm">
+                {String(quantity).padStart(2, "0")}
+              </span>
 
-            <button
-              type="button"
-              onClick={() => onQuantityChange(quantity + 1)}
-              className="grid size-6 place-items-center rounded-md border border-gray-200 bg-white text-xs font-bold text-gray-700 transition hover:bg-gray-100 sm:size-7 sm:rounded-lg"
-              aria-label="Increase quantity"
-            >
-              +
-            </button>
+              <button
+                type="button"
+                onClick={() => onQuantityChange(quantity + 1)}
+                className="grid size-7 place-items-center text-lg font-semibold text-[#a67854] transition hover:scale-110 active:scale-95"
+                aria-label="Increase quantity"
+              >
+                +
+              </button>
+            </div>
 
             {onRemove && (
               <button
                 type="button"
                 onClick={onRemove}
-                className="grid size-6 place-items-center rounded-md text-red-500 transition hover:bg-red-50 sm:size-7 sm:rounded-lg"
+                className="grid size-9 shrink-0 place-items-center rounded-2xl bg-[#FAF6F0] transition hover:bg-[#f3ede3] active:scale-95 sm:size-10"
                 aria-label="Remove product"
               >
                 <Image
                   src="/customer-flow/icons/delete-btn.svg"
                   alt="Remove"
-                  width={16}
-                  height={16}
+                  width={18}
+                  height={18}
+                  className="size-[18px] object-contain sm:size-5"
                 />
               </button>
             )}

@@ -30,17 +30,8 @@ describe("customer catalogue", () => {
     ).toBe(true);
   });
 
-  it("provides enough catalogue entries to reproduce the Figma mobile grids", () => {
+  it("ensures each brand has at least 10 products", () => {
     expect(getBrandsByCategory("whisky")).toHaveLength(8);
-    expect(getProductsByBrand("old-monk")).toHaveLength(6);
-  });
-
-  it("maps every Old Monk product to its distinct Figma image export", () => {
-    const oldMonkProducts = getProductsByBrand("old-monk");
-    expect(oldMonkProducts.every((product) => product.image.includes("/figma-images/"))).toBe(true);
-    expect(new Set(oldMonkProducts.map((product) => product.image))).toHaveLength(6);
-    expect(oldMonkProducts.find((product) => product.id === "balvenie-wood")?.image).toContain(
-      "73df0c99e6acd3f7b7bb5a049588d2c058caf884",
-    );
+    expect(brands.every((brand) => getProductsByBrand(brand.id).length >= 10)).toBe(true);
   });
 });

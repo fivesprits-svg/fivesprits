@@ -15,7 +15,7 @@ export function DesktopCategoriesSection() {
       {/* Header */}
       <DesktopHeader />
 
-      <main className="mx-auto max-w-7xl px-6 py-10">
+      <main className="mx-auto max-w-7xl px-6 py-8">
         {/* 1. SEAMLESS MIXED EDITORIAL HERO */}
         <section className="relative pt-4 pb-12">
           <div className="grid grid-cols-12 items-center gap-8 lg:gap-10">
