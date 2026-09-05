@@ -21,9 +21,12 @@ export function DesktopProfileSection() {
 
   const [permitDocument, setPermitDocument] = useState<{
     name: string;
+    url?: string;
+    type?: "pdf" | "image" | "doc";
     uploaded: boolean;
   } | null>({
     name: "Excise_Permit_2026.pdf",
+    type: "pdf",
     uploaded: true,
   });
 
@@ -263,7 +266,7 @@ export function DesktopProfileSection() {
                             {permitDocument.name}
                           </span>
                         </div>
-                        <div className="flex items-center gap-2.5">
+                        <div className="flex items-center gap-2">
                           <button
                             type="button"
                             onClick={() => setShowPermitModal(true)}
@@ -278,9 +281,17 @@ export function DesktopProfileSection() {
                               setPermitDocument(null);
                               if (permitInputRef.current) permitInputRef.current.value = "";
                             }}
-                            className="text-[11px] font-semibold text-red-500 hover:underline"
+                            aria-label="Remove permit document"
+                            className="grid size-6 place-items-center rounded-md bg-red-50 text-red-500 transition hover:bg-red-100"
+                            title="Remove"
                           >
-                            Remove
+                            <Image
+                              src="/customer-flow/icons/delete-btn.svg"
+                              alt="Delete"
+                              width={14}
+                              height={14}
+                              className="size-3.5 opacity-80 hover:opacity-100"
+                            />
                           </button>
                         </div>
                       </div>
@@ -303,12 +314,21 @@ export function DesktopProfileSection() {
                     <input
                       ref={permitInputRef}
                       type="file"
-                      accept=".pdf,.png,.jpg,.jpeg"
+                      accept=".pdf,.png,.jpg,.jpeg,.webp"
                       className="hidden"
                       onChange={(e) => {
                         if (e.target.files && e.target.files[0]) {
+                          const file = e.target.files[0];
+                          const url = URL.createObjectURL(file);
+                          const isImage =
+                            file.type.startsWith("image/") ||
+                            /\.(png|jpe?g|webp|gif|svg)$/i.test(file.name);
+                          const isPdf =
+                            file.type === "application/pdf" || /\.pdf$/i.test(file.name);
                           setPermitDocument({
-                            name: e.target.files[0].name,
+                            name: file.name,
+                            url,
+                            type: isImage ? "image" : isPdf ? "pdf" : "doc",
                             uploaded: true,
                           });
                         }
@@ -491,7 +511,8 @@ export function DesktopProfileSection() {
       {/* Permit Document Preview Modal */}
       {showPermitModal && permitDocument && (
         <div className="profile-popup-overlay" role="dialog" aria-modal="true">
-          <div className="profile-popup-card max-w-md">
+          <div className="profile-popup-card max-w-lg !p-6">
+            {/* Modal Header */}
             <div className="flex items-center justify-between border-b border-gray-100 pb-3">
               <div className="flex items-center gap-2">
                 <span className="size-2 rounded-full bg-[#a67854]" />
@@ -502,58 +523,198 @@ export function DesktopProfileSection() {
               <button
                 type="button"
                 onClick={() => setShowPermitModal(false)}
-                className="text-gray-400 hover:text-gray-600"
+                className="grid size-8 place-items-center rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-700"
+                aria-label="Close modal"
               >
                 ✕
               </button>
             </div>
 
-            <div className="mt-4 rounded-xl border border-[#e8d5c4] bg-[#fbf9f6] p-4">
-              <div className="flex items-center justify-between border-b border-[#e8d5c4]/60 pb-3">
-                <div className="flex items-center gap-2.5">
-                  <div className="grid size-10 place-items-center rounded-lg bg-[#a67854] text-white">
-                    <span className="font-outfit text-xs font-bold">PDF</span>
-                  </div>
-                  <div>
-                    <p className="font-geist max-w-[200px] truncate text-xs font-bold text-gray-900">
+            {/* Dynamic Document Content */}
+            {permitDocument.type === "image" && permitDocument.url ? (
+              /* 1. Image Preview Mode */
+              <div className="relative mt-4 overflow-hidden rounded-2xl border border-[#E8DFC8] bg-gray-50 p-2.5 shadow-inner">
+                <div className="relative flex aspect-[4/3] w-full items-center justify-center overflow-hidden rounded-xl bg-black/5">
+                  <Image
+                    src={permitDocument.url}
+                    alt={permitDocument.name}
+                    fill
+                    className="object-contain"
+                  />
+                </div>
+                <div className="mt-3 flex items-center justify-between px-2 text-xs">
+                  <div className="flex items-center gap-1.5 truncate">
+                    <span className="font-outfit text-[10px] font-bold text-gray-500 uppercase">
+                      Permit File:
+                    </span>
+                    <span className="font-geist max-w-[200px] truncate font-semibold text-gray-900">
                       {permitDocument.name}
-                    </p>
-                    <p className="text-[10px] text-gray-500">Official State Excise Copy</p>
+                    </span>
+                  </div>
+                  <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-0.5 text-[10px] font-bold text-emerald-700">
+                    <span className="size-1.5 animate-pulse rounded-full bg-emerald-500" />
+                    Verified
+                  </span>
+                </div>
+              </div>
+            ) : permitDocument.type === "pdf" && permitDocument.url ? (
+              /* 2. Uploaded PDF Viewer Mode */
+              <div className="relative mt-4 overflow-hidden rounded-2xl border border-[#E8DFC8] bg-gray-100 shadow-inner">
+                <iframe
+                  src={`${permitDocument.url}#toolbar=0`}
+                  title={permitDocument.name}
+                  className="h-[340px] w-full rounded-2xl border-0"
+                />
+                <div className="flex items-center justify-between border-t border-gray-200 bg-white p-3 text-xs">
+                  <span className="font-geist truncate font-bold text-gray-900">
+                    {permitDocument.name}
+                  </span>
+                  <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-0.5 text-[10px] font-bold text-emerald-700">
+                    <span className="size-1.5 animate-pulse rounded-full bg-emerald-500" />
+                    Verified PDF
+                  </span>
+                </div>
+              </div>
+            ) : (
+              /* 3. Official State Excise Certificate Document Mode (Default) */
+              <div className="relative mt-4 overflow-hidden rounded-2xl border-2 border-[#D4AF37]/50 bg-gradient-to-b from-[#FDFCF7] via-[#FAF6EE] to-[#F5EFE3] p-5 shadow-inner">
+                {/* Security Watermark in background */}
+                <div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-[0.035] select-none">
+                  <span className="font-outfit rotate-[-25deg] text-6xl font-black tracking-widest text-gray-900 uppercase">
+                    STATE EXCISE
+                  </span>
+                </div>
+
+                {/* Document Header */}
+                <div className="relative z-10 flex items-center justify-between border-b border-[#D4AF37]/35 pb-3.5">
+                  <div className="flex items-center gap-3">
+                    <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#8B5E34] to-[#5C3A1E] text-white shadow-sm ring-2 ring-[#D4AF37]/40">
+                      <svg
+                        className="size-6 text-[#FFD700]"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                      >
+                        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="font-outfit text-[10px] font-black tracking-widest text-[#8B5E34] uppercase">
+                        State Excise Department
+                      </p>
+                      <h3 className="font-outfit text-sm font-black text-gray-950">
+                        Official State Excise Copy
+                      </h3>
+                      <p className="font-geist text-[10px] text-gray-500">{permitDocument.name}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col items-end gap-1">
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2.5 py-1 text-[11px] font-bold text-emerald-700 ring-1 ring-emerald-600/20">
+                      <span className="size-1.5 animate-pulse rounded-full bg-emerald-500" />
+                      Verified
+                    </span>
+                    <span className="font-geist text-[9px] font-semibold text-gray-400">
+                      FORM L-50 PERMIT
+                    </span>
                   </div>
                 </div>
-                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-700">
-                  <span className="size-1 rounded-full bg-emerald-500" />
-                  Verified
-                </span>
-              </div>
 
-              <div className="mt-3 space-y-2 text-xs">
-                <div className="flex justify-between text-gray-600">
-                  <span>Permit Number:</span>
-                  <span className="font-semibold text-gray-900">{profileData.permitNumber}</span>
+                {/* Document Credentials Grid */}
+                <div className="relative z-10 mt-4 grid grid-cols-2 gap-3.5 rounded-xl border border-[#E8DFC8] bg-white/85 p-4 shadow-2xs backdrop-blur-xs">
+                  <div>
+                    <span className="font-outfit block text-[10px] font-bold tracking-wider text-gray-400 uppercase">
+                      Permit Number:
+                    </span>
+                    <span className="font-geist text-sm font-extrabold tracking-wide text-gray-950">
+                      {profileData.permitNumber}
+                    </span>
+                  </div>
+
+                  <div>
+                    <span className="font-outfit block text-[10px] font-bold tracking-wider text-gray-400 uppercase">
+                      Holder Name:
+                    </span>
+                    <span className="font-geist block truncate text-sm font-bold text-gray-900">
+                      {profileData.name}
+                    </span>
+                  </div>
+
+                  <div className="border-t border-gray-100 pt-2.5">
+                    <span className="font-outfit block text-[10px] font-bold tracking-wider text-gray-400 uppercase">
+                      Authorized Area:
+                    </span>
+                    <span className="font-geist text-sm font-semibold text-gray-900">
+                      {profileData.pincode}
+                    </span>
+                  </div>
+
+                  <div className="border-t border-gray-100 pt-2.5">
+                    <span className="font-outfit block text-[10px] font-bold tracking-wider text-gray-400 uppercase">
+                      Status:
+                    </span>
+                    <span className="font-geist text-xs font-bold text-[#8B5E34]">
+                      Possession Authorized
+                    </span>
+                  </div>
                 </div>
-                <div className="flex justify-between text-gray-600">
-                  <span>Holder Name:</span>
-                  <span className="font-semibold text-gray-900">{profileData.name}</span>
-                </div>
-                <div className="flex justify-between text-gray-600">
-                  <span>Authorized Area:</span>
-                  <span className="font-semibold text-gray-900">{profileData.pincode}</span>
+
+                {/* Document Footer */}
+                <div className="relative z-10 mt-3.5 flex items-center justify-between border-t border-[#D4AF37]/25 pt-3">
+                  <div className="flex items-center gap-2">
+                    <div className="grid size-6 place-items-center rounded-md border border-[#C5A059] bg-[#FAF6EE] text-[8px] font-black text-[#8B5E34]">
+                      SEAL
+                    </div>
+                    <div>
+                      <p className="font-geist text-[10px] font-bold text-gray-800">
+                        Digitally Certified
+                      </p>
+                      <p className="font-geist text-[9px] text-gray-400">
+                        Excise Verification Registry
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-1.5 text-gray-500">
+                    <svg
+                      className="size-4 text-emerald-600"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <span className="font-geist text-[10px] font-bold text-gray-600">
+                      Tamper-Proof
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
 
-            <div className="mt-5 flex gap-2">
+            {/* Action Buttons: Upload Again | Trash Icon | Close */}
+            <div className="mt-5 flex items-center gap-2.5">
               <button
                 type="button"
                 onClick={() => {
                   setShowPermitModal(false);
                   permitInputRef.current?.click();
                 }}
-                className="profile-popup-save-btn flex-1 text-xs"
+                className="font-outfit flex h-11 flex-1 items-center justify-center gap-2 rounded-full bg-black px-4 text-xs font-bold tracking-wide text-white transition hover:bg-gray-800 active:scale-[0.99]"
               >
+                <Image
+                  src="/customer-flow/icons/icon-camera.svg"
+                  alt=""
+                  width={14}
+                  height={14}
+                  className="brightness-0 invert"
+                />
                 Upload Again
               </button>
+
+              {/* Trash Icon Button */}
               <button
                 type="button"
                 onClick={() => {
@@ -561,14 +722,23 @@ export function DesktopProfileSection() {
                   if (permitInputRef.current) permitInputRef.current.value = "";
                   setShowPermitModal(false);
                 }}
-                className="rounded-full border border-red-200 px-4 py-2 text-xs font-bold text-red-600 hover:bg-red-50"
+                aria-label="Remove permit document"
+                className="grid size-11 shrink-0 place-items-center rounded-full border border-red-200 bg-red-50 text-red-600 transition hover:bg-red-100 active:scale-95"
+                title="Remove Document"
               >
-                Remove
+                <Image
+                  src="/customer-flow/icons/delete-btn.svg"
+                  alt="Delete"
+                  width={18}
+                  height={18}
+                  className="size-4.5 opacity-85 hover:opacity-100"
+                />
               </button>
+
               <button
                 type="button"
                 onClick={() => setShowPermitModal(false)}
-                className="profile-popup-cancel-btn text-xs"
+                className="font-outfit flex h-11 items-center justify-center rounded-full border border-gray-200 bg-gray-50 px-5 text-xs font-bold text-gray-700 transition hover:bg-gray-100 active:scale-[0.99]"
               >
                 Close
               </button>
