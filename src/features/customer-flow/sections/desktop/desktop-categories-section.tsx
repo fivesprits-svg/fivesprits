@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -10,22 +10,6 @@ import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-co
 export function DesktopCategoriesSection() {
   const router = useRouter();
   const { selectCategory } = useCustomerFlow();
-  const [searchQuery, setSearchQuery] = useState("");
-  const [email, setEmail] = useState("");
-  const [subscribed, setSubscribed] = useState(false);
-
-  const filteredCategories = categories.filter((c) =>
-    c.name.toLowerCase().includes(searchQuery.toLowerCase().trim()),
-  );
-
-  function handleSubscribe(e: React.FormEvent) {
-    e.preventDefault();
-    if (email.trim()) {
-      setSubscribed(true);
-      setEmail("");
-    }
-  }
-
   return (
     <div className="hidden min-h-dvh bg-[#f8f9fa] text-gray-900 md:block">
       {/* Header */}
@@ -40,9 +24,6 @@ export function DesktopCategoriesSection() {
               <div className="flex flex-wrap items-center gap-3">
                 <span className="font-outfit inline-flex items-center gap-1.5 rounded-full border border-gray-300 bg-white px-3.5 py-1 text-[11px] font-bold tracking-widest text-[#a67854] uppercase shadow-xs">
                   ✦ Curated Spirits Vault
-                </span>
-                <span className="font-geist text-xs text-gray-500">
-                  Govt. Excise Compliant & Verified
                 </span>
               </div>
 
@@ -147,55 +128,10 @@ export function DesktopCategoriesSection() {
               </div>
             </div>
           </div>
-
-          {/* 3-Column Mixed Highlights Bar */}
-          <div className="mt-12 grid grid-cols-1 gap-4 border-y border-gray-200/80 py-6 sm:grid-cols-3">
-            <div className="flex items-center gap-3.5 px-3">
-              <div className="grid size-10 shrink-0 place-items-center rounded-xl border border-gray-200/60 bg-white text-lg shadow-xs">
-                🥃
-              </div>
-              <div>
-                <p className="font-outfit text-xs font-bold tracking-wider text-gray-900 uppercase">
-                  Reserve Cellar
-                </p>
-                <p className="font-geist text-xs text-gray-500">
-                  Aged single malts and rare global vintages
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3.5 border-t border-gray-200/60 pt-4 sm:border-t-0 sm:border-l sm:pt-0 sm:pl-6">
-              <div className="grid size-10 shrink-0 place-items-center rounded-xl border border-gray-200/60 bg-white text-lg shadow-xs">
-                🎁
-              </div>
-              <div>
-                <p className="font-outfit text-xs font-bold tracking-wider text-gray-900 uppercase">
-                  Member Combos
-                </p>
-                <p className="font-geist text-xs text-gray-500">
-                  Exclusive pairings & seasonal gifts
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3.5 border-t border-gray-200/60 pt-4 sm:border-t-0 sm:border-l sm:pt-0 sm:pl-6">
-              <div className="grid size-10 shrink-0 place-items-center rounded-xl border border-gray-200/60 bg-white text-lg shadow-xs">
-                🛡️
-              </div>
-              <div>
-                <p className="font-outfit text-xs font-bold tracking-wider text-gray-900 uppercase">
-                  Verified Identity
-                </p>
-                <p className="font-geist text-xs text-gray-500">
-                  Instant DigiLocker age compliance
-                </p>
-              </div>
-            </div>
-          </div>
         </section>
 
         {/* 2. THE CATEGORIES SECTION */}
-        <section id="categories" className="scroll-mt-24 pt-16 pb-8">
+        <section id="categories" className="scroll-mt-24 pb-8">
           <div className="flex flex-col justify-between gap-4 border-b border-gray-200/80 pb-6 md:flex-row md:items-end">
             <div>
               <p className="font-outfit text-xs font-bold tracking-[0.25em] text-[#a67854] uppercase">
@@ -210,34 +146,14 @@ export function DesktopCategoriesSection() {
               </p>
             </div>
 
-            {/* Search Input */}
-            <div className="relative w-full md:w-64">
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search by category..."
-                className="h-10 w-full rounded-full border border-gray-200 bg-white pr-9 pl-4 text-xs font-medium text-gray-800 placeholder-gray-400 transition outline-none focus:border-[#a67854]"
-              />
-              <svg
-                className="absolute top-1/2 right-3.5 size-4 -translate-y-1/2 text-gray-400"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
-            </div>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-[#e8d5c4] bg-[#f7f4ee] px-3.5 py-1.5 text-xs font-semibold text-[#a67854]">
+              {categories.length} categories available
+            </span>
           </div>
 
           {/* Categories 4x2 Grid */}
           <div className="mt-8 grid grid-cols-2 gap-5 sm:grid-cols-4 lg:gap-6">
-            {filteredCategories.map((category) => (
+            {categories.map((category) => (
               <button
                 key={category.id}
                 type="button"
@@ -262,14 +178,6 @@ export function DesktopCategoriesSection() {
               </button>
             ))}
           </div>
-
-          {filteredCategories.length === 0 && (
-            <div className="py-12 text-center">
-              <p className="font-geist text-sm text-gray-500">
-                No categories found matching &ldquo;{searchQuery}&rdquo;.
-              </p>
-            </div>
-          )}
         </section>
 
         {/* 3. THE ART OF AGING (BARREL ROOM) */}
@@ -310,65 +218,6 @@ export function DesktopCategoriesSection() {
                   className="object-cover"
                 />
               </div>
-            </div>
-          </div>
-        </section>
-
-        {/* 4. JOIN THE SPIRIT CLUB */}
-        <section className="my-14 overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-xl">
-          <div className="grid grid-cols-12 items-stretch">
-            {/* Left Content */}
-            <div className="col-span-12 flex flex-col justify-center bg-gray-50 p-8 lg:col-span-7 lg:p-12">
-              <p className="font-outfit text-[11px] font-bold tracking-widest text-[#a67854] uppercase">
-                MEMBERSHIP PRIVILEGES
-              </p>
-
-              <h2 className="font-unbounded mt-2 text-2xl font-black text-gray-900 lg:text-3xl">
-                JOIN THE SPIRIT CLUB
-              </h2>
-
-              <p className="font-geist mt-2 text-xs leading-relaxed text-gray-600 lg:text-sm">
-                Sign up for exclusive early access to rare bottle drops, member-only events, and
-                seasonal tastings from our master blenders.
-              </p>
-
-              {subscribed ? (
-                <div className="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-xs font-semibold text-emerald-800">
-                  ✓ Thank you for subscribing! You will receive our next reserve release invitation.
-                </div>
-              ) : (
-                <form onSubmit={handleSubscribe} className="mt-6 flex max-w-md items-center gap-2">
-                  <input
-                    type="email"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Enter your email address"
-                    className="h-11 flex-1 rounded-full border border-gray-300 bg-white px-4 text-xs font-medium text-gray-800 placeholder-gray-400 transition outline-none focus:border-[#a67854]"
-                  />
-                  <button
-                    type="submit"
-                    className="font-outfit h-11 rounded-full bg-gray-900 px-6 text-xs font-bold tracking-wider text-white uppercase transition hover:bg-[#a67854]"
-                  >
-                    Join Now
-                  </button>
-                </form>
-              )}
-
-              <p className="font-geist mt-3 text-[10px] tracking-wider text-gray-400 uppercase">
-                Unsubscribe at any time. We value your privacy.
-              </p>
-            </div>
-
-            {/* Right Cheers Photo */}
-            <div className="relative col-span-12 min-h-[260px] lg:col-span-5">
-              <Image
-                src="/customer-flow/hero/spirit-club.jpg"
-                alt="Spirit Club Tasting"
-                fill
-                sizes="(max-width: 1024px) 100vw, 400px"
-                className="object-cover"
-              />
             </div>
           </div>
         </section>
@@ -448,15 +297,6 @@ export function DesktopCategoriesSection() {
                   <span>Terms of Service</span>
                 </li>
               </ul>
-            </div>
-          </div>
-
-          <div className="flex flex-col items-center justify-between gap-4 border-t border-gray-200/80 pt-6 text-xs text-gray-400 md:flex-row">
-            <p>© 2026 Five Spirits. All rights reserved.</p>
-            <div className="flex items-center gap-6">
-              <span>🌐 English (US)</span>
-              <span>•</span>
-              <span>India (Excise Compliant)</span>
             </div>
           </div>
         </footer>

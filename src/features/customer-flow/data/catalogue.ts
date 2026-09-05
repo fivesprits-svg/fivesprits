@@ -123,7 +123,7 @@ export const products: Product[] = [
     name: "Old Monk",
     pack: "12 Year Old • 750ml",
     mrp: 5150,
-    image: "/customer-flow/figma-images/7f4b6e7de0e280834578ab3b2299472912863eab",
+    image: "/customer-flow/figma-images/7f4b6e7de0e280834578ab3b2299472912863eab.png",
   },
   {
     id: "glenfiddich-solera",
@@ -131,7 +131,7 @@ export const products: Product[] = [
     name: "Glenfiddich Solera",
     pack: "15 Year Old • 750ml",
     mrp: 4250,
-    image: "/customer-flow/figma-images/d195136c0212d53f31bc11ebd101e6933996feae",
+    image: "/customer-flow/figma-images/d195136c0212d53f31bc11ebd101e6933996feae.png",
   },
   {
     id: "lagavulin-classic",
@@ -139,7 +139,7 @@ export const products: Product[] = [
     name: "Lagavulin Classic",
     pack: "16 Year Old • 700ml",
     mrp: 8990,
-    image: "/customer-flow/figma-images/60da6e0114b7ba89bf637d0b3a201421f6a5c12e",
+    image: "/customer-flow/figma-images/60da6e0114b7ba89bf637d0b3a201421f6a5c12e.png",
   },
   {
     id: "balvenie-wood",
@@ -147,7 +147,7 @@ export const products: Product[] = [
     name: "Balvenie Wood",
     pack: "DoubleWood 12 • 750ml",
     mrp: 4750,
-    image: "/customer-flow/figma-images/73df0c99e6acd3f7b7bb5a049588d2c058caf884",
+    image: "/customer-flow/figma-images/73df0c99e6acd3f7b7bb5a049588d2c058caf884.png",
   },
   {
     id: "talisker-storm",
@@ -155,7 +155,7 @@ export const products: Product[] = [
     name: "Talisker Storm",
     pack: "Single Malt • 700ml",
     mrp: 3890,
-    image: "/customer-flow/figma-images/597748d1399cb30f321880b047cf4523a77fae8b",
+    image: "/customer-flow/figma-images/597748d1399cb30f321880b047cf4523a77fae8b.png",
   },
   {
     id: "oban-highland",
@@ -163,7 +163,7 @@ export const products: Product[] = [
     name: "Oban Highland",
     pack: "Little Bay • 750ml",
     mrp: 5190,
-    image: "/customer-flow/figma-images/0e02c81d6221e2bca6ce8df49c5e787f7e3b00e1",
+    image: "/customer-flow/figma-images/0e02c81d6221e2bca6ce8df49c5e787f7e3b00e1.png",
   },
   {
     id: "amber-750",
