@@ -26,87 +26,105 @@ export function MobileGiftSelectionSection() {
     () => Object.values(quantities).reduce((total, quantity) => total + quantity, 0),
     [quantities],
   );
+
   return (
     <div className="min-h-dvh bg-white pb-48 md:hidden">
       <MobileHeader title="Select Product" backHref="/offers/gifts" />
       <main className="mx-auto w-full max-w-[390px] px-6">
-        <p className="text-center text-[12px] text-[#777]">Choose any 6 items</p>
-        <article className="mt-4 overflow-hidden rounded-[20px] border border-black/10 bg-white p-3">
-          <div className="relative h-40 overflow-hidden rounded-[14px] bg-[#f5f3ef]">
-            <Image
-              src={giftOffer.image}
-              alt="Premium trolley gift"
-              fill
-              sizes="342px"
-              className="object-cover"
-            />
-          </div>
-          <h2 className="mt-3 text-lg font-bold">{giftOffer.title}</h2>
-          <p className="mt-2 text-xl font-black text-[#9d7658]">{giftOffer.benefit}</p>
-          <p className="mt-2 text-sm leading-5 text-[#666]">{giftOffer.description}</p>
-        </article>
-        <div id="gift-products" className="mt-4 grid grid-cols-2 gap-4">
+        <div className="pt-2 text-center">
+          <p className="font-outfit text-[11px] font-extrabold tracking-wider text-[#a67854] uppercase">
+            EXCLUSIVE REWARDS
+          </p>
+          <h1 className="font-geist text-lg font-black text-gray-950">Choose any 6 items</h1>
+          <p className="font-geist mt-0.5 text-xs text-gray-500">
+            Complete the selection to unlock your {giftOffer.gift}.
+          </p>
+        </div>
+
+        <div id="gift-products" className="mt-4 grid grid-cols-2 gap-3">
           {giftProducts.map((product) => {
             const quantity = quantities[product.id] ?? 0;
             return (
-              <article key={product.id} className="rounded-[16px] border border-black/10 p-3">
-                <div className="relative h-[130px] rounded-[10px] bg-[#f5f3ef]">
-                  <Image
-                    src={product.image}
-                    alt={product.name}
-                    fill
-                    sizes="141px"
-                    className="object-contain p-3"
-                  />
-                </div>
-                <h3 className="mt-3 min-h-10 text-sm font-bold">{product.name}</h3>
-                <p className="text-xs text-[#777]">{product.pack}</p>
-                <p className="mt-1">
-                  <span className="mr-1 text-[11px] text-[#777] line-through">
-                    {formatMrp(product.mrp)}
-                  </span>
-                  <span className="text-sm font-black">{formatMrp(product.salePrice)}</span>
-                </p>
-                <div className="mt-3">
-                  {quantity > 0 ? (
-                    <QuantityStepper
-                      compact
-                      value={quantity}
-                      onChange={(value) =>
-                        setQuantities((current) => ({ ...current, [product.id]: value }))
-                      }
+              <article
+                key={product.id}
+                className="flex flex-col justify-between rounded-[18px] border border-gray-200/90 bg-white p-2.5 shadow-sm"
+              >
+                <div>
+                  <div className="relative aspect-square overflow-hidden rounded-[14px] bg-[#f5f3ef]">
+                    <Image
+                      src={product.image}
+                      alt={product.name}
+                      fill
+                      sizes="141px"
+                      className="object-contain p-3"
                     />
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => setQuantities((current) => ({ ...current, [product.id]: 1 }))}
-                      className="h-9 w-full rounded-full bg-black text-sm font-bold text-white"
-                    >
-                      Add
-                    </button>
-                  )}
+                  </div>
+                  <h3 className="font-geist mt-2 truncate text-xs font-bold text-gray-950">
+                    {product.name}
+                  </h3>
+                  <p className="font-geist text-[10px] text-gray-500">{product.pack}</p>
+                </div>
+                <div className="mt-2 border-t border-gray-100 pt-2">
+                  <div className="flex items-baseline gap-1">
+                    <span className="font-geist text-[10px] text-gray-400 line-through">
+                      {formatMrp(product.mrp)}
+                    </span>
+                    <span className="font-geist text-xs font-black text-[#c2966e]">
+                      {formatMrp(product.salePrice)}
+                    </span>
+                  </div>
+                  <div className="mt-2">
+                    {quantity > 0 ? (
+                      <QuantityStepper
+                        compact
+                        value={quantity}
+                        onChange={(value) =>
+                          setQuantities((current) => ({ ...current, [product.id]: value }))
+                        }
+                        onRemove={() =>
+                          setQuantities((current) => ({ ...current, [product.id]: 0 }))
+                        }
+                      />
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setQuantities((current) => ({ ...current, [product.id]: 1 }))
+                        }
+                        className="font-outfit flex h-8 w-full items-center justify-center rounded-full bg-black text-xs font-bold text-white transition hover:bg-gray-800"
+                      >
+                        Add
+                      </button>
+                    )}
+                  </div>
                 </div>
               </article>
             );
           })}
         </div>
       </main>
-      <div className="fixed right-0 bottom-[92px] left-0 z-30 mx-auto flex max-w-[390px] items-center justify-between border-t border-black/10 bg-white px-6 py-3">
+
+      {/* Mobile Bottom Bar */}
+      <div className="fixed right-0 bottom-[92px] left-0 z-30 mx-auto flex max-w-[390px] items-center justify-between border-t border-gray-200/90 bg-white px-5 py-3 shadow-lg">
         <div>
-          <p className="text-sm font-bold">{Math.min(selected, 6)} / 6 Selected</p>
-          <p className="text-[11px] text-[#777]">
-            {selected >= 6
-              ? "Eligible for 1 Premium Trolley"
-              : `${6 - selected} More Required for free gift`}
+          <p className="font-geist text-sm font-black text-gray-950">{selected} / 6 Selected</p>
+          <p className="font-geist text-[11px] text-gray-500">
+            {selected >= 6 ? "Gift unlocked! 🎉" : `${6 - selected} More Required for free gift`}
           </p>
         </div>
         <Link
           href={selected >= 6 ? "/cart" : "#gift-products"}
-          onClick={() => {
-            if (selected >= 6) addGiftToCart(giftOffer.id, quantitiesToSelection(quantities));
+          onClick={(e) => {
+            if (selected < 6) {
+              e.preventDefault();
+            } else {
+              addGiftToCart(giftOffer.id, quantitiesToSelection(quantities));
+            }
           }}
           aria-disabled={selected < 6}
-          className={`grid h-11 min-w-32 place-items-center rounded-full text-sm font-bold ${selected >= 6 ? "bg-black text-white" : "pointer-events-none bg-black/15 text-black/35"}`}
+          className={`font-outfit flex h-10 min-w-28 items-center justify-center rounded-full text-xs font-bold ${
+            selected >= 6 ? "bg-black text-white" : "pointer-events-none bg-gray-200 text-gray-400"
+          }`}
         >
           Continue
         </Link>
