@@ -239,7 +239,7 @@ export function DesktopCartSection() {
                                 <button
                                   type="button"
                                   onClick={() => setCartQuantity(id, Math.max(1, quantity - 1))}
-                                  className="grid size-6 place-items-center text-base font-semibold text-[#a67854] disabled:opacity-40"
+                                  className="grid size-6 cursor-pointer place-items-center text-base font-semibold text-[#a67854] disabled:opacity-40"
                                   disabled={quantity <= 1}
                                   aria-label="Decrease quantity"
                                 >
@@ -251,7 +251,7 @@ export function DesktopCartSection() {
                                 <button
                                   type="button"
                                   onClick={() => setCartQuantity(id, quantity + 1)}
-                                  className="grid size-6 place-items-center text-base font-semibold text-[#a67854]"
+                                  className="grid size-6 cursor-pointer place-items-center text-base font-semibold text-[#a67854]"
                                   aria-label="Increase quantity"
                                 >
                                   +
@@ -262,7 +262,7 @@ export function DesktopCartSection() {
                                 type="button"
                                 onClick={() => removeFromCart(id)}
                                 aria-label={`Remove ${product.name}`}
-                                className="grid size-9 place-items-center rounded-2xl bg-[#FAF6F0] text-gray-400 transition hover:text-red-500"
+                                className="grid size-9 cursor-pointer place-items-center rounded-2xl bg-[#FAF6F0] text-gray-400 transition hover:text-red-500"
                               >
                                 <Image
                                   src="/customer-flow/icons/delete-btn.svg"
@@ -376,7 +376,7 @@ export function DesktopCartSection() {
                                       type="button"
                                       onClick={() => removeFromCart(gift.id)}
                                       aria-label="Remove gift offer"
-                                      className="grid size-9 place-items-center rounded-2xl bg-white text-gray-400 shadow-2xs transition hover:text-red-500"
+                                      className="grid size-9 cursor-pointer place-items-center rounded-2xl bg-white text-gray-400 shadow-2xs transition hover:text-red-500"
                                     >
                                       <Image
                                         src="/customer-flow/icons/delete-btn.svg"
@@ -466,7 +466,7 @@ export function DesktopCartSection() {
                                         onClick={() =>
                                           setCartQuantity(id, Math.max(1, quantity - 1))
                                         }
-                                        className="grid size-6 place-items-center text-base font-semibold text-[#a67854] disabled:opacity-40"
+                                        className="grid size-6 cursor-pointer place-items-center text-base font-semibold text-[#a67854] disabled:opacity-40"
                                         disabled={quantity <= 1}
                                         aria-label="Decrease quantity"
                                       >
@@ -478,7 +478,7 @@ export function DesktopCartSection() {
                                       <button
                                         type="button"
                                         onClick={() => setCartQuantity(id, quantity + 1)}
-                                        className="grid size-6 place-items-center text-base font-semibold text-[#a67854]"
+                                        className="grid size-6 cursor-pointer place-items-center text-base font-semibold text-[#a67854]"
                                         aria-label="Increase quantity"
                                       >
                                         +
@@ -489,7 +489,7 @@ export function DesktopCartSection() {
                                       type="button"
                                       onClick={() => removeFromCart(id)}
                                       aria-label={`Remove ${offer.title}`}
-                                      className="grid size-9 place-items-center rounded-2xl bg-[#FAF6F0] text-gray-400 transition hover:text-red-500"
+                                      className="grid size-9 cursor-pointer place-items-center rounded-2xl bg-[#FAF6F0] text-gray-400 transition hover:text-red-500"
                                     >
                                       <Image
                                         src="/customer-flow/icons/delete-btn.svg"
@@ -674,7 +674,7 @@ export function DesktopCartSection() {
                 type="button"
                 disabled={totalItemsCount === 0}
                 onClick={submitRequirement}
-                className="font-outfit mt-6 flex h-12 w-full items-center justify-center rounded-full bg-black text-sm font-bold tracking-wide text-white shadow-sm transition hover:bg-gray-800 disabled:opacity-40"
+                className="font-outfit mt-6 flex h-12 w-full cursor-pointer items-center justify-center rounded-full bg-black text-sm font-bold tracking-wide text-white shadow-sm transition hover:bg-gray-800 disabled:opacity-40"
               >
                 Send Requirement
               </button>

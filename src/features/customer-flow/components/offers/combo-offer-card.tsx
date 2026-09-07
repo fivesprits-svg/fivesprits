@@ -92,7 +92,7 @@ export function ComboOfferCard({
             <button
               type="button"
               onClick={onAdd}
-              className="font-outfit flex h-11 shrink-0 items-center justify-center rounded-full bg-black px-7 text-sm font-bold tracking-wide text-white transition hover:bg-gray-800 active:scale-[0.99] sm:h-12 sm:px-8 sm:text-base"
+              className="font-outfit flex h-11 shrink-0 cursor-pointer items-center justify-center rounded-full bg-black px-7 text-sm font-bold tracking-wide text-white transition hover:bg-gray-800 active:scale-[0.99] sm:h-12 sm:px-8 sm:text-base"
             >
               Add
             </button>
@@ -102,7 +102,7 @@ export function ComboOfferCard({
                 <button
                   type="button"
                   onClick={() => onQuantityChange(Math.max(1, quantity - 1))}
-                  className="grid size-8 place-items-center text-xl font-semibold text-[#a67854] transition hover:scale-110 active:scale-95 disabled:opacity-40"
+                  className="grid size-8 cursor-pointer place-items-center text-xl font-semibold text-[#a67854] transition hover:scale-110 active:scale-95 disabled:opacity-40"
                   aria-label="Decrease quantity"
                   disabled={quantity <= 1}
                 >
@@ -116,7 +116,7 @@ export function ComboOfferCard({
                 <button
                   type="button"
                   onClick={() => onQuantityChange(quantity + 1)}
-                  className="grid size-8 place-items-center text-xl font-semibold text-[#a67854] transition hover:scale-110 active:scale-95"
+                  className="grid size-8 cursor-pointer place-items-center text-xl font-semibold text-[#a67854] transition hover:scale-110 active:scale-95"
                   aria-label="Increase quantity"
                 >
                   +
@@ -126,7 +126,7 @@ export function ComboOfferCard({
               <button
                 type="button"
                 onClick={onRemove}
-                className="grid size-11 shrink-0 place-items-center rounded-2xl bg-[#FAF6F0] transition hover:bg-[#f3ede3] active:scale-95 sm:size-12"
+                className="grid size-11 shrink-0 cursor-pointer place-items-center rounded-2xl bg-[#FAF6F0] transition hover:bg-[#f3ede3] active:scale-95 sm:size-12"
                 aria-label="Remove offer"
               >
                 <Image

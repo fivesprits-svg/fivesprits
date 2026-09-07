@@ -83,7 +83,7 @@ export function CatalogueCard({
   }
 
   return (
-    <article className="group flex h-full w-full flex-col justify-between rounded-xl border border-gray-200/80 bg-white p-2.5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-[#a67854]/40 hover:shadow-md sm:rounded-2xl sm:p-3.5">
+    <article className="group flex h-full w-full cursor-pointer flex-col justify-between rounded-xl border border-gray-200/80 bg-white p-2.5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-[#a67854]/40 hover:shadow-md sm:rounded-2xl sm:p-3.5">
       <div>
         {/* Product Image Box */}
         <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg bg-gray-50 p-1.5 transition-colors group-hover:bg-gray-100 sm:rounded-xl sm:p-2">
@@ -138,7 +138,7 @@ export function CatalogueCard({
           <button
             type="button"
             onClick={onAction}
-            className={`font-outfit flex h-9 w-full items-center justify-center rounded-xl text-[11px] font-bold tracking-wider uppercase transition-all duration-150 sm:h-10 sm:text-xs ${
+            className={`font-outfit flex h-9 w-full cursor-pointer items-center justify-center rounded-xl text-[11px] font-bold tracking-wider uppercase transition-all duration-150 sm:h-10 sm:text-xs ${
               actionVariant === "request"
                 ? "bg-[#a67854] text-white hover:bg-[#8f6442]"
                 : actionVariant === "requested"
@@ -157,7 +157,7 @@ export function CatalogueCard({
               <button
                 type="button"
                 onClick={() => onQuantityChange(Math.max(1, quantity - 1))}
-                className="grid size-7 place-items-center text-lg font-semibold text-[#a67854] transition hover:scale-110 active:scale-95 disabled:opacity-40"
+                className="grid size-7 cursor-pointer place-items-center text-lg font-semibold text-[#a67854] transition hover:scale-110 active:scale-95 disabled:opacity-80"
                 aria-label="Decrease quantity"
                 disabled={quantity <= 1}
               >
@@ -171,7 +171,7 @@ export function CatalogueCard({
               <button
                 type="button"
                 onClick={() => onQuantityChange(quantity + 1)}
-                className="grid size-7 place-items-center text-lg font-semibold text-[#a67854] transition hover:scale-110 active:scale-95"
+                className="grid size-7 cursor-pointer place-items-center text-lg font-semibold text-[#a67854] transition hover:scale-110 active:scale-95"
                 aria-label="Increase quantity"
               >
                 +
@@ -190,7 +190,7 @@ export function CatalogueCard({
                   alt="Remove"
                   width={18}
                   height={18}
-                  className="size-[18px] object-contain sm:size-5"
+                  className="size-[18px] cursor-pointer object-contain sm:size-5"
                 />
               </button>
             )}
