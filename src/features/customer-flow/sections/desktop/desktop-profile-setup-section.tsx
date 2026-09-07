@@ -4,7 +4,6 @@ import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-co
 import { ProfileSetupForm } from "@/features/customer-flow/components/auth/profile-setup-form";
 import { ProfileSetupHereForm } from "@/features/customer-flow/components/auth/profile-setup-here-form";
 import { DesktopAuthPageLayout } from "@/features/customer-flow/components/ui/auth-page-layout";
-import { Breadcrumb } from "@/features/customer-flow/components/navigation/breadcrumb";
 
 export function DesktopProfileSetupSection() {
   const { state } = useCustomerFlow();
@@ -13,13 +12,6 @@ export function DesktopProfileSetupSection() {
   return (
     <DesktopAuthPageLayout maxWidth={isLoginHereFlow ? "max-w-4xl" : "max-w-xl"}>
       <div className="rounded-3xl border border-gray-200/80 bg-white p-4 shadow-xl shadow-black/5 md:p-8">
-        <Breadcrumb
-          homeHref="/"
-          items={[
-            { label: "Age Verification", href: "/age-verification" },
-            { label: "Profile Setup" },
-          ]}
-        />
         {/* Header Branding */}
         <div className="flex flex-col items-center text-center">
           <div className="mb-2 flex items-center justify-center gap-2">

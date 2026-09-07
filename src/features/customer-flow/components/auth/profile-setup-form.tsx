@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import { formatDisplayMobile } from "@/features/customer-flow/utils/validation";
+import { FlowNavButtons } from "@/features/customer-flow/components/auth/flow-nav-buttons";
 
 export function ProfileSetupForm() {
   const router = useRouter();
@@ -47,13 +48,13 @@ export function ProfileSetupForm() {
       </div>
 
       <div className="pt-3">
-        <button
-          type="submit"
-          disabled={loading || !name.trim()}
-          className="customer-continue-button w-full"
-        >
-          {loading ? "Saving..." : "Save & Continue"}
-        </button>
+        <FlowNavButtons
+          backHref="/age-verification"
+          submitLabel="Save & Continue"
+          loading={loading}
+          loadingLabel="Saving..."
+          disabled={!name.trim()}
+        />
       </div>
     </form>
   );

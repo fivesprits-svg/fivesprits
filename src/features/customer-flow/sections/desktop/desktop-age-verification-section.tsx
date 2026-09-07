@@ -1,18 +1,11 @@
 import { AgeVerificationForm } from "@/features/customer-flow/components/auth/age-verification-form";
 import { DesktopAuthPageLayout } from "@/features/customer-flow/components/ui/auth-page-layout";
 import { IconCircle } from "@/features/customer-flow/components/ui/icon-circle";
-import { Breadcrumb } from "@/features/customer-flow/components/navigation/breadcrumb";
 
 export function DesktopAgeVerificationSection() {
   return (
     <DesktopAuthPageLayout>
       <div className="customer-desktop-card flex flex-col items-center text-center">
-        <div className="w-full text-left">
-          <Breadcrumb
-            homeHref="/"
-            items={[{ label: "DigiLocker", href: "/digilocker" }, { label: "Age Verification" }]}
-          />
-        </div>
         <IconCircle
           iconSrc="/customer-flow/icons/age-verification.svg"
           iconAlt="Age verification"

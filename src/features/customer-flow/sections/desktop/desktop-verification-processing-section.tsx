@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import { mockVerifyAadhaar } from "@/features/customer-flow/utils/verification-mock";
 import { DesktopAuthPageLayout } from "@/features/customer-flow/components/ui/auth-page-layout";
-import { Breadcrumb } from "@/features/customer-flow/components/navigation/breadcrumb";
 import Image from "next/image";
 
 export function DesktopVerificationProcessingSection() {
@@ -36,10 +35,6 @@ export function DesktopVerificationProcessingSection() {
   return (
     <DesktopAuthPageLayout>
       <div className="customer-desktop-card flex flex-col items-center text-center">
-        <Breadcrumb
-          homeHref="/"
-          items={[{ label: "DigiLocker OTP", href: "/digilocker/otp" }, { label: "Verification" }]}
-        />
         <div className="my-4 grid place-items-center rounded-full bg-[#faf6f0] p-6">
           <div className="grid place-items-center rounded-full bg-[#f3e9db] p-4">
             <div className="grid size-20 place-items-center rounded-full bg-white/80">
@@ -61,6 +56,13 @@ export function DesktopVerificationProcessingSection() {
         <div className="mt-8">
           <div className="border-common-border border-t-brand-primary size-8 animate-spin rounded-full border-4" />
         </div>
+        <button
+          type="button"
+          onClick={() => router.push("/digilocker/otp")}
+          className="customer-form-nav-back mt-8"
+        >
+          Back
+        </button>
       </div>
     </DesktopAuthPageLayout>
   );

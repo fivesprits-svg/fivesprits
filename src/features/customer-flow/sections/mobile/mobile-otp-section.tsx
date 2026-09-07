@@ -1,15 +1,10 @@
 import { OtpForm } from "@/features/customer-flow/components/auth/otp-form";
 import { MobileHomeIndicator } from "@/features/customer-flow/components/navigation/mobile-system-chrome";
-import { Breadcrumb } from "@/features/customer-flow/components/navigation/breadcrumb";
 export function MobileOtpSection() {
   return (
     <section className="customer-page-container md:hidden">
       {/* <MobileHeader title="" backHref="/" /> */}
       <div className="px-6 pt-6 md:px-10">
-        <Breadcrumb
-          homeHref="/"
-          items={[{ label: "Login", href: "/" }, { label: "OTP Verification" }]}
-        />
         <h1 className="font-unbounded text-common-black mt-2 text-[30px] leading-tight font-black uppercase md:text-[40px]">
           Verify Your
           <br />

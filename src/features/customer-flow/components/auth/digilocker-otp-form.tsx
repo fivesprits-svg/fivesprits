@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import { ResendTimer } from "@/features/customer-flow/components/ui/resend-timer";
+import { FlowNavButtons } from "@/features/customer-flow/components/auth/flow-nav-buttons";
 import {
   MobileHomeIndicator,
   // MobileStatusBar,
@@ -94,9 +95,14 @@ export function DigilockerOtpForm() {
       <div className="mt-6 md:mt-8">
         <ResendTimer initialSeconds={60} onResend={handleResend} />
       </div>
-      <button type="submit" disabled={loading} className="customer-continue-button mt-8 md:mt-10">
-        {loading ? "Verifying..." : "Verify & Proceed"}
-      </button>
+      <div className="mt-8 md:mt-10">
+        <FlowNavButtons
+          backHref="/digilocker"
+          submitLabel="Verify & Proceed"
+          loading={loading}
+          loadingLabel="Verifying..."
+        />
+      </div>
     </form>
   );
 }

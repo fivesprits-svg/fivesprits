@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import { mockVerifyAadhaar } from "@/features/customer-flow/utils/verification-mock";
 import { AuthPageLayout } from "@/features/customer-flow/components/ui/auth-page-layout";
-import { Breadcrumb } from "@/features/customer-flow/components/navigation/breadcrumb";
 import Image from "next/image";
 
 export function MobileVerificationProcessingSection() {
@@ -36,15 +35,6 @@ export function MobileVerificationProcessingSection() {
   return (
     <AuthPageLayout>
       <div className="flex min-h-[80dvh] flex-col items-center px-6 pt-6 pb-24 md:px-12 md:pt-8 md:pb-28">
-        <div className="w-full">
-          <Breadcrumb
-            homeHref="/"
-            items={[
-              { label: "DigiLocker OTP", href: "/digilocker/otp" },
-              { label: "Verification" },
-            ]}
-          />
-        </div>
         <div className="my-6 grid place-items-center rounded-full bg-[#faf6f0] p-6 md:my-8 md:p-8">
           <div className="grid place-items-center rounded-full bg-[#f3e9db] p-4 md:p-5">
             <div className="grid size-20 place-items-center rounded-full bg-white/80">
@@ -68,6 +58,13 @@ export function MobileVerificationProcessingSection() {
         <div className="mt-8 md:mt-10">
           <div className="border-common-border border-t-brand-primary size-8 animate-spin rounded-full border-4 md:size-10" />
         </div>
+        <button
+          type="button"
+          onClick={() => router.push("/digilocker/otp")}
+          className="customer-form-nav-back mt-8 md:mt-10"
+        >
+          Back
+        </button>
       </div>
     </AuthPageLayout>
   );

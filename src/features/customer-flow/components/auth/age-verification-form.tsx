@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { TermsOfServiceModal } from "@/features/customer-flow/components/auth/terms-of-service-modal";
+import { FlowNavButtons } from "@/features/customer-flow/components/auth/flow-nav-buttons";
 
 export function AgeVerificationForm() {
   const router = useRouter();
@@ -36,13 +37,7 @@ export function AgeVerificationForm() {
           I confirm that I am 25 years of age or older.
         </span>
       </button>
-      <button
-        type="submit"
-        disabled={!confirmed}
-        className={`customer-continue-button ${!confirmed ? "bg-gray-300" : ""}`}
-      >
-        Continue
-      </button>
+      <FlowNavButtons backHref="/digilocker" submitLabel="Continue" disabled={!confirmed} />
       <p className="font-geist text-common-gray text-center text-xs md:text-sm">
         By continuing, you agree to our{" "}
         <button

@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import { validateAadhaar, formatAadhaar } from "@/features/customer-flow/utils/validation";
+import { FlowNavButtons } from "@/features/customer-flow/components/auth/flow-nav-buttons";
 
 export function AadhaarForm() {
   const router = useRouter();
@@ -46,9 +47,12 @@ export function AadhaarForm() {
           </span>
         )}
       </label>
-      <button type="submit" disabled={loading} className="customer-continue-button">
-        {loading ? "Processing..." : "Proceed"}
-      </button>
+      <FlowNavButtons
+        backHref="/otp"
+        submitLabel="Proceed"
+        loading={loading}
+        loadingLabel="Processing..."
+      />
     </form>
   );
 }

@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import { formatDisplayMobile } from "@/features/customer-flow/utils/validation";
+import { FlowNavButtons } from "@/features/customer-flow/components/auth/flow-nav-buttons";
 
 export function ProfileSetupHereForm() {
   const router = useRouter();
@@ -192,9 +193,12 @@ export function ProfileSetupHereForm() {
 
       {/* Action Footer */}
       <div className="border-t border-gray-100 pt-5">
-        <button type="submit" disabled={loading} className="customer-continue-button w-full">
-          {loading ? "Saving..." : "Save & Continue"}
-        </button>
+        <FlowNavButtons
+          backHref="/age-verification"
+          submitLabel="Save & Continue"
+          loading={loading}
+          loadingLabel="Saving..."
+        />
       </div>
     </form>
   );

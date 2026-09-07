@@ -1,15 +1,10 @@
 import { DigilockerOtpForm } from "@/features/customer-flow/components/auth/digilocker-otp-form";
 import { AuthPageLayout } from "@/features/customer-flow/components/ui/auth-page-layout";
-import { Breadcrumb } from "@/features/customer-flow/components/navigation/breadcrumb";
 
 export function MobileDigilockerOtpSection() {
   return (
     <AuthPageLayout>
       <div className="px-6 pt-6 pb-24 md:px-12 md:pt-8 md:pb-28">
-        <Breadcrumb
-          homeHref="/"
-          items={[{ label: "DigiLocker", href: "/digilocker" }, { label: "OTP Verification" }]}
-        />
         <h1 className="font-unbounded text-common-black mt-2 text-[30px] leading-tight font-black uppercase md:text-[36px] md:leading-tight">
           Verify Your
           <br />

@@ -3,19 +3,14 @@ import Image from "next/image";
 import { AadhaarForm } from "@/features/customer-flow/components/auth/aadhaar-form";
 import { DesktopAuthPageLayout } from "@/features/customer-flow/components/ui/auth-page-layout";
 import { IconCircle } from "@/features/customer-flow/components/ui/icon-circle";
-import { Breadcrumb } from "@/features/customer-flow/components/navigation/breadcrumb";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import { formatDisplayMobile } from "@/features/customer-flow/utils/validation";
 
 export function DesktopDigilockerSection() {
-  const { state, logout } = useCustomerFlow();
+  const { state } = useCustomerFlow();
   return (
     <DesktopAuthPageLayout>
       <div className="customer-desktop-card">
-        <Breadcrumb
-          homeHref="/"
-          items={[{ label: "OTP", href: "/otp" }, { label: "Aadhaar Verification" }]}
-        />
         <div className="mt-2 text-left">
           <h1 className="font-unbounded text-common-black text-2xl leading-tight font-extrabold">
             Welcome
@@ -73,11 +68,6 @@ export function DesktopDigilockerSection() {
         <div className="mt-5">
           <AadhaarForm />
         </div>
-
-        <button type="button" onClick={logout} className="customer-logout-button mt-5">
-          <Image src="/customer-flow/icons/log-out.svg" alt="" width={18} height={18} />
-          Logout
-        </button>
       </div>
     </DesktopAuthPageLayout>
   );

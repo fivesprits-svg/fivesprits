@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
+import { FlowNavButtons } from "@/features/customer-flow/components/auth/flow-nav-buttons";
 import {
   MobileHomeIndicator,
   // MobileStatusBar,
@@ -81,9 +82,9 @@ export function OtpForm() {
         ))}
       </div>
       <p className="sr-only">Prototype code: 1234</p>
-      <button type="submit" className="customer-continue-button mt-10 md:mt-12">
-        Verify &amp; Proceed
-      </button>
+      <div className="mt-10 md:mt-12">
+        <FlowNavButtons backHref="/" submitLabel="Verify & Proceed" />
+      </div>
     </form>
   );
 }
