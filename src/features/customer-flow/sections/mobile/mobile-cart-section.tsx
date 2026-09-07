@@ -11,6 +11,7 @@ import { sampleRequirementHistory } from "@/features/customer-flow/data/requirem
 import { buildStructuredCart } from "@/features/customer-flow/helpers/cart-view-model";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import { formatMrp } from "@/features/customer-flow/utils/currency";
+import Link from "next/link";
 
 export function MobileCartSection() {
   const router = useRouter();
@@ -37,13 +38,22 @@ export function MobileCartSection() {
   return (
     <div className="min-h-dvh bg-white pb-48 md:hidden">
       {/* Header matching mockup */}
-      <header className="mx-auto w-full max-w-[390px] px-6 pt-5 pb-2">
-        <h1 className="font-unbounded text-3xl font-black tracking-tight text-gray-950 uppercase">
-          Requirement
-        </h1>
-        <p className="font-outfit mt-1 text-xs font-bold tracking-widest text-[#a67854] uppercase">
-          CHECKLIST
-        </p>
+      <header className="mx-auto flex w-full max-w-[390px] items-start gap-2 px-6 pt-5 pb-2">
+        <Link
+          href="/categories"
+          aria-label="Go back"
+          className="mt-1 grid size-10 shrink-0 place-items-center rounded-full bg-[#f7f4ee]"
+        >
+          <Image src="/customer-flow/icons/back.svg" alt="" width={16} height={16} />
+        </Link>
+        <div className="min-w-0">
+          <h1 className="font-unbounded text-3xl font-black tracking-tight text-gray-950 uppercase">
+            Requirement
+          </h1>
+          <p className="font-outfit mt-1 text-xs font-bold tracking-widest text-[#a67854] uppercase">
+            CHECKLIST
+          </p>
+        </div>
       </header>
 
       <main className="mx-auto w-full max-w-[390px] px-6 pt-3">
