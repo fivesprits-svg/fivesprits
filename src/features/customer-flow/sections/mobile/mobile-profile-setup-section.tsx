@@ -4,6 +4,7 @@ import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-co
 import { ProfileSetupForm } from "@/features/customer-flow/components/auth/profile-setup-form";
 import { ProfileSetupHereForm } from "@/features/customer-flow/components/auth/profile-setup-here-form";
 import { AuthPageLayout } from "@/features/customer-flow/components/ui/auth-page-layout";
+import { Breadcrumb } from "@/features/customer-flow/components/navigation/breadcrumb";
 
 export function MobileProfileSetupSection() {
   const { state } = useCustomerFlow();
@@ -12,6 +13,12 @@ export function MobileProfileSetupSection() {
   return (
     <AuthPageLayout>
       <div className="px-6 pt-4 pb-24 md:px-12 md:pt-6 md:pb-28">
+        <Breadcrumb
+          items={[
+            { label: "Age Verification", href: "/age-verification" },
+            { label: "Profile Setup" },
+          ]}
+        />
         {isLoginHereFlow ? (
           <>
             <div className="flex items-center gap-2 md:justify-center">

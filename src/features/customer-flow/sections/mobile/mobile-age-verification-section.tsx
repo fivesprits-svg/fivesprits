@@ -1,11 +1,17 @@
 import { AgeVerificationForm } from "@/features/customer-flow/components/auth/age-verification-form";
 import { AuthPageLayout } from "@/features/customer-flow/components/ui/auth-page-layout";
 import { IconCircle } from "@/features/customer-flow/components/ui/icon-circle";
+import { Breadcrumb } from "@/features/customer-flow/components/navigation/breadcrumb";
 
 export function MobileAgeVerificationSection() {
   return (
     <AuthPageLayout>
-      <div className="flex min-h-[80dvh] flex-col items-center px-6 pt-12 pb-24 md:px-10 md:pt-16">
+      <div className="flex min-h-[80dvh] flex-col items-center px-6 pt-6 pb-24 md:px-10 md:pt-8">
+        <div className="w-full">
+          <Breadcrumb
+            items={[{ label: "DigiLocker", href: "/digilocker" }, { label: "Age Verification" }]}
+          />
+        </div>
         <IconCircle
           iconSrc="/customer-flow/icons/age-verification.svg"
           iconAlt="Age verification"

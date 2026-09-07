@@ -14,12 +14,10 @@ export function IconCircle({
   iconAlt = "",
   iconWidth = 24,
   iconHeight = 24,
-  variant = "default",
-  className = "",
 }: IconCircleProps) {
   return (
     <div
-      className={`${variant === "large" ? "customer-icon-circle-lg" : "customer-icon-circle"} ${className}`}
+    // className={`${variant === "large" ? "customer-icon-circle-lg" : "customer-icon-circle"} ${className}`}
     >
       <Image src={iconSrc} alt={iconAlt} width={iconWidth} height={iconHeight} />
     </div>

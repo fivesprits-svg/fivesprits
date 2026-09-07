@@ -37,7 +37,7 @@ export function DigilockerOtpForm() {
       <div className="fixed inset-0 z-50 flex min-h-dvh flex-col bg-[#faf9f6] md:static md:mt-8 md:block md:min-h-0 md:bg-transparent">
         {/* <MobileStatusBar /> */}
         <div className="flex flex-1 flex-col items-center justify-center px-10 text-center md:block md:px-0 md:text-left">
-          <div className="customer-icon-circle md:hidden">
+          <div className="">
             <Image src="/customer-flow/icons/error.svg" alt="" width={24} height={24} />
           </div>
           <h2 className="mt-8 text-[28px] font-bold md:mt-0 md:text-lg">Verification Failed</h2>
