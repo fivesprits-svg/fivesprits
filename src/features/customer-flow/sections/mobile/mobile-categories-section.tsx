@@ -51,7 +51,7 @@ export function MobileCategoriesSection() {
       ) : (
         <>
           {/* Hero Section with Visual Hero Image */}
-          <div className="relative flex items-center justify-between px-6 pt-3 pb-6">
+          <div className="relative flex items-center justify-between px-6 pb-6">
             <div className="relative z-10 max-w-[190px]">
               <p className="font-outfit text-xs font-bold tracking-widest text-[#7e7e86] uppercase">
                 WELCOME TO
@@ -96,7 +96,7 @@ export function MobileCategoriesSection() {
                     selectCategory(category.id);
                     router.push(`/brands?categoryId=${category.id}`);
                   }}
-                  className="group flex flex-col items-center"
+                  className="group flex cursor-pointer flex-col items-center"
                 >
                   <div className="relative aspect-square w-full overflow-hidden rounded-[18px] border border-gray-100/90 bg-[#FAF9F7] p-2 shadow-2xs transition-transform active:scale-95">
                     <Image

@@ -6,6 +6,7 @@ import { OfferTabs } from "@/features/customer-flow/components/offers/offer-tabs
 import { ComboOfferCard } from "@/features/customer-flow/components/offers/combo-offer-card";
 import { comboOffers } from "@/features/customer-flow/data/offers";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
+import { MobileHeader } from "../../components/navigation/mobile-header";
 
 export function MobileOffersSection() {
   const { addComboToCart, removeFromCart, state } = useCustomerFlow();
@@ -13,7 +14,7 @@ export function MobileOffersSection() {
 
   return (
     <div className="min-h-dvh bg-white pb-28 md:hidden">
-      {/* <MobileHeader title="Offers" /> */}
+      <MobileHeader title="Offers" backHref="" />
       <main className="mx-auto w-full max-w-[390px] px-6 pt-2">
         <OfferTabs active="combo" />
         <MobileOfferHero />

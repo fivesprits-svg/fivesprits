@@ -4,11 +4,12 @@ import { MobileBottomNav } from "@/features/customer-flow/components/navigation/
 import { MobileOfferHero } from "@/features/customer-flow/components/offers/mobile-offer-hero";
 import { OfferTabs } from "@/features/customer-flow/components/offers/offer-tabs";
 import { giftOffer } from "@/features/customer-flow/data/offers";
+import { MobileHeader } from "../../components/navigation/mobile-header";
 
 export function MobileGiftOffersSection() {
   return (
     <div className="min-h-dvh bg-white pb-28 md:hidden">
-      {/* <MobileHeader title="Offers" /> */}
+      <MobileHeader title="Offers" backHref="" />
       <main className="mx-auto w-full max-w-[390px] px-6 pt-2">
         <OfferTabs active="gift" />
         <MobileOfferHero gift />
