@@ -5,11 +5,19 @@ import { MobileHeader } from "@/features/customer-flow/components/navigation/mob
 import { MobileOfferHero } from "@/features/customer-flow/components/offers/mobile-offer-hero";
 import { OfferTabs } from "@/features/customer-flow/components/offers/offer-tabs";
 import { ComboOfferCard } from "@/features/customer-flow/components/offers/combo-offer-card";
-import { comboOffers } from "@/features/customer-flow/data/offers";
+import {
+  comboOffers as defaultComboOffers,
+  type ComboOffer,
+} from "@/features/customer-flow/data/offers";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 
-export function MobileOffersSection() {
+export function MobileOffersSection({
+  offersList = defaultComboOffers,
+}: {
+  offersList?: ComboOffer[];
+} = {}) {
   const { addComboToCart, removeFromCart, state } = useCustomerFlow();
+
   const cartLines = state.cart;
 
   return (
@@ -19,7 +27,7 @@ export function MobileOffersSection() {
         <OfferTabs active="combo" />
         <MobileOfferHero />
         <div className="mt-4 space-y-4">
-          {comboOffers.map((offer) => {
+          {offersList.map((offer) => {
             const item = cartLines.find((line) => line.productId === offer.id);
             return (
               <ComboOfferCard

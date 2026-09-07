@@ -2,15 +2,31 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ConfirmationDialog } from "@/features/customer-flow/components/confirmation-dialog";
 import { MobileBottomNav } from "@/features/customer-flow/components/navigation/mobile-bottom-nav";
-import { brands, products } from "@/features/customer-flow/data/catalogue";
-import { comboOffers, giftOffer } from "@/features/customer-flow/data/offers";
+import {
+  brands as defaultBrands,
+  products as defaultProducts,
+} from "@/features/customer-flow/data/catalogue";
+import {
+  comboOffers as defaultComboOffers,
+  giftOffer as defaultGiftOffer,
+} from "@/features/customer-flow/data/offers";
+import { fetchProductsApi } from "@/features/customer-flow/services/products-api";
+import { fetchBrandsApi } from "@/features/customer-flow/services/brands-api";
+import {
+  fetchComboOffersApi,
+  fetchGiftOffersApi,
+  type GiftOfferDetail,
+} from "@/features/customer-flow/services/offers-api";
 import { sampleRequirementHistory } from "@/features/customer-flow/data/requirements-history";
 import { buildStructuredCart } from "@/features/customer-flow/helpers/cart-view-model";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import { formatMrp } from "@/features/customer-flow/utils/currency";
+import type { Brand, Product } from "@/features/customer-flow/types";
+import type { ComboOffer } from "@/features/customer-flow/data/offers";
 
 export function MobileCartSection() {
   const router = useRouter();
@@ -22,6 +38,49 @@ export function MobileCartSection() {
     submitRequirement,
     dismissConfirmation,
   } = useCustomerFlow();
+
+  const [productsList, setProductsList] = useState<Product[]>(defaultProducts);
+  const [brandsList, setBrandsList] = useState<Brand[]>(defaultBrands);
+  const [comboOffersList, setComboOffersList] = useState<ComboOffer[]>(defaultComboOffers);
+  const [giftOfferDetail, setGiftOfferDetail] = useState<GiftOfferDetail>(defaultGiftOffer);
+
+  useEffect(() => {
+    let isMounted = true;
+    Promise.all([
+      fetchProductsApi(),
+      fetchBrandsApi(),
+      fetchComboOffersApi(),
+      fetchGiftOffersApi(),
+    ]).then(([prods, brs, combos, gifts]) => {
+      if (!isMounted) return;
+      if (prods && prods.length > 0) {
+        const merged = [...prods];
+        defaultProducts.forEach((dp) => {
+          if (!merged.find((p) => p.id === dp.id)) merged.push(dp);
+        });
+        setProductsList(merged);
+      }
+      if (brs && brs.length > 0) {
+        const merged = [...brs];
+        defaultBrands.forEach((db) => {
+          if (!merged.find((b) => b.id === db.id)) merged.push(db);
+        });
+        setBrandsList(merged);
+      }
+      if (combos && combos.length > 0) {
+        const merged = [...combos];
+        defaultComboOffers.forEach((dc) => {
+          if (!merged.find((c) => c.id === dc.id)) merged.push(dc);
+        });
+        setComboOffersList(merged);
+      }
+      if (gifts?.giftOffer) setGiftOfferDetail(gifts.giftOffer);
+    });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const isRegularUser = Boolean(state.session?.cameFromLoginHere || state.session?.mobile);
 
@@ -38,7 +97,7 @@ export function MobileCartSection() {
     requestedItemsCount,
     requestedOriginalMrp,
     requestedSalePrice,
-  } = buildStructuredCart(state.cart, products, brands, comboOffers, giftOffer);
+  } = buildStructuredCart(state.cart, productsList, brandsList, comboOffersList, giftOfferDetail);
 
   return (
     <div className="min-h-dvh bg-white pb-48 md:hidden">
@@ -153,7 +212,7 @@ export function MobileCartSection() {
                           type="button"
                           onClick={() => {
                             history.items.forEach((item) => {
-                              const found = products.find((p) => p.name === item.name);
+                              const found = productsList.find((p) => p.name === item.name);
                               if (found) {
                                 addToCart(found.id, item.quantity);
                               }
@@ -621,7 +680,7 @@ export function MobileCartSection() {
                           type="button"
                           onClick={() => {
                             history.items.forEach((item) => {
-                              const found = products.find((p) => p.name === item.name);
+                              const found = productsList.find((p) => p.name === item.name);
                               if (found) {
                                 addToCart(found.id, item.quantity);
                               }

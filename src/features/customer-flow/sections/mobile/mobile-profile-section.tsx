@@ -1,12 +1,13 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { MobileBottomNav } from "@/features/customer-flow/components/navigation/mobile-bottom-nav";
 import { MobileHeader } from "@/features/customer-flow/components/navigation/mobile-header";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import { formatDisplayMobile } from "@/features/customer-flow/utils/validation";
+import { fetchCustomerProfileApi } from "@/features/customer-flow/services/user-api";
 
 export function MobileProfileSection() {
   const router = useRouter();
@@ -31,14 +32,31 @@ export function MobileProfileSection() {
     uploaded: true,
   });
 
-  const profileData = {
-    name: state.session?.name || "Rajesh Kumar",
+  const [profileData, setProfileData] = useState({
+    name: state.session?.name || "Member",
     mobile: formatDisplayMobile(state.session?.mobile),
-    permitNumber: "PRM-2024-00587",
+    permitNumber: "PRM-2026-00587",
     address: "42, MG Road, Sector 15, Gurugram, Haryana",
     pincode: "122001",
     mapsLocation: "maps.google.com/rajesh-store",
-  };
+  });
+
+  useEffect(() => {
+    let isMounted = true;
+    fetchCustomerProfileApi().then((user) => {
+      if (isMounted && user) {
+        setProfileData((prev) => ({
+          ...prev,
+          name: user.name || user.username || prev.name,
+          mobile: formatDisplayMobile(user.mobileNumber || state.session?.mobile) || prev.mobile,
+          permitNumber: user.permitNumber || prev.permitNumber,
+        }));
+      }
+    });
+    return () => {
+      isMounted = false;
+    };
+  }, [state.session?.mobile]);
 
   function handleEditField(field: string, currentValue: string) {
     setEditingField(field);

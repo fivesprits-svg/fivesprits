@@ -4,11 +4,19 @@ import Link from "next/link";
 import { PortalShell } from "@/features/customer-flow/components/portal-shell";
 import { Breadcrumb } from "@/features/customer-flow/components/navigation/breadcrumb";
 import { ComboOfferCard } from "@/features/customer-flow/components/offers/combo-offer-card";
-import { comboOffers } from "@/features/customer-flow/data/offers";
+import {
+  comboOffers as defaultComboOffers,
+  type ComboOffer,
+} from "@/features/customer-flow/data/offers";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 
-export function DesktopOffersSection() {
+export function DesktopOffersSection({
+  offersList = defaultComboOffers,
+}: {
+  offersList?: ComboOffer[];
+} = {}) {
   const { addComboToCart, removeFromCart, state } = useCustomerFlow();
+
   const cartLines = state.cart;
 
   return (
@@ -44,7 +52,7 @@ export function DesktopOffersSection() {
 
           {/* Offers Grid */}
           <div className="grid grid-cols-2 gap-6">
-            {comboOffers.map((offer) => {
+            {offersList.map((offer) => {
               const item = cartLines.find((line) => line.productId === offer.id);
               return (
                 <ComboOfferCard

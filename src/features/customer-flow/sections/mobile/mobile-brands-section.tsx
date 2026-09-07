@@ -6,14 +6,22 @@ import { useRouter } from "next/navigation";
 import { MobileBottomNav } from "@/features/customer-flow/components/navigation/mobile-bottom-nav";
 import { getBrandsByCategory, getCategory } from "@/features/customer-flow/data/catalogue";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
+import type { Brand, Category } from "@/features/customer-flow/types";
 
-export function MobileBrandsSection() {
+export function MobileBrandsSection({
+  category: propCategory,
+  brands: propBrands,
+}: {
+  category?: Category | null;
+  brands?: Brand[];
+} = {}) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { selectBrand } = useCustomerFlow();
   const categoryId = searchParams.get("categoryId") ?? "beer";
-  const category = getCategory(categoryId);
-  const brands = getBrandsByCategory(categoryId);
+
+  const category = propCategory ?? getCategory(categoryId) ?? null;
+  const brands = propBrands && propBrands.length > 0 ? propBrands : getBrandsByCategory(categoryId);
 
   return (
     <div className="mx-auto min-h-dvh w-full max-w-[390px] overflow-hidden bg-white pb-28 text-[#101010] md:hidden">

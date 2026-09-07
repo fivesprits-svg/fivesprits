@@ -7,7 +7,12 @@ import { MobileBottomNav } from "@/features/customer-flow/components/navigation/
 import { MobileHeader } from "@/features/customer-flow/components/navigation/mobile-header";
 import { QuantityStepper } from "@/features/customer-flow/components/quantity-stepper";
 import { MaxLimitDialog } from "@/features/customer-flow/components/offers/max-limit-dialog";
-import { giftOffer, giftProducts } from "@/features/customer-flow/data/offers";
+import {
+  giftOffer as defaultGiftOffer,
+  giftProducts as defaultGiftProducts,
+  type GiftProduct,
+} from "@/features/customer-flow/data/offers";
+import { type GiftOfferDetail } from "@/features/customer-flow/services/offers-api";
 import { formatMrp } from "@/features/customer-flow/utils/currency";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import {
@@ -15,11 +20,20 @@ import {
   selectionToQuantities,
 } from "@/features/customer-flow/helpers/gift-selection";
 
-export function MobileGiftSelectionSection() {
+export function MobileGiftSelectionSection({
+  offer: propOffer,
+  productsList: propProducts,
+}: {
+  offer?: GiftOfferDetail;
+  productsList?: GiftProduct[];
+} = {}) {
   const { state, addGiftToCart } = useCustomerFlow();
+  const offer = propOffer ?? defaultGiftOffer;
+  const productsList = propProducts && propProducts.length > 0 ? propProducts : defaultGiftProducts;
   const [showMaxLimitDialog, setShowMaxLimitDialog] = useState(false);
+
   const savedSelection = state.cart.find(
-    (line) => line.productId === giftOffer.id,
+    (line) => line.productId === offer.id || line.productId === defaultGiftOffer.id,
   )?.selectedProductIds;
   const [quantities, setQuantities] = useState<Record<string, number>>(() =>
     selectionToQuantities(savedSelection),
@@ -49,12 +63,12 @@ export function MobileGiftSelectionSection() {
           </p>
           <h1 className="font-geist text-lg font-black text-gray-950">Choose any 6 items</h1>
           <p className="font-geist mt-0.5 text-xs text-gray-500">
-            Complete the selection to unlock your {giftOffer.gift}.
+            Complete the selection to unlock your {offer.gift}.
           </p>
         </div>
 
         <div id="gift-products" className="mt-4 grid grid-cols-2 gap-3">
-          {giftProducts.map((product) => {
+          {productsList.map((product) => {
             const quantity = quantities[product.id] ?? 0;
             return (
               <article
@@ -126,7 +140,7 @@ export function MobileGiftSelectionSection() {
             if (selected < 6) {
               e.preventDefault();
             } else {
-              addGiftToCart(giftOffer.id, quantitiesToSelection(quantities));
+              addGiftToCart(offer.id, quantitiesToSelection(quantities));
             }
           }}
           aria-disabled={selected < 6}
@@ -144,7 +158,7 @@ export function MobileGiftSelectionSection() {
         open={showMaxLimitDialog}
         onClose={() => setShowMaxLimitDialog(false)}
         maxLimit={6}
-        giftName={giftOffer.gift}
+        giftName={offer.gift}
       />
     </div>
   );

@@ -6,14 +6,22 @@ import { CatalogueCard } from "@/features/customer-flow/components/catalogue-car
 import { Breadcrumb } from "@/features/customer-flow/components/navigation/breadcrumb";
 import { getBrandsByCategory, getCategory } from "@/features/customer-flow/data/catalogue";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
+import type { Brand, Category } from "@/features/customer-flow/types";
 
-export function DesktopBrandsSection() {
+export function DesktopBrandsSection({
+  category: propCategory,
+  brands: propBrands,
+}: {
+  category?: Category | null;
+  brands?: Brand[];
+} = {}) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { selectBrand } = useCustomerFlow();
   const categoryId = searchParams.get("categoryId") ?? "whisky";
-  const category = getCategory(categoryId);
-  const brands = getBrandsByCategory(categoryId);
+
+  const category = propCategory ?? getCategory(categoryId) ?? null;
+  const brands = propBrands && propBrands.length > 0 ? propBrands : getBrandsByCategory(categoryId);
 
   return (
     <div className="hidden md:block">
@@ -33,11 +41,11 @@ export function DesktopBrandsSection() {
               <div className="mb-1.5 flex items-center gap-2">
                 <span className="size-2 rounded-full bg-[#a67854]" />
                 <span className="font-outfit text-xs font-bold tracking-wider text-[#a67854] uppercase">
-                  {category?.name} Houses
+                  {category?.name ?? "Spirits"} Houses
                 </span>
               </div>
               <h1 className="font-unbounded text-2xl font-black tracking-tight text-gray-900 lg:text-3xl">
-                Explore {category?.name}
+                Explore {category?.name ?? "Collection"}
               </h1>
               <p className="font-geist mt-1 text-xs text-gray-500 lg:text-sm">
                 Select a house to view its available collection and vintage reserves.

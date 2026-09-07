@@ -7,15 +7,27 @@ import { Breadcrumb } from "@/features/customer-flow/components/navigation/bread
 import { getBrand, getCategory, getProductsByBrand } from "@/features/customer-flow/data/catalogue";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import { formatMrp } from "@/features/customer-flow/utils/currency";
+import type { Brand, Category, Product } from "@/features/customer-flow/types";
 
-export function DesktopProductsSection() {
+export function DesktopProductsSection({
+  category: propCategory,
+  brand: propBrand,
+  products: propProducts,
+}: {
+  category?: Category | null;
+  brand?: Brand | null;
+  products?: Product[];
+} = {}) {
   const searchParams = useSearchParams();
   const { addToCart, removeFromCart, state } = useCustomerFlow();
   const brandId = searchParams.get("brandId") ?? "amber-reserve";
   const categoryId = searchParams.get("categoryId") ?? "whisky";
-  const brand = getBrand(brandId);
-  const category = getCategory(categoryId);
-  const products = getProductsByBrand(brandId);
+
+  const category = propCategory ?? getCategory(categoryId) ?? null;
+  const brand = propBrand ?? getBrand(brandId) ?? null;
+  const products =
+    propProducts && propProducts.length > 0 ? propProducts : getProductsByBrand(brandId);
+
   const cartLines = state.cart;
 
   return (

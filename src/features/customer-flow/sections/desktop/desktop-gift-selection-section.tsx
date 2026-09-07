@@ -7,7 +7,12 @@ import { PortalShell } from "@/features/customer-flow/components/portal-shell";
 import { Breadcrumb } from "@/features/customer-flow/components/navigation/breadcrumb";
 import { QuantityStepper } from "@/features/customer-flow/components/quantity-stepper";
 import { MaxLimitDialog } from "@/features/customer-flow/components/offers/max-limit-dialog";
-import { giftOffer, giftProducts } from "@/features/customer-flow/data/offers";
+import {
+  giftOffer as defaultGiftOffer,
+  giftProducts as defaultGiftProducts,
+  type GiftProduct,
+} from "@/features/customer-flow/data/offers";
+import { type GiftOfferDetail } from "@/features/customer-flow/services/offers-api";
 import { formatMrp } from "@/features/customer-flow/utils/currency";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import {
@@ -15,11 +20,20 @@ import {
   selectionToQuantities,
 } from "@/features/customer-flow/helpers/gift-selection";
 
-export function DesktopGiftSelectionSection() {
+export function DesktopGiftSelectionSection({
+  offer: propOffer,
+  productsList: propProducts,
+}: {
+  offer?: GiftOfferDetail;
+  productsList?: GiftProduct[];
+} = {}) {
   const { state, addGiftToCart } = useCustomerFlow();
+  const offer = propOffer ?? defaultGiftOffer;
+  const productsList = propProducts && propProducts.length > 0 ? propProducts : defaultGiftProducts;
   const [showMaxLimitDialog, setShowMaxLimitDialog] = useState(false);
+
   const savedSelection = state.cart.find(
-    (line) => line.productId === giftOffer.id,
+    (line) => line.productId === offer.id || line.productId === defaultGiftOffer.id,
   )?.selectedProductIds;
   const [quantities, setQuantities] = useState<Record<string, number>>(() =>
     selectionToQuantities(savedSelection),
@@ -65,7 +79,7 @@ export function DesktopGiftSelectionSection() {
                 Choose any 6 items
               </h1>
               <p className="font-geist mt-1 text-xs text-gray-500 lg:text-sm">
-                Complete the selection to unlock your {giftOffer.gift}.
+                Complete the selection to unlock your {offer.gift}.
               </p>
             </div>
             <div className="rounded-full bg-[#FAF6F0] px-5 py-2 text-xs font-black tracking-wide text-[#755337] shadow-xs">
@@ -75,7 +89,7 @@ export function DesktopGiftSelectionSection() {
 
           {/* Compact Product Cards Grid */}
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-            {giftProducts.map((product) => {
+            {productsList.map((product) => {
               const quantity = quantities[product.id] ?? 0;
               return (
                 <article
@@ -142,7 +156,7 @@ export function DesktopGiftSelectionSection() {
               </p>
               <p className="font-geist text-xs text-gray-500 sm:text-sm">
                 {selected >= 6
-                  ? "Gift unlocked! 🎉 Eligible for 1 " + giftOffer.gift
+                  ? "Gift unlocked! 🎉 Eligible for 1 " + offer.gift
                   : `${6 - selected} More Required for free gift`}
               </p>
             </div>
@@ -152,7 +166,7 @@ export function DesktopGiftSelectionSection() {
                 if (selected < 6) {
                   e.preventDefault();
                 } else {
-                  addGiftToCart(giftOffer.id, quantitiesToSelection(quantities));
+                  addGiftToCart(offer.id, quantitiesToSelection(quantities));
                 }
               }}
               aria-disabled={selected < 6}
@@ -173,7 +187,7 @@ export function DesktopGiftSelectionSection() {
         open={showMaxLimitDialog}
         onClose={() => setShowMaxLimitDialog(false)}
         maxLimit={6}
-        giftName={giftOffer.gift}
+        giftName={offer.gift}
       />
     </div>
   );

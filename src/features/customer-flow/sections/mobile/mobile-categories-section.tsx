@@ -1,11 +1,16 @@
 "use client";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { categories } from "@/features/customer-flow/data/catalogue";
+import { categories as defaultCategories } from "@/features/customer-flow/data/catalogue";
 import { MobileBottomNav } from "@/features/customer-flow/components/navigation/mobile-bottom-nav";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
+import type { Category } from "@/features/customer-flow/types";
 
-export function MobileCategoriesSection() {
+export function MobileCategoriesSection({
+  categoriesList = defaultCategories,
+}: {
+  categoriesList?: Category[];
+} = {}) {
   const router = useRouter();
   const { selectCategory } = useCustomerFlow();
 
@@ -72,7 +77,7 @@ export function MobileCategoriesSection() {
       <div className="px-6">
         <h2 className="font-outfit text-xl font-black text-black">Categories</h2>
         <div className="mt-4 grid grid-cols-4 gap-x-2.5 gap-y-4">
-          {categories.map((category) => (
+          {categoriesList.map((category) => (
             <button
               key={category.id}
               type="button"

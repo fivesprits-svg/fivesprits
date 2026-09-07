@@ -1,10 +1,17 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { PortalShell } from "@/features/customer-flow/components/portal-shell";
 import { Breadcrumb } from "@/features/customer-flow/components/navigation/breadcrumb";
-import { giftOffer } from "@/features/customer-flow/data/offers";
+import { giftOffer as defaultGiftOffer } from "@/features/customer-flow/data/offers";
+import { type GiftOfferDetail } from "@/features/customer-flow/services/offers-api";
 
-export function DesktopGiftOffersSection() {
+export function DesktopGiftOffersSection({
+  offer = defaultGiftOffer,
+}: {
+  offer?: GiftOfferDetail;
+} = {}) {
   return (
     <div className="hidden md:block">
       <PortalShell title="Offers" eyebrow="Exclusive rewards">
@@ -37,7 +44,7 @@ export function DesktopGiftOffersSection() {
           <article className="grid items-center gap-6 overflow-hidden rounded-[28px] border border-gray-200/90 bg-white p-4 shadow-sm transition-all duration-200 hover:shadow-md lg:grid-cols-[1fr_1.15fr] lg:p-6">
             <div className="relative aspect-[16/10] w-full overflow-hidden rounded-[20px] bg-[#f5f3ef] lg:h-full lg:min-h-[380px]">
               <Image
-                src={giftOffer.image}
+                src={offer.image}
                 alt="Premium trolley gift"
                 fill
                 sizes="50vw"
@@ -51,16 +58,16 @@ export function DesktopGiftOffersSection() {
                 </span>
               </div>
               <h2 className="font-geist mt-3 text-2xl font-black tracking-tight text-gray-950 lg:text-3xl">
-                {giftOffer.title}
+                {offer.title}
               </h2>
               <p className="font-geist mt-2 text-xl font-extrabold text-[#c2966e] lg:text-2xl">
-                {giftOffer.benefit}
+                {offer.benefit}
               </p>
               <div className="mt-4 rounded-2xl bg-[#FAF6F0] p-4">
                 <p className="font-geist text-sm leading-relaxed font-medium text-gray-800">
-                  {giftOffer.description}
+                  {offer.description}
                 </p>
-                <p className="font-geist mt-2 text-xs text-gray-500">{giftOffer.terms}</p>
+                <p className="font-geist mt-2 text-xs text-gray-500">{offer.terms}</p>
               </div>
               <div className="mt-6 flex items-center justify-end">
                 <Link

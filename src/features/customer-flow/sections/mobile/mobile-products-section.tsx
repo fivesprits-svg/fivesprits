@@ -1,5 +1,4 @@
 "use client";
-// import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { MobileBottomNav } from "@/features/customer-flow/components/navigation/mobile-bottom-nav";
 import { MobileHeader } from "@/features/customer-flow/components/navigation/mobile-header";
@@ -7,21 +6,33 @@ import { CatalogueCard } from "@/features/customer-flow/components/catalogue-car
 import { getBrand, getProductsByBrand } from "@/features/customer-flow/data/catalogue";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import { formatMrp } from "@/features/customer-flow/utils/currency";
+import type { Brand, Product } from "@/features/customer-flow/types";
 
-export function MobileProductsSection() {
+export function MobileProductsSection({
+  brand: propBrand,
+  products: propProducts,
+}: {
+  brand?: Brand | null;
+  products?: Product[];
+} = {}) {
   const searchParams = useSearchParams();
   const { addToCart, removeFromCart, state } = useCustomerFlow();
   const brandId = searchParams.get("brandId") ?? "amber-reserve";
-  const brand = getBrand(brandId);
-  // const [quantities, setQuantities] = useState<Record<string, number>>({});
+  const categoryId = searchParams.get("categoryId") ?? "whisky";
 
-  const products = getProductsByBrand(brandId);
+  const brand = propBrand ?? getBrand(brandId) ?? null;
+  const products =
+    propProducts && propProducts.length > 0 ? propProducts : getProductsByBrand(brandId);
+
   const cartLines = state.cart;
   const requestedIds = new Set(cartLines.map((line) => line.productId).filter((id) => id != null));
 
   return (
     <div className="min-h-dvh bg-white pb-28 md:hidden">
-      <MobileHeader title={brand?.name ?? "Products"} backHref={`/brands?categoryId=whisky`} />
+      <MobileHeader
+        title={brand?.name ?? "Products"}
+        backHref={`/brands?categoryId=${categoryId}`}
+      />
       <main className="mx-auto w-full max-w-[390px] px-6 pt-5">
         <div className="grid grid-cols-2 gap-3">
           {products.map((product) => {

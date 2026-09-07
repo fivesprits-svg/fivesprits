@@ -3,11 +3,16 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { categories } from "@/features/customer-flow/data/catalogue";
+import { categories as defaultCategories } from "@/features/customer-flow/data/catalogue";
 import { DesktopHeader } from "@/features/customer-flow/components/layout/desktop-header";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
+import type { Category } from "@/features/customer-flow/types";
 
-export function DesktopCategoriesSection() {
+export function DesktopCategoriesSection({
+  categoriesList = defaultCategories,
+}: {
+  categoriesList?: Category[];
+} = {}) {
   const router = useRouter();
   const { selectCategory } = useCustomerFlow();
   return (
@@ -46,7 +51,7 @@ export function DesktopCategoriesSection() {
                   Quick Select Category:
                 </p>
                 <div className="flex flex-wrap gap-2">
-                  {categories.map((cat) => (
+                  {categoriesList.map((cat) => (
                     <button
                       key={cat.id}
                       type="button"
@@ -147,13 +152,13 @@ export function DesktopCategoriesSection() {
             </div>
 
             <span className="inline-flex items-center gap-1.5 rounded-full border border-[#e8d5c4] bg-[#f7f4ee] px-3.5 py-1.5 text-xs font-semibold text-[#a67854]">
-              {categories.length} categories available
+              {categoriesList.length} categories available
             </span>
           </div>
 
           {/* Categories 4x2 Grid */}
           <div className="mt-8 grid grid-cols-2 gap-5 sm:grid-cols-4 lg:gap-6">
-            {categories.map((category) => (
+            {categoriesList.map((category) => (
               <button
                 key={category.id}
                 type="button"
