@@ -2,10 +2,12 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { TermsOfServiceModal } from "@/features/customer-flow/components/auth/terms-of-service-modal";
 
 export function AgeVerificationForm() {
   const router = useRouter();
   const [confirmed, setConfirmed] = useState(false);
+  const [showTerms, setShowTerms] = useState(false);
 
   function submit(event: React.FormEvent) {
     event.preventDefault();
@@ -43,8 +45,15 @@ export function AgeVerificationForm() {
       </button>
       <p className="font-geist text-common-gray text-center text-xs md:text-sm">
         By continuing, you agree to our{" "}
-        <span className="text-common-black text-md font-semibold underline">Terms of Service</span>
+        <button
+          type="button"
+          onClick={() => setShowTerms(true)}
+          className="text-common-black text-md cursor-pointer font-semibold underline"
+        >
+          Terms of Service
+        </button>
       </p>
+      <TermsOfServiceModal open={showTerms} onClose={() => setShowTerms(false)} />
     </form>
   );
 }

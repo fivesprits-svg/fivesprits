@@ -36,7 +36,7 @@ export function ResendTimer({ initialSeconds = 60, onResend }: ResendTimerProps)
         <button
           type="button"
           onClick={handleResend}
-          className="font-geist rounded-xl bg-[#FAF3EB] p-1.5 text-[12px] font-bold text-[#C9A07E] underline"
+          className="font-geist cursor-pointer rounded-xl bg-[#FAF3EB] p-1.5 text-[12px] font-bold text-[#C9A07E] underline"
         >
           Resend
         </button>
