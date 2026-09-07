@@ -18,7 +18,7 @@ export function MobileBrandsSection() {
   return (
     <div className="mx-auto min-h-dvh w-full max-w-[390px] overflow-hidden bg-white pb-28 text-[#101010] md:hidden">
       {/* Top Header with Back Button & Column Hero Image */}
-      <div className="relative px-6 pt-5 pb-2">
+      <div className="relative px-6 pt-2 pb-2">
         <Link
           href="/categories"
           aria-label="Go back"
@@ -29,7 +29,7 @@ export function MobileBrandsSection() {
 
         <div className="mt-3 flex items-start justify-between">
           <div className="pt-1">
-            <h1 className="font-outfit text-[42px] leading-none font-black tracking-tight text-black uppercase">
+            <h1 className="font-outfit text-[36px] leading-none font-black tracking-tight text-black uppercase lg:text-[42px]">
               {category?.name ?? "BEER"}
             </h1>
             <p className="font-outfit mt-2 text-xs font-bold tracking-widest text-[#c9a07e] uppercase">

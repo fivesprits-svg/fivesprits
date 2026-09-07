@@ -1,7 +1,6 @@
 "use client";
 
 import { MobileBottomNav } from "@/features/customer-flow/components/navigation/mobile-bottom-nav";
-import { MobileHeader } from "@/features/customer-flow/components/navigation/mobile-header";
 import { MobileOfferHero } from "@/features/customer-flow/components/offers/mobile-offer-hero";
 import { OfferTabs } from "@/features/customer-flow/components/offers/offer-tabs";
 import { ComboOfferCard } from "@/features/customer-flow/components/offers/combo-offer-card";
@@ -14,8 +13,8 @@ export function MobileOffersSection() {
 
   return (
     <div className="min-h-dvh bg-white pb-28 md:hidden">
-      <MobileHeader title="Offers" />
-      <main className="mx-auto w-full max-w-[390px] px-6">
+      {/* <MobileHeader title="Offers" /> */}
+      <main className="mx-auto w-full max-w-[390px] px-6 pt-2">
         <OfferTabs active="combo" />
         <MobileOfferHero />
         <div className="mt-4 space-y-4">

@@ -65,7 +65,7 @@ export function DesktopGiftOffersSection() {
               <div className="mt-6 flex items-center justify-end">
                 <Link
                   href="/offers/gifts/select"
-                  className="font-outfit flex h-11 items-center justify-center rounded-full bg-black px-8 text-sm font-bold tracking-wide text-white transition hover:bg-gray-800 active:scale-[0.99] sm:h-12 sm:text-base"
+                  className="font-outfit flex h-11 cursor-pointer items-center justify-center rounded-full bg-black px-8 text-sm font-bold tracking-wide text-white transition hover:bg-gray-800 active:scale-[0.99] sm:h-12 sm:text-base"
                 >
                   View Offer
                 </Link>
