@@ -33,7 +33,14 @@ export function MobileBottomNav({ active }: { active: string }) {
             <Image src={item.icon} alt="" width={20} height={20} />
             <span className={isActive(item.label) ? "block" : "sr-only"}>{item.label}</span>
             {item.label === "Inquiry" && cartCount > 0 && (
-              <span className="absolute -top-3 right-1 grid size-5 place-items-center rounded-full bg-[#c9a07e] text-[10px] text-black">
+              // <span className="absolute -top-3 right-1 grid size-5 place-items-center rounded-full bg-[#c9a07e] text-[10px] text-black">
+              //   {cartCount}
+              // </span>
+              <span
+                className={`absolute -top-3 grid size-5 place-items-center rounded-full bg-[#c9a07e] text-[10px] text-black ${
+                  isActive(item.label) ? "-right-3" : "right-1"
+                }`}
+              >
                 {cartCount}
               </span>
             )}
