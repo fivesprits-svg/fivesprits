@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { MobileBottomNav } from "@/features/customer-flow/components/navigation/mobile-bottom-nav";
+import { EmptyState } from "@/features/customer-flow/components/ui/empty-state";
 import { getBrandsByCategory, getCategory } from "@/features/customer-flow/data/catalogue";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 
@@ -37,7 +38,7 @@ export function MobileBrandsSection() {
             </p>
           </div>
 
-          {/* Hero Right Column Image */}
+          {/* Hero Right Column Image — always visible */}
           <div className="relative -mt-10 h-[170px] w-[135px] shrink-0">
             <Image
               src="/customer-flow/hero/hero-right-column.webp"
@@ -51,35 +52,45 @@ export function MobileBrandsSection() {
         </div>
       </div>
 
-      {/* Brands 2-Column Grid */}
-      <main className="px-6 pt-3">
-        <div className="grid grid-cols-2 gap-x-3.5 gap-y-5">
-          {brands.map((brand) => (
-            <button
-              key={brand.id}
-              type="button"
-              onClick={() => {
-                selectBrand(brand.id);
-                router.push(`/products?brandId=${brand.id}&categoryId=${categoryId}`);
-              }}
-              className="group flex flex-col items-center text-center"
-            >
-              <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[22px] border border-gray-100/90 bg-[#FAF9F7] p-3 shadow-2xs transition-transform duration-200 group-hover:scale-105 active:scale-95">
-                <Image
-                  src={brand.image}
-                  alt={brand.name}
-                  fill
-                  sizes="160px"
-                  className="object-contain p-1.5 transition-transform duration-200 group-hover:scale-105"
-                />
-              </div>
-              <span className="font-geist mt-2.5 w-full truncate text-center text-sm font-bold text-black">
-                {brand.name}
-              </span>
-            </button>
-          ))}
-        </div>
-      </main>
+      {brands.length === 0 ? (
+        <EmptyState
+          icon="/customer-flow/icons/brands0.svg"
+          title="No Brands Available"
+          description="We are currently curating our brand list. Please check back soon or explore our existing collections."
+          actionLabel="Back to Collections"
+          actionHref="/categories"
+        />
+      ) : (
+        /* Brands 2-Column Grid */
+        <main className="px-6 pt-3">
+          <div className="grid grid-cols-2 gap-x-3.5 gap-y-5">
+            {brands.map((brand) => (
+              <button
+                key={brand.id}
+                type="button"
+                onClick={() => {
+                  selectBrand(brand.id);
+                  router.push(`/products?brandId=${brand.id}&categoryId=${categoryId}`);
+                }}
+                className="group flex flex-col items-center text-center"
+              >
+                <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[22px] border border-gray-100/90 bg-[#FAF9F7] p-3 shadow-2xs transition-transform duration-200 group-hover:scale-105 active:scale-95">
+                  <Image
+                    src={brand.image}
+                    alt={brand.name}
+                    fill
+                    sizes="160px"
+                    className="object-contain p-1.5 transition-transform duration-200 group-hover:scale-105"
+                  />
+                </div>
+                <span className="font-geist mt-2.5 w-full truncate text-center text-sm font-bold text-black">
+                  {brand.name}
+                </span>
+              </button>
+            ))}
+          </div>
+        </main>
+      )}
 
       <MobileBottomNav active="Product" />
     </div>

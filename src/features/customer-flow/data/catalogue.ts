@@ -158,6 +158,8 @@ export const brands: Brand[] = [
   },
 ];
 
+// export const brands: Brand[] = [];
+
 export const products: Product[] = [
   // --- Amber Reserve (Whisky) ---
   {

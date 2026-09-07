@@ -1,10 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ConfirmationDialog } from "@/features/customer-flow/components/confirmation-dialog";
 import { MobileBottomNav } from "@/features/customer-flow/components/navigation/mobile-bottom-nav";
+import { EmptyState } from "@/features/customer-flow/components/ui/empty-state";
 import { brands, products } from "@/features/customer-flow/data/catalogue";
 import { comboOffers, giftOffer } from "@/features/customer-flow/data/offers";
 import { sampleRequirementHistory } from "@/features/customer-flow/data/requirements-history";
@@ -49,23 +49,13 @@ export function MobileCartSection() {
       <main className="mx-auto w-full max-w-[390px] px-6 pt-3">
         {totalItemsCount === 0 ? (
           <div className="space-y-8">
-            <div className="rounded-3xl border border-gray-100 bg-[#FAF9F7] p-8 text-center shadow-2xs">
-              <div className="mx-auto grid size-16 place-items-center rounded-full bg-white shadow-xs">
-                <Image src="/customer-flow/icons/empty.svg" alt="" width={32} height={32} />
-              </div>
-              <h2 className="font-unbounded mt-4 text-base font-bold text-gray-950">
-                Your requirement list is empty
-              </h2>
-              <p className="font-geist mx-auto mt-1.5 max-w-[240px] text-xs leading-relaxed text-gray-500">
-                Browse the catalogue and add items or curated offers to your checklist.
-              </p>
-              <Link
-                href="/categories"
-                className="font-outfit mt-5 inline-flex h-11 items-center rounded-full bg-black px-6 text-xs font-bold tracking-wider text-white uppercase"
-              >
-                Browse Catalogue
-              </Link>
-            </div>
+            <EmptyState
+              icon="/customer-flow/icons/requirement0.svg"
+              title="No Offers Available"
+              description="No offers or products in your requirement list yet. Browse our catalogue to discover the best deals."
+              actionLabel="Browse Catalogue"
+              actionHref="/categories"
+            />
 
             {/* Requirement History (shown for regular / logged-in users) */}
             {isRegularUser && (

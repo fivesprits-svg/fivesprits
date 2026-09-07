@@ -1,11 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ConfirmationDialog } from "@/features/customer-flow/components/confirmation-dialog";
 import { PortalShell } from "@/features/customer-flow/components/portal-shell";
 import { Breadcrumb } from "@/features/customer-flow/components/navigation/breadcrumb";
+import { EmptyState } from "@/features/customer-flow/components/ui/empty-state";
 import { brands, products } from "@/features/customer-flow/data/catalogue";
 import { comboOffers, giftOffer } from "@/features/customer-flow/data/offers";
 import { sampleRequirementHistory } from "@/features/customer-flow/data/requirements-history";
@@ -63,20 +63,13 @@ export function DesktopCartSection() {
 
               {totalItemsCount === 0 ? (
                 <div className="space-y-8">
-                  <div className="rounded-2xl border border-gray-200/80 bg-white p-12 text-center shadow-sm">
-                    <h2 className="font-unbounded text-lg font-bold text-gray-900">
-                      Your requirement list is empty
-                    </h2>
-                    <p className="font-geist mt-1 text-xs text-gray-500">
-                      Explore categories and add your preferred bottles or offers to this list.
-                    </p>
-                    <Link
-                      href="/categories"
-                      className="font-outfit mt-5 inline-flex h-11 items-center rounded-full bg-black px-6 text-xs font-bold tracking-wider text-white uppercase transition hover:bg-[#a67854]"
-                    >
-                      Browse Categories
-                    </Link>
-                  </div>
+                  <EmptyState
+                    icon="/customer-flow/icons/requirement0.svg"
+                    title="No Offers Available"
+                    description="No offers or products in your requirement list yet. Browse our catalogue to discover the best deals."
+                    actionLabel="Browse Catalogue"
+                    actionHref="/categories"
+                  />
 
                   {/* Requirement History for Regular Users when cart is empty */}
                   {isRegularUser && (

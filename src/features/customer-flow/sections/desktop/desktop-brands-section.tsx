@@ -1,9 +1,11 @@
 "use client";
+import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { PortalShell } from "@/features/customer-flow/components/portal-shell";
 import { CatalogueCard } from "@/features/customer-flow/components/catalogue-card";
 import { Breadcrumb } from "@/features/customer-flow/components/navigation/breadcrumb";
+import { EmptyState } from "@/features/customer-flow/components/ui/empty-state";
 import { getBrandsByCategory, getCategory } from "@/features/customer-flow/data/catalogue";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 
@@ -27,7 +29,7 @@ export function DesktopBrandsSection() {
             ]}
           />
 
-          {/* Header Title Section */}
+          {/* Header Title Section — always visible */}
           <div className="mb-6 flex items-end justify-between border-b border-gray-200/80 pb-5">
             <div>
               <div className="mb-1.5 flex items-center gap-2">
@@ -48,21 +50,44 @@ export function DesktopBrandsSection() {
             </span>
           </div>
 
-          {/* Brands Grid */}
-          <div className="grid grid-cols-2 items-stretch gap-5 sm:grid-cols-3 lg:grid-cols-4">
-            {brands.map((brand) => (
-              <CatalogueCard
-                key={brand.id}
-                variant="brand"
-                image={brand.image}
-                title={brand.name}
-                onClick={() => {
-                  selectBrand(brand.id);
-                  router.push(`/products?brandId=${brand.id}&categoryId=${categoryId}`);
-                }}
+          {brands.length === 0 ? (
+            /* Empty state with hero image */
+            <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-2">
+              <EmptyState
+                icon="star"
+                title="No Brands Available"
+                description="We are currently curating our brand list. Please check back soon or explore our existing collections."
+                actionLabel="Back to Collections"
+                actionHref="/categories"
               />
-            ))}
-          </div>
+              <div className="relative mx-auto hidden aspect-[4/5] w-full max-w-[360px] overflow-hidden rounded-3xl bg-[#FAF6F0] lg:block">
+                <Image
+                  src="/customer-flow/hero/hero-right-column.webp"
+                  alt="Brand Collection Hero"
+                  fill
+                  sizes="360px"
+                  priority
+                  className="object-contain p-6"
+                />
+              </div>
+            </div>
+          ) : (
+            /* Brands Grid */
+            <div className="grid grid-cols-2 items-stretch gap-5 sm:grid-cols-3 lg:grid-cols-4">
+              {brands.map((brand) => (
+                <CatalogueCard
+                  key={brand.id}
+                  variant="brand"
+                  image={brand.image}
+                  title={brand.name}
+                  onClick={() => {
+                    selectBrand(brand.id);
+                    router.push(`/products?brandId=${brand.id}&categoryId=${categoryId}`);
+                  }}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </PortalShell>
     </div>
