@@ -15,14 +15,8 @@ import { formatMrp } from "@/features/customer-flow/utils/currency";
 
 export function DesktopCartSection() {
   const router = useRouter();
-  const {
-    state,
-    addToCart,
-    setCartQuantity,
-    removeFromCart,
-    submitRequirement,
-    dismissConfirmation,
-  } = useCustomerFlow();
+  const { state, setCartQuantity, removeFromCart, submitRequirement, dismissConfirmation } =
+    useCustomerFlow();
 
   const isRegularUser = Boolean(state.session?.cameFromLoginHere || state.session?.mobile);
 
@@ -167,20 +161,6 @@ export function DesktopCartSection() {
                                   {formatMrp(history.totalSalePrice)}
                                 </span>
                               </div>
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  history.items.forEach((item) => {
-                                    const found = products.find((p) => p.name === item.name);
-                                    if (found) {
-                                      addToCart(found.id, item.quantity);
-                                    }
-                                  });
-                                }}
-                                className="font-outfit rounded-full bg-black px-5 py-2 text-xs font-bold text-white transition hover:bg-[#a67854]"
-                              >
-                                Repeat Inquiry
-                              </button>
                             </div>
                           </article>
                         ))}
@@ -544,10 +524,6 @@ export function DesktopCartSection() {
                                   </>
                                 )}
                               </div>
-                              <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700">
-                                <span className="size-1.5 rounded-full bg-emerald-500" />
-                                {history.status}
-                              </span>
                             </div>
 
                             {/* Items list */}
@@ -596,20 +572,6 @@ export function DesktopCartSection() {
                                   {formatMrp(history.totalSalePrice)}
                                 </span>
                               </div>
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  history.items.forEach((item) => {
-                                    const found = products.find((p) => p.name === item.name);
-                                    if (found) {
-                                      addToCart(found.id, item.quantity);
-                                    }
-                                  });
-                                }}
-                                className="font-outfit rounded-full bg-black px-5 py-2 text-xs font-bold text-white transition hover:bg-[#a67854]"
-                              >
-                                Repeat Inquiry
-                              </button>
                             </div>
                           </article>
                         ))}

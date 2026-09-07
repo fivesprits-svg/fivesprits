@@ -14,14 +14,8 @@ import { formatMrp } from "@/features/customer-flow/utils/currency";
 
 export function MobileCartSection() {
   const router = useRouter();
-  const {
-    state,
-    addToCart,
-    setCartQuantity,
-    removeFromCart,
-    submitRequirement,
-    dismissConfirmation,
-  } = useCustomerFlow();
+  const { state, setCartQuantity, removeFromCart, submitRequirement, dismissConfirmation } =
+    useCustomerFlow();
 
   const isRegularUser = Boolean(state.session?.cameFromLoginHere || state.session?.mobile);
 
@@ -149,20 +143,6 @@ export function MobileCartSection() {
                             {formatMrp(history.totalSalePrice)}
                           </p>
                         </div>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            history.items.forEach((item) => {
-                              const found = products.find((p) => p.name === item.name);
-                              if (found) {
-                                addToCart(found.id, item.quantity);
-                              }
-                            });
-                          }}
-                          className="font-outfit rounded-full bg-black px-4 py-1.5 text-[11px] font-bold text-white transition hover:bg-gray-800"
-                        >
-                          Repeat Inquiry
-                        </button>
                       </div>
                     </article>
                   ))}
@@ -565,10 +545,6 @@ export function MobileCartSection() {
                             {history.date}
                           </span>
                         </div>
-                        <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-700">
-                          <span className="size-1 rounded-full bg-emerald-500" />
-                          {history.status}
-                        </span>
                       </div>
 
                       {/* Items list */}
@@ -617,20 +593,6 @@ export function MobileCartSection() {
                             {formatMrp(history.totalSalePrice)}
                           </p>
                         </div>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            history.items.forEach((item) => {
-                              const found = products.find((p) => p.name === item.name);
-                              if (found) {
-                                addToCart(found.id, item.quantity);
-                              }
-                            });
-                          }}
-                          className="font-outfit rounded-full bg-black px-4 py-1.5 text-[11px] font-bold text-white transition hover:bg-gray-800"
-                        >
-                          Repeat Inquiry
-                        </button>
                       </div>
                     </article>
                   ))}
