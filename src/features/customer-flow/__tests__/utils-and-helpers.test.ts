@@ -7,8 +7,12 @@ import { comboOffers, giftOffer } from "@/features/customer-flow/data/offers";
 describe("customer flow utilities", () => {
   it("validates the Figma login fields", () => {
     expect(validateLogin("", "123")).toEqual({
-      name: "Please enter your name",
-      mobile: "Enter a valid 10-digit mobile number",
+      name: "User name is required",
+      mobile: "Enter a 10-digit valid number",
+    });
+    expect(validateLogin("", "")).toEqual({
+      name: "User name is required",
+      mobile: "Mobile number is required",
     });
   });
 

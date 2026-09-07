@@ -29,9 +29,9 @@ export function LoginFormHere() {
     event.preventDefault();
     const next: { mobile?: string; password?: string } = {};
     const fullPhone = `+${countryData.dialCode}${phoneValue}`;
-    if (!phoneValue.trim()) next.mobile = "Please enter your mobile number";
+    if (!phoneValue.trim()) next.mobile = "Mobile number is required";
     else if (phoneValue.replace(/\D/g, "").length < 7) next.mobile = "Enter a valid phone number";
-    if (!password.trim()) next.password = "Please enter your password";
+    if (!password.trim()) next.password = "Password is required";
     setErrors(next);
     if (!next.mobile && !next.password) {
       loginHere(fullPhone, password);
@@ -110,7 +110,7 @@ export function LoginFormHere() {
         <button
           type="button"
           onClick={() => router.push("/")}
-          className="text-common-black font-semibold underline"
+          className="text-common-black cursor-pointer font-semibold underline"
         >
           {" "}
           Register{" "}
