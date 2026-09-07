@@ -55,8 +55,8 @@ export function DesktopProductsSection() {
               </p>
             </div>
 
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-[#e8d5c4] bg-[#f7f4ee] px-3.5 py-1.5 text-xs font-semibold text-[#755337]">
-              MRP for reference only
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-[#e8d5c4] bg-[#f7f4ee] px-3.5 py-1.5 text-xs font-semibold text-[#a67854]">
+              {products.length} products available
             </span>
           </div>
 
@@ -73,7 +73,7 @@ export function DesktopProductsSection() {
                   title={product.name}
                   subtitle={product.pack}
                   price={formatMrp(product.mrp)}
-                  actionLabel="Add to List"
+                  actionLabel="Add"
                   actionVariant="add"
                   quantity={item?.quantity}
                   onAction={() => {

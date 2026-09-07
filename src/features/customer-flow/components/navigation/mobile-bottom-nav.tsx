@@ -7,12 +7,15 @@ import { MobileHomeIndicator } from "@/features/customer-flow/components/navigat
 const items = [
   { href: "/categories", label: "Product", icon: "/customer-flow/icons/home.svg" },
   { href: "/offers", label: "Offer", icon: "/customer-flow/icons/offer.svg" },
-  { href: "/cart", label: "Cart", icon: "/customer-flow/icons/cart.svg" },
+  { href: "/cart", label: "Inquiry", icon: "/customer-flow/icons/cart.svg" },
   { href: "/profile", label: "Profile", icon: "/customer-flow/icons/profile.svg" },
 ];
 
 export function MobileBottomNav({ active }: { active: string }) {
   const { cartCount } = useCustomerFlow();
+  const isActive = (label: string) =>
+    active === label || (label === "Inquiry" && (active === "Cart" || active === "Inquiry"));
+
   return (
     <>
       <nav
@@ -23,11 +26,13 @@ export function MobileBottomNav({ active }: { active: string }) {
           <Link
             key={item.label}
             href={item.href}
-            className={`relative flex min-w-16 items-center justify-center gap-2 text-xs font-semibold ${active === item.label ? "text-[#c9a07e]" : "text-white"}`}
+            className={`relative flex min-w-16 items-center justify-center gap-2 text-xs font-semibold ${
+              isActive(item.label) ? "text-[#c9a07e]" : "text-white"
+            }`}
           >
             <Image src={item.icon} alt="" width={20} height={20} />
-            <span className={active === item.label ? "block" : "sr-only"}>{item.label}</span>
-            {item.label === "Cart" && cartCount > 0 && (
+            <span className={isActive(item.label) ? "block" : "sr-only"}>{item.label}</span>
+            {item.label === "Inquiry" && cartCount > 0 && (
               <span className="absolute -top-3 right-1 grid size-5 place-items-center rounded-full bg-[#c9a07e] text-[10px] text-black">
                 {cartCount}
               </span>

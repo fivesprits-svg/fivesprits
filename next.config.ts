@@ -4,7 +4,7 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   images: {
-    unoptimized: false,
+    unoptimized: true,
   },
   compress: true,
   async headers() {
@@ -19,7 +19,7 @@ const nextConfig: NextConfig = {
         ],
       },
       {
-        source: "/assets/:path*",
+        source: "/customer-flow/:path*",
         headers: [
           {
             key: "Cache-Control",
@@ -28,7 +28,7 @@ const nextConfig: NextConfig = {
         ],
       },
       {
-        source: "/:all*(svg|jpg|jpeg|png|webp|avif|ico)",
+        source: "/:path*.(svg|jpg|jpeg|png|webp|avif|ico)",
         headers: [
           {
             key: "Cache-Control",

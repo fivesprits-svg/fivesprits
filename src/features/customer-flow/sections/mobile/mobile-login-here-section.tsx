@@ -10,7 +10,7 @@ export function MobileLoginHereSection() {
     <section className="customer-page-container md:hidden">
       {/* <MobileStatusBar /> */}
       <div className="flex h-[108px] items-center gap-3 px-6 pt-4 md:h-[120px] md:justify-center md:px-12 md:pt-6">
-        <Image src="/customer-flow/icons/logo.svg" alt="Five Spirits" width={44} height={76} />
+        <Image src="/logo.svg" alt="Five Spirit" width={44} height={76} />
       </div>
       <div className="px-6 pt-10 md:px-12 md:pt-14">
         <h1 className="customer-welcome-title md:text-[40px]">Welcome</h1>

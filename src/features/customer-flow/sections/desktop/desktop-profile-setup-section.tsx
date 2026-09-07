@@ -16,8 +16,8 @@ export function DesktopProfileSetupSection() {
         <div className="flex flex-col items-center text-center">
           <div className="mb-2 flex items-center justify-center gap-2">
             <Image
-              src="/customer-flow/icons/logo.svg"
-              alt="Five Spirits"
+              src="/logo.svg"
+              alt="Five Spirit"
               width={32}
               height={55}
               className="h-10 w-auto"

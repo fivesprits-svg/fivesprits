@@ -25,7 +25,7 @@ export const comboOffers: ComboOffer[] = [
     items: ["2 × Reserve Shiraz (750 ml)", "1 × Sparkling Brut Celebration (750 ml) FREE"],
     mrp: 5150,
     salePrice: 3890,
-    image: "/customer-flow/figma-images/422fad509d4091ef4daca825cec07b2ea792418f",
+    image: "/customer-flow/figma-images/422fad509d4091ef4daca825cec07b2ea792418f.png",
   },
   {
     id: "oak-glasses-combo",
@@ -34,7 +34,7 @@ export const comboOffers: ComboOffer[] = [
     items: ["1 × Macallan Sherry Oak 12Y (700 ml)", "2 × Crystal Nosing Glasses"],
     mrp: 8500,
     salePrice: 6999,
-    image: "/customer-flow/figma-images/3c540eb5339d000d28544a42d56a5a2821941163",
+    image: "/customer-flow/figma-images/3c540eb5339d000d28544a42d56a5a2821941163.png",
   },
 ];
 
@@ -47,7 +47,7 @@ export const giftOffer = {
   terms: "Limited-time gift offer. Terms and eligibility apply.",
   gift: "Premium Trolley",
   requiredQuantity: 6,
-  image: "/customer-flow/figma-images/b5cc1a9483ed729f12d4553c90b131047daba5b7",
+  image: "/customer-flow/figma-images/b5cc1a9483ed729f12d4553c90b131047daba5b7.png",
 } as const;
 
 export const giftProducts: GiftProduct[] = [
@@ -57,7 +57,7 @@ export const giftProducts: GiftProduct[] = [
     pack: "700ml",
     mrp: 5150,
     salePrice: 3890,
-    image: "/customer-flow/figma-images/6090d85d008480b7542f3321501e11f02b5d09a7",
+    image: "/customer-flow/figma-images/6090d85d008480b7542f3321501e11f02b5d09a7.png",
   },
   {
     id: "moet-chandon",
@@ -65,7 +65,7 @@ export const giftProducts: GiftProduct[] = [
     pack: "750ml",
     mrp: 5150,
     salePrice: 3890,
-    image: "/customer-flow/figma-images/c2ca76acac57236b1f0c3a1fb1065bda155eedf6",
+    image: "/customer-flow/figma-images/c2ca76acac57236b1f0c3a1fb1065bda155eedf6.png",
   },
   {
     id: "grey-goose",
@@ -73,7 +73,7 @@ export const giftProducts: GiftProduct[] = [
     pack: "750ml",
     mrp: 5150,
     salePrice: 3890,
-    image: "/customer-flow/figma-images/d49e01318383b96599a2c9e85e04ad37a6891ce4",
+    image: "/customer-flow/figma-images/d49e01318383b96599a2c9e85e04ad37a6891ce4.png",
   },
   {
     id: "johnnie-walker-black",
@@ -81,7 +81,7 @@ export const giftProducts: GiftProduct[] = [
     pack: "700ml",
     mrp: 5150,
     salePrice: 3890,
-    image: "/customer-flow/figma-images/bbe3eaab1ae03c51110c6402d43c48429e357204",
+    image: "/customer-flow/figma-images/bbe3eaab1ae03c51110c6402d43c48429e357204.png",
   },
   {
     id: "remy-martin-vsop",
@@ -89,7 +89,7 @@ export const giftProducts: GiftProduct[] = [
     pack: "700ml",
     mrp: 5150,
     salePrice: 3890,
-    image: "/customer-flow/figma-images/20b1d1e27c61ec04f5b1e245a349fc3d6b3a7dd7",
+    image: "/customer-flow/figma-images/20b1d1e27c61ec04f5b1e245a349fc3d6b3a7dd7.png",
   },
   {
     id: "glenfiddich-12",
@@ -97,6 +97,6 @@ export const giftProducts: GiftProduct[] = [
     pack: "700ml",
     mrp: 5150,
     salePrice: 3890,
-    image: "/customer-flow/figma-images/9d554afef701e184cd48debc27284b19c0cb9e9a",
+    image: "/customer-flow/figma-images/9d554afef701e184cd48debc27284b19c0cb9e9a.png",
   },
 ];

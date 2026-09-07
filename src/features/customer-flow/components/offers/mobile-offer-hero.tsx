@@ -14,8 +14,8 @@ export function MobileOfferHero({ gift = false }: { gift?: boolean }) {
             : "Best deals on your favorite premium brands."}
         </p>
       </div>
-      <div className="absolute top-[-10px] right-8 h-[145px] w-[76px] bg-[url('/customer-flow/figma-images/cf84e700c08cfaf02eebfd4a7ee03b1e9f44af72')] bg-contain bg-center bg-no-repeat" />
-      <div className="absolute right-0 bottom-0 h-24 w-40 bg-[url('/customer-flow/figma-images/ba4157e75a3049e6aed3b253c5145beaaa70bbdd')] bg-contain bg-right-bottom bg-no-repeat opacity-40" />
+      <div className="absolute top-[-10px] right-8 h-[145px] w-[76px] bg-[url('/customer-flow/figma-images/cf84e700c08cfaf02eebfd4a7ee03b1e9f44af72.png')] bg-contain bg-center bg-no-repeat" />
+      <div className="absolute right-0 bottom-0 h-24 w-40 bg-[url('/customer-flow/figma-images/ba4157e75a3049e6aed3b253c5145beaaa70bbdd.png')] bg-contain bg-right-bottom bg-no-repeat opacity-40" />
     </section>
   );
 }
