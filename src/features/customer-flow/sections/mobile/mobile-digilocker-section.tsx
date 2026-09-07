@@ -13,7 +13,10 @@ export function MobileDigilockerSection() {
     <AuthPageLayout>
       <div className="flex flex-col items-center px-6 pt-4 pb-16 md:px-12 md:pt-6 md:pb-20">
         <div className="w-full">
-          <Breadcrumb items={[{ label: "OTP", href: "/otp" }, { label: "Aadhaar Verification" }]} />
+          <Breadcrumb
+            homeHref="/"
+            items={[{ label: "OTP", href: "/otp" }, { label: "Aadhaar Verification" }]}
+          />
         </div>
         <div className="w-full text-left">
           <h1 className="font-unbounded text-common-black text-[24px] leading-tight font-extrabold md:text-[26px]">

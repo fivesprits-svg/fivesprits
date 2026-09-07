@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import { formatDisplayMobile } from "@/features/customer-flow/utils/validation";
 
@@ -41,15 +40,7 @@ export function ProfileSetupForm() {
           <div className="relative">
             <input
               defaultValue={formatDisplayMobile(state.session?.mobile)}
-              readOnly
-              className="customer-input cursor-not-allowed bg-gray-50/80 pr-10 text-sm font-medium text-gray-700"
-            />
-            <Image
-              src="/customer-flow/icons/lock.svg"
-              alt="Verified"
-              width={16}
-              height={16}
-              className="absolute top-1/2 right-3.5 -translate-y-1/2 opacity-40"
+              className="customer-input bg-gray-50/80 pr-10 text-sm font-medium text-gray-700"
             />
           </div>
         </label>

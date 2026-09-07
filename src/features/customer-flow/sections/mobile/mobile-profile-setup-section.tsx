@@ -14,6 +14,7 @@ export function MobileProfileSetupSection() {
     <AuthPageLayout>
       <div className="px-6 pt-4 pb-24 md:px-12 md:pt-6 md:pb-28">
         <Breadcrumb
+          homeHref="/"
           items={[
             { label: "Age Verification", href: "/age-verification" },
             { label: "Profile Setup" },

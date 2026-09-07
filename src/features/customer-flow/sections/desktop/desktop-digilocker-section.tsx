@@ -12,7 +12,10 @@ export function DesktopDigilockerSection() {
   return (
     <DesktopAuthPageLayout>
       <div className="customer-desktop-card">
-        <Breadcrumb items={[{ label: "OTP", href: "/otp" }, { label: "Aadhaar Verification" }]} />
+        <Breadcrumb
+          homeHref="/"
+          items={[{ label: "OTP", href: "/otp" }, { label: "Aadhaar Verification" }]}
+        />
         <div className="mt-2 text-left">
           <h1 className="font-unbounded text-common-black text-2xl leading-tight font-extrabold">
             Welcome

@@ -9,6 +9,7 @@ export function MobileAgeVerificationSection() {
       <div className="flex min-h-[80dvh] flex-col items-center px-6 pt-6 pb-24 md:px-10 md:pt-8">
         <div className="w-full">
           <Breadcrumb
+            homeHref="/"
             items={[{ label: "DigiLocker", href: "/digilocker" }, { label: "Age Verification" }]}
           />
         </div>

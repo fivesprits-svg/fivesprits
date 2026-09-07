@@ -9,6 +9,7 @@ export function DesktopAgeVerificationSection() {
       <div className="customer-desktop-card flex flex-col items-center text-center">
         <div className="w-full text-left">
           <Breadcrumb
+            homeHref="/"
             items={[{ label: "DigiLocker", href: "/digilocker" }, { label: "Age Verification" }]}
           />
         </div>
