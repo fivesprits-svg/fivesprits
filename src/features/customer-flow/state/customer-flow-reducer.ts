@@ -14,7 +14,15 @@ export function customerFlowReducer(
 ): CustomerFlowState {
   switch (action.type) {
     case "session/login":
-      return { ...state, session: { name: action.name, mobile: action.mobile, verified: false } };
+      return {
+        ...state,
+        session: {
+          name: action.name,
+          mobile: action.mobile,
+          verified: false,
+          ...(state.session?.formDrafts ? { formDrafts: state.session.formDrafts } : {}),
+        },
+      };
     case "session/login-here":
       return {
         ...state,
@@ -23,6 +31,7 @@ export function customerFlowReducer(
           mobile: action.mobile,
           verified: false,
           cameFromLoginHere: true,
+          ...(state.session?.formDrafts ? { formDrafts: state.session.formDrafts } : {}),
         },
       };
     case "session/verify":
@@ -122,5 +131,96 @@ export function customerFlowReducer(
       return { ...state, showConfirmation: false };
     case "session/logout":
       return initialCustomerFlowState;
+    case "form-draft/login":
+      return {
+        ...state,
+        session: state.session
+          ? {
+              ...state.session,
+              formDrafts: {
+                ...state.session.formDrafts,
+                login: { name: action.name, mobile: action.mobile },
+              },
+            }
+          : {
+              name: "",
+              mobile: "",
+              verified: false,
+              formDrafts: { login: { name: action.name, mobile: action.mobile } },
+            },
+      };
+    case "form-draft/login-here":
+      return {
+        ...state,
+        session: state.session
+          ? {
+              ...state.session,
+              formDrafts: {
+                ...state.session.formDrafts,
+                loginHere: {
+                  phoneValue: action.phoneValue,
+                  countryCode: action.countryCode,
+                  dialCode: action.dialCode,
+                  password: action.password,
+                },
+              },
+            }
+          : {
+              name: "",
+              mobile: "",
+              verified: false,
+              formDrafts: {
+                loginHere: {
+                  phoneValue: action.phoneValue,
+                  countryCode: action.countryCode,
+                  dialCode: action.dialCode,
+                  password: action.password,
+                },
+              },
+            },
+      };
+    case "form-draft/otp":
+      return state.session
+        ? {
+            ...state,
+            session: {
+              ...state.session,
+              formDrafts: { ...state.session.formDrafts, otp: action.otp },
+            },
+          }
+        : state;
+    case "form-draft/digilocker-otp":
+      return state.session
+        ? {
+            ...state,
+            session: {
+              ...state.session,
+              formDrafts: { ...state.session.formDrafts, digilockerOtp: action.otp },
+            },
+          }
+        : state;
+    case "form-draft/aadhaar":
+      return state.session
+        ? {
+            ...state,
+            session: {
+              ...state.session,
+              formDrafts: { ...state.session.formDrafts, aadhaar: action.aadhaar },
+            },
+          }
+        : state;
+    case "form-draft/age-verification":
+      return state.session
+        ? {
+            ...state,
+            session: {
+              ...state.session,
+              formDrafts: {
+                ...state.session.formDrafts,
+                ageVerification: { confirmed: action.confirmed },
+              },
+            },
+          }
+        : state;
   }
 }

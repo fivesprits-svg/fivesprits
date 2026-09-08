@@ -10,10 +10,12 @@ import {
 } from "@/features/customer-flow/components/navigation/mobile-system-chrome";
 export function OtpForm() {
   const router = useRouter();
-  const { verifyOtp } = useCustomerFlow();
-  const [otp, setOtp] = useState("");
+  const { state, verifyOtp, updateFormDraft } = useCustomerFlow();
+  const draft = state.session?.formDrafts?.otp;
+  const [otp, setOtp] = useState(draft ?? "");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
   if (error) {
     return (
       <div className="fixed inset-0 z-50 flex min-h-dvh flex-col bg-[#faf9f6] md:static md:mt-8 md:block md:min-h-0 md:bg-transparent">
@@ -67,7 +69,9 @@ export function OtpForm() {
           id="otp"
           value={otp}
           onChange={(event) => {
-            setOtp(event.target.value.replace(/\D/g, "").slice(0, 4));
+            const next = event.target.value.replace(/\D/g, "").slice(0, 4);
+            setOtp(next);
+            updateFormDraft({ type: "otp", data: { otp: next } });
             setError("");
           }}
           inputMode="numeric"

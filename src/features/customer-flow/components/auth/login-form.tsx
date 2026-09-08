@@ -7,11 +7,13 @@ import { ButtonSpinner } from "@/features/customer-flow/components/ui/skeleton";
 
 export function LoginForm() {
   const router = useRouter();
-  const { login } = useCustomerFlow();
-  const [name, setName] = useState("");
-  const [mobile, setMobile] = useState("");
+  const { state, login, updateFormDraft } = useCustomerFlow();
+  const draft = state.session?.formDrafts?.login;
+  const [name, setName] = useState(draft?.name ?? "");
+  const [mobile, setMobile] = useState(draft?.mobile ?? "");
   const [errors, setErrors] = useState<ReturnType<typeof validateLogin>>({});
   const [loading, setLoading] = useState(false);
+
   function submit(event: React.FormEvent) {
     event.preventDefault();
     const next = validateLogin(name, mobile);
@@ -29,8 +31,10 @@ export function LoginForm() {
         <input
           value={name}
           onChange={(event) => {
-            setName(event.target.value);
-            if (event.target.value.trim() && errors.name) {
+            const next = event.target.value;
+            setName(next);
+            updateFormDraft({ type: "login", data: { name: next, mobile } });
+            if (next.trim() && errors.name) {
               setErrors((prev) => ({ ...prev, name: undefined }));
             }
           }}
@@ -55,6 +59,7 @@ export function LoginForm() {
           onChange={(event) => {
             const next = event.target.value.replace(/\D/g, "").slice(0, 10);
             setMobile(next);
+            updateFormDraft({ type: "login", data: { name, mobile: next } });
             if (/^\d{10}$/.test(next) && errors.mobile) {
               setErrors((prev) => ({ ...prev, mobile: undefined }));
             }

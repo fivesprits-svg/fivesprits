@@ -64,7 +64,7 @@ export function MobileOfferDetailsSection({ offer }: { offer: ComboOffer }) {
             type="button"
             disabled={adding}
             onClick={() => {
-              setAdding(true);
+              setAdding(false);
               addComboToCart(offer.id, quantity);
             }}
             className="font-outfit h-12 flex-1 rounded-full bg-black text-sm font-bold text-white transition hover:bg-gray-800 active:scale-[0.99] disabled:opacity-70"
