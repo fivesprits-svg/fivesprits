@@ -17,11 +17,11 @@ export function MobileBrandsSection() {
   const brands = getBrandsByCategory(categoryId);
 
   return (
-    <div className="mx-auto min-h-dvh w-full max-w-[390px] overflow-hidden bg-white pb-28 text-[#101010] md:hidden">
+    <div className="min-h-dvh w-full max-w-[390px] overflow-hidden bg-white pb-28 text-[#101010] md:hidden">
       {/* Top Header with Back Button & Column Hero Image */}
       {/* Mobile Header */}
       <MobileHeader backHref="/categories" />
-      <div className="relative px-6 pt-2 pb-2">
+      <div className="relative px-6 pb-2">
         <div className="mt-3 flex items-start justify-between">
           <div className="pt-1">
             <h1 className="font-outfit text-[36px] leading-none font-black tracking-tight text-black uppercase lg:text-[42px]">
@@ -68,13 +68,13 @@ export function MobileBrandsSection() {
                 }}
                 className="group flex cursor-pointer flex-col items-center text-center"
               >
-                <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[22px] border border-gray-100/90 bg-[#FAF9F7] p-3 shadow-2xs transition-transform duration-200 group-hover:scale-105 active:scale-95">
+                <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[22px] transition-transform duration-200 group-hover:scale-105 active:scale-95">
                   <Image
                     src={brand.image}
                     alt={brand.name}
                     fill
                     sizes="160px"
-                    className="object-contain p-1.5 transition-transform duration-200 group-hover:scale-105"
+                    className="object-contain transition-transform duration-200 group-hover:scale-105"
                   />
                 </div>
                 <span className="font-geist mt-2.5 w-full truncate text-center text-sm font-bold text-black">

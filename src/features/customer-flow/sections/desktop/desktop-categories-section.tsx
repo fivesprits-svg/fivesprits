@@ -175,7 +175,7 @@ export function DesktopCategoriesSection() {
                       selectCategory(category.id);
                       router.push(`/brands?categoryId=${category.id}`);
                     }}
-                    className="group flex cursor-pointer flex-col items-center justify-between rounded-2xl border border-gray-200/80 bg-white p-4 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-[#a67854]/60 hover:shadow-md"
+                    className="group flex cursor-pointer flex-col items-center justify-between rounded-2xl border border-gray-200/80 bg-white p-3 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-[#a67854]/60 hover:shadow-md"
                   >
                     <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl bg-gray-50 p-2 transition-colors group-hover:bg-gray-100">
                       <Image

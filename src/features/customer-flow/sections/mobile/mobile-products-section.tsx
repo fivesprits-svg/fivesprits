@@ -12,6 +12,8 @@ export function MobileProductsSection() {
   const searchParams = useSearchParams();
   const { addToCart, removeFromCart, state } = useCustomerFlow();
   const brandId = searchParams.get("brandId") ?? "amber-reserve";
+  const categoryId = searchParams.get("categoryId") ?? "whisky";
+  console.log("categoryId", categoryId);
   const brand = getBrand(brandId);
   // const [quantities, setQuantities] = useState<Record<string, number>>({});
 
@@ -21,7 +23,10 @@ export function MobileProductsSection() {
 
   return (
     <div className="min-h-dvh bg-white pb-28 md:hidden">
-      <MobileHeader title={brand?.name ?? "Products"} backHref={`/brands?categoryId=whisky`} />
+      <MobileHeader
+        title={brand?.name ?? "Products"}
+        backHref={`/brands?categoryId=${categoryId}`}
+      />
       <main className="mx-auto w-full max-w-[390px] px-6 pt-5">
         <div className="grid grid-cols-2 gap-3">
           {products.map((product) => {

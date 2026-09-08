@@ -63,16 +63,16 @@ export function CatalogueCard({
       <button
         type="button"
         onClick={onClick}
-        className="group flex w-full cursor-pointer flex-col items-center rounded-xl border border-gray-200/80 bg-white p-2.5 text-center shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-[#a67854]/50 hover:shadow-md sm:rounded-2xl sm:p-4"
+        className="group flex w-full cursor-pointer flex-col items-center rounded-xl border border-gray-200/80 bg-white p-1.5 text-center shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-[#a67854]/50 hover:shadow-md sm:rounded-2xl sm:p-4"
       >
-        <div className="relative aspect-[16/10] w-full overflow-hidden rounded-lg bg-[#f7f5f0] p-2 transition-colors group-hover:bg-[#f2ede4] sm:rounded-xl sm:p-3">
+        <div className="relative aspect-[16/10] w-full overflow-hidden rounded-lg transition-colors sm:rounded-xl">
           <Image
             src={image}
             alt={title}
             fill
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
             loading="eager"
-            className="object-contain p-1 transition-transform duration-300 group-hover:scale-105 sm:p-2"
+            className="object-contain p-1 transition-transform duration-300 group-hover:scale-105"
           />
         </div>
         <span className="font-geist mt-2.5 max-w-full truncate text-xs font-bold tracking-tight text-gray-900 transition-colors group-hover:text-[#a67854] sm:mt-3 sm:text-sm">
