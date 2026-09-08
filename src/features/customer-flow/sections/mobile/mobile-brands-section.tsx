@@ -20,7 +20,7 @@ export function MobileBrandsSection() {
     <div className="mx-auto min-h-dvh w-full max-w-[390px] overflow-hidden bg-white pb-28 text-[#101010] md:hidden">
       {/* Top Header with Back Button & Column Hero Image */}
       {/* Mobile Header */}
-      <MobileHeader title="Brands" backHref="/categories" />
+      <MobileHeader backHref="/categories" />
       <div className="relative px-6 pt-2 pb-2">
         <div className="mt-3 flex items-start justify-between">
           <div className="pt-1">

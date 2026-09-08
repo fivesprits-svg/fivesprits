@@ -11,7 +11,6 @@ import { sampleRequirementHistory } from "@/features/customer-flow/data/requirem
 import { buildStructuredCart } from "@/features/customer-flow/helpers/cart-view-model";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import { formatMrp } from "@/features/customer-flow/utils/currency";
-import { MobileHeader } from "../../components/navigation/mobile-header";
 
 export function MobileCartSection() {
   const router = useRouter();
@@ -37,7 +36,7 @@ export function MobileCartSection() {
 
   return (
     <div className="min-h-dvh w-full bg-white pb-48 md:hidden">
-      <MobileHeader title="Request" backHref="" />
+      {/* <MobileHeader title="Request" backHref="" /> */}
       <div className="relative px-6 pb-2">
         <div className="mt-3">
           <h1 className="font-outfit text-[36px] leading-none font-black tracking-tight text-black uppercase">

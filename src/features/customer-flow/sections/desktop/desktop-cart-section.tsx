@@ -62,7 +62,7 @@ export function DesktopCartSection() {
               </div>
 
               {totalItemsCount === 0 ? (
-                <div className="space-y-8">
+                <div className="">
                   <EmptyState
                     icon="/customer-flow/icons/requirement0.svg"
                     title="No Offers Available"
@@ -73,7 +73,7 @@ export function DesktopCartSection() {
 
                   {/* Requirement History for Regular Users when cart is empty */}
                   {isRegularUser && (
-                    <div className="space-y-4 pt-4">
+                    <div className="space-y-4">
                       <div className="flex items-center justify-between">
                         <div>
                           <h2 className="font-unbounded text-lg font-bold text-gray-950">

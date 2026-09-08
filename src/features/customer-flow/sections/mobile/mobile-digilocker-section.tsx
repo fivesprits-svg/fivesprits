@@ -25,8 +25,8 @@ export function MobileDigilockerSection() {
             <IconCircle
               iconSrc="/customer-flow/icons/shield-badge.svg"
               iconAlt="Shield"
-              iconWidth={80}
-              iconHeight={80}
+              iconWidth={50}
+              iconHeight={50}
               variant="large"
             />
           </div>
