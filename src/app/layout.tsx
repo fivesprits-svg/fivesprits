@@ -5,6 +5,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Five Spirits | Customer Catalogue",
   description: "Browse the Five Spirits catalogue and send your product requirement.",
+  icons: "/logo.svg",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

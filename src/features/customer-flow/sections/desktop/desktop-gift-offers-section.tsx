@@ -15,13 +15,13 @@ export function DesktopGiftOffersSection() {
           {/* Header Title Section - Gifts specific */}
           <div className="mb-6 flex items-end justify-between border-b border-gray-200/80 pb-5">
             <div>
-              <p className="font-outfit text-xs font-extrabold tracking-wider text-[#a67854] uppercase sm:text-sm">
+              <p className="font-outfit text-xs font-bold tracking-wider text-[#a67854] uppercase">
                 EXCLUSIVE REWARDS
               </p>
-              <h1 className="font-unbounded mt-1 text-3xl font-black tracking-tight text-gray-950 uppercase sm:text-4xl lg:text-5xl">
+              <h1 className="font-unbounded mt-1 text-2xl font-black tracking-tight text-gray-950 uppercase lg:text-3xl">
                 GIFTS
               </h1>
-              <p className="font-geist mt-1.5 max-w-md text-sm leading-relaxed text-gray-500 sm:text-base">
+              <p className="font-geist mt-1.5 max-w-md text-xs leading-relaxed text-gray-500 sm:text-sm">
                 Unlock premium gifts with your purchases.
               </p>
             </div>
