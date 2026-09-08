@@ -41,17 +41,9 @@ export function MobileGiftSelectionSection() {
 
   return (
     <div className="min-h-dvh bg-white pb-48 md:hidden">
-      <MobileHeader title="Select Product" backHref="/offers/gifts" />
+      <MobileHeader title="Select Product" subtitle="Choose any 6 items" backHref="/offers/gifts" />
       <main className="mx-auto w-full max-w-[390px] px-6">
-        <div className="pt-2 text-center">
-          <p className="font-outfit text-[11px] font-extrabold tracking-wider text-[#a67854] uppercase">
-            EXCLUSIVE REWARDS
-          </p>
-          <h1 className="font-geist text-lg font-black text-gray-950">Choose any 6 items</h1>
-          <p className="font-geist mt-0.5 text-xs text-gray-500">
-            Complete the selection to unlock your {giftOffer.gift}.
-          </p>
-        </div>
+        <div className="text-center"></div>
 
         <div id="gift-products" className="mt-4 grid grid-cols-2 gap-3">
           {giftProducts.map((product) => {

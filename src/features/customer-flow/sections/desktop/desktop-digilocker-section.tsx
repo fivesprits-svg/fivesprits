@@ -11,7 +11,7 @@ export function DesktopDigilockerSection() {
   return (
     <DesktopAuthPageLayout>
       <div className="customer-desktop-card">
-        <div className="mt-2 text-left">
+        <div className="text-left">
           <h1 className="font-unbounded text-common-black text-2xl leading-tight font-extrabold">
             Welcome
           </h1>
@@ -25,8 +25,8 @@ export function DesktopDigilockerSection() {
               <IconCircle
                 iconSrc="/customer-flow/icons/shield-badge.svg"
                 iconAlt="Shield"
-                iconWidth={80}
-                iconHeight={80}
+                iconWidth={60}
+                iconHeight={60}
                 variant="large"
               />
             </div>

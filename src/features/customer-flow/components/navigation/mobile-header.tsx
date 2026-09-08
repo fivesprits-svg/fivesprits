@@ -1,7 +1,15 @@
 "use client";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-export function MobileHeader({ title, backHref }: { title: string; backHref?: string }) {
+export function MobileHeader({
+  title,
+  subtitle,
+  backHref,
+}: {
+  title?: string;
+  subtitle?: string;
+  backHref?: string;
+}) {
   const router = useRouter();
 
   const handleBack = () => {
@@ -22,7 +30,16 @@ export function MobileHeader({ title, backHref }: { title: string; backHref?: st
         >
           <Image src="/customer-flow/icons/back.svg" alt="" width={16} height={16} />
         </button>
-        <h1 className="text-[17px] font-semibold md:text-lg">{title}</h1>
+
+        <div className="text-center">
+          {title && <h1 className="text-[17px] font-semibold md:text-lg">{title}</h1>}
+
+          {subtitle && (
+            <h3 className="font-outfit text-[11px] font-extrabold tracking-wider text-[#a67854]">
+              {subtitle}
+            </h3>
+          )}
+        </div>
       </div>
     </header>
   );

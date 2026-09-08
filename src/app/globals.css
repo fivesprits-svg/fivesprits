@@ -39,12 +39,15 @@
   .font-unbounded {
     font-family: var(--font-family-unbounded);
   }
+
   .font-geist {
     font-family: var(--font-family-geist);
   }
+
   .font-outfit {
     font-family: var(--font-family-outfit);
   }
+
   .customer-welcome-title {
     font-family: var(--font-family-unbounded);
     font-weight: 900;
@@ -406,7 +409,10 @@
     background: var(--color-common-white);
     border: 1px solid var(--color-common-border);
     border-radius: 24px;
-    padding: 48px;
+    padding-top: 24px;
+    padding-bottom: 24px;
+    padding-left: 40px;
+    padding-right: 40px;
     box-shadow: 0 24px 80px rgba(0, 0, 0, 0.08);
   }
 
@@ -710,10 +716,12 @@
     .catalogue-card-category {
       max-width: 100px;
     }
+
     .catalogue-card-category-image {
       width: 90px;
       height: 90px;
     }
+
     .catalogue-card-category-title {
       font-size: 13px;
     }
@@ -723,10 +731,12 @@
     .catalogue-card-category {
       max-width: 110px;
     }
+
     .catalogue-card-category-image {
       width: 100px;
       height: 100px;
     }
+
     .catalogue-card-category-title {
       font-size: 14px;
     }
@@ -771,6 +781,7 @@
       width: 160px;
       height: 115px;
     }
+
     .catalogue-card-brand-title {
       font-size: 14px;
     }
@@ -781,6 +792,7 @@
       width: 180px;
       height: 130px;
     }
+
     .catalogue-card-brand-title {
       font-size: 15px;
     }
@@ -809,13 +821,16 @@
     .catalogue-card-product-image {
       height: 180px;
     }
+
     .catalogue-card-product-name {
       font-size: 15px;
       line-height: 20px;
     }
+
     .catalogue-card-product-pack {
       font-size: 13px;
     }
+
     .catalogue-card-product-price {
       font-size: 16px;
     }
