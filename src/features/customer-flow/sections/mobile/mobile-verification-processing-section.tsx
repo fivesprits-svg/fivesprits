@@ -41,8 +41,8 @@ export function MobileVerificationProcessingSection() {
               <Image
                 src="/customer-flow/icons/shield-badge.svg"
                 alt="Verification"
-                width={64}
-                height={64}
+                width={50}
+                height={50}
               />
             </div>
           </div>
