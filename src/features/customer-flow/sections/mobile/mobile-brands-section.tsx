@@ -7,6 +7,7 @@ import { EmptyState } from "@/features/customer-flow/components/ui/empty-state";
 import { getBrandsByCategory, getCategory } from "@/features/customer-flow/data/catalogue";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import { MobileHeader } from "../../components/navigation/mobile-header";
+import { ImageSkeleton } from "@/features/customer-flow/components/ui/skeleton";
 
 export function MobileBrandsSection() {
   const router = useRouter();
@@ -34,6 +35,7 @@ export function MobileBrandsSection() {
 
           {/* Hero Right Column Image — always visible */}
           <div className="relative -mt-10 h-[170px] w-[135px] shrink-0">
+            <ImageSkeleton className="absolute inset-0 rounded-2xl" />
             <Image
               src="/customer-flow/hero/hero-right-column.webp"
               alt="Brand Collection Hero"
@@ -69,6 +71,7 @@ export function MobileBrandsSection() {
                 className="group flex cursor-pointer flex-col items-center text-center"
               >
                 <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[22px] transition-transform duration-200 group-hover:scale-105 active:scale-95">
+                  <ImageSkeleton className="absolute inset-0" />
                   <Image
                     src={brand.image}
                     alt={brand.name}

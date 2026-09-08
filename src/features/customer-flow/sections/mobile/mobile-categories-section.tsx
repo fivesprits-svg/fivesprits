@@ -5,6 +5,7 @@ import { categories } from "@/features/customer-flow/data/catalogue";
 import { MobileBottomNav } from "@/features/customer-flow/components/navigation/mobile-bottom-nav";
 import { EmptyState } from "@/features/customer-flow/components/ui/empty-state";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
+import { ImageSkeleton, SkeletonCircle } from "@/features/customer-flow/components/ui/skeleton";
 
 export function MobileCategoriesSection() {
   const router = useRouter();
@@ -73,6 +74,7 @@ export function MobileCategoriesSection() {
 
             {/* Right Visual Image */}
             <div className="relative h-[220px] w-[165px] shrink-0">
+              <ImageSkeleton className="absolute inset-0 rounded-2xl" />
               <Image
                 src="/customer-flow/hero/hero-right-visual.webp"
                 alt="Five Spirit Catalogue Hero"
@@ -99,6 +101,7 @@ export function MobileCategoriesSection() {
                   className="group flex cursor-pointer flex-col items-center"
                 >
                   <div className="relative aspect-square w-full overflow-hidden rounded-[18px] border border-gray-100/90 bg-[#FAF9F7] p-2 shadow-2xs transition-transform active:scale-95">
+                    <SkeletonCircle className="absolute inset-2" />
                     <Image
                       src={category.image}
                       alt={category.name}

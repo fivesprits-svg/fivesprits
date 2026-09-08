@@ -7,9 +7,11 @@ import { QuantityStepper } from "@/features/customer-flow/components/quantity-st
 import type { ComboOffer } from "@/features/customer-flow/data/offers";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import { formatMrp } from "@/features/customer-flow/utils/currency";
+import { ImageSkeleton, ButtonSpinner } from "@/features/customer-flow/components/ui/skeleton";
 
 export function DesktopOfferDetailsSection({ offer }: { offer: ComboOffer }) {
   const [quantity, setQuantity] = useState(1);
+  const [adding, setAdding] = useState(false);
   const { addComboToCart } = useCustomerFlow();
 
   return (
@@ -18,6 +20,7 @@ export function DesktopOfferDetailsSection({ offer }: { offer: ComboOffer }) {
         <article className="mx-auto grid max-w-5xl overflow-hidden rounded-[28px] border border-gray-200/90 bg-white shadow-sm lg:grid-cols-[1fr_1.15fr]">
           {/* Reduced image height */}
           <div className="relative h-[360px] w-full bg-[#f3f0eb] lg:h-full lg:min-h-[400px]">
+            <ImageSkeleton className="absolute inset-0" />
             <Image src={offer.image} alt={offer.title} fill sizes="50vw" className="object-cover" />
           </div>
 
@@ -66,10 +69,21 @@ export function DesktopOfferDetailsSection({ offer }: { offer: ComboOffer }) {
                 <QuantityStepper value={quantity} onChange={setQuantity} />
                 <button
                   type="button"
-                  onClick={() => addComboToCart(offer.id, quantity)}
-                  className="font-outfit h-11 rounded-full bg-black px-7 text-sm font-bold text-white transition hover:bg-gray-800 active:scale-[0.99] sm:h-12 sm:px-8 sm:text-base"
+                  disabled={adding}
+                  onClick={() => {
+                    setAdding(true);
+                    addComboToCart(offer.id, quantity);
+                  }}
+                  className="font-outfit h-11 rounded-full bg-black px-7 text-sm font-bold text-white transition hover:bg-gray-800 active:scale-[0.99] disabled:opacity-70 sm:h-12 sm:px-8 sm:text-base"
                 >
-                  Add
+                  {adding ? (
+                    <span className="inline-flex items-center gap-2">
+                      <ButtonSpinner />
+                      Adding...
+                    </span>
+                  ) : (
+                    "Add"
+                  )}
                 </button>
               </div>
             </div>

@@ -7,6 +7,7 @@ import { categories } from "@/features/customer-flow/data/catalogue";
 import { DesktopHeader } from "@/features/customer-flow/components/layout/desktop-header";
 import { EmptyState } from "@/features/customer-flow/components/ui/empty-state";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
+import { ImageSkeleton } from "@/features/customer-flow/components/ui/skeleton";
 
 export function DesktopCategoriesSection() {
   const router = useRouter();
@@ -102,6 +103,7 @@ export function DesktopCategoriesSection() {
                     {/* CARD 1: LEFT CARD (Barrel Room Cellar - Large) */}
                     <div className="absolute top-10 left-0 z-10 w-[220px] -rotate-6 overflow-hidden rounded-3xl border-2 border-white/95 bg-white p-2 shadow-2xl transition-all duration-500 ease-out group-hover/cards:-translate-x-6 group-hover/cards:-translate-y-3 group-hover/cards:-rotate-10 group-hover/cards:shadow-[0_25px_50px_rgba(0,0,0,0.25)] sm:top-14 sm:-left-2 sm:w-[270px] lg:-left-4 lg:w-[290px]">
                       <div className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl bg-gray-900">
+                        <ImageSkeleton className="absolute inset-0" />
                         <Image
                           src="/customer-flow/hero/barrel-room.jpg"
                           alt="Barrel Room Cellar"
@@ -115,6 +117,7 @@ export function DesktopCategoriesSection() {
                     {/* CARD 2: CENTER CARD (Aurum Reserve Bottle - Large Focus) */}
                     <div className="relative z-30 w-[235px] -translate-y-4 rotate-0 overflow-hidden rounded-3xl border-2 border-white bg-white p-2.5 shadow-[0_20px_50px_rgba(0,0,0,0.2)] transition-all duration-500 ease-out group-hover/cards:-translate-y-8 group-hover/cards:scale-105 group-hover/cards:shadow-[0_30px_60px_rgba(0,0,0,0.3)] sm:w-[290px] lg:w-[315px]">
                       <div className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl bg-gray-900">
+                        <ImageSkeleton className="absolute inset-0" />
                         <Image
                           src="/customer-flow/hero/aurum-reserve.jpg"
                           alt="Aurum Reserve 18Y"
@@ -129,6 +132,7 @@ export function DesktopCategoriesSection() {
                     {/* CARD 3: RIGHT CARD (Spirit Club Tasting - Large) */}
                     <div className="absolute top-10 right-0 z-20 w-[220px] rotate-6 overflow-hidden rounded-3xl border-2 border-white/95 bg-white p-2 shadow-2xl transition-all duration-500 ease-out group-hover/cards:translate-x-6 group-hover/cards:-translate-y-3 group-hover/cards:rotate-10 group-hover/cards:shadow-[0_25px_50px_rgba(0,0,0,0.25)] sm:top-14 sm:-right-2 sm:w-[270px] lg:-right-4 lg:w-[290px]">
                       <div className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl bg-gray-900">
+                        <ImageSkeleton className="absolute inset-0" />
                         <Image
                           src="/customer-flow/hero/spirit-club.jpg"
                           alt="Spirit Club Cheers"
@@ -178,6 +182,7 @@ export function DesktopCategoriesSection() {
                     className="group flex cursor-pointer flex-col items-center justify-between rounded-2xl border border-gray-200/80 bg-white p-3 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-[#a67854]/60 hover:shadow-md"
                   >
                     <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl bg-gray-50 p-2 transition-colors group-hover:bg-gray-100">
+                      <ImageSkeleton className="absolute inset-0" />
                       <Image
                         src={category.image}
                         alt={category.name}
@@ -224,6 +229,7 @@ export function DesktopCategoriesSection() {
 
                 <div className="col-span-12 lg:col-span-6">
                   <div className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl border border-white/10 shadow-lg">
+                    <ImageSkeleton className="absolute inset-0" />
                     <Image
                       src="/customer-flow/hero/barrel-room.jpg"
                       alt="Distillery Barrel Room"

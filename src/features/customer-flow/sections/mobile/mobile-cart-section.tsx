@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ConfirmationDialog } from "@/features/customer-flow/components/confirmation-dialog";
 import { MobileBottomNav } from "@/features/customer-flow/components/navigation/mobile-bottom-nav";
@@ -11,11 +12,13 @@ import { sampleRequirementHistory } from "@/features/customer-flow/data/requirem
 import { buildStructuredCart } from "@/features/customer-flow/helpers/cart-view-model";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import { formatMrp } from "@/features/customer-flow/utils/currency";
+import { ImageSkeleton, ButtonSpinner } from "@/features/customer-flow/components/ui/skeleton";
 
 export function MobileCartSection() {
   const router = useRouter();
   const { state, setCartQuantity, removeFromCart, submitRequirement, dismissConfirmation } =
     useCustomerFlow();
+  const [submitting, setSubmitting] = useState(false);
 
   const isRegularUser = Boolean(state.session?.cameFromLoginHere || state.session?.mobile);
 
@@ -157,6 +160,7 @@ export function MobileCartSection() {
                     >
                       <div className="flex min-w-0 items-center gap-3">
                         <div className="relative size-[68px] shrink-0 overflow-hidden rounded-[14px] bg-[#FAF6F0] p-1">
+                          <ImageSkeleton className="absolute inset-0" />
                           <Image
                             src={product.image}
                             alt={product.name}
@@ -245,6 +249,7 @@ export function MobileCartSection() {
                       className="rounded-[26px] border border-[#eee4d8] bg-[#FAF6F0] p-4 shadow-xs"
                     >
                       <div className="relative aspect-[16/9] w-full overflow-hidden rounded-[18px] bg-white">
+                        <ImageSkeleton className="absolute inset-0" />
                         <Image
                           src={gift.offer.image}
                           alt={gift.offer.gift}
@@ -272,6 +277,7 @@ export function MobileCartSection() {
                           >
                             <div className="flex min-w-0 items-center gap-2.5">
                               <div className="relative size-11 shrink-0 overflow-hidden rounded-lg bg-[#FAF6F0]">
+                                <ImageSkeleton className="absolute inset-0" />
                                 <Image
                                   src={product.image}
                                   alt={product.name}
@@ -361,6 +367,7 @@ export function MobileCartSection() {
                       className="rounded-[26px] border border-gray-200/90 bg-white p-4 shadow-sm"
                     >
                       <div className="relative aspect-[16/8] w-full overflow-hidden rounded-[18px] bg-[#f5f3ef]">
+                        <ImageSkeleton className="absolute inset-0" />
                         <Image
                           src={offer.image}
                           alt={offer.title}
@@ -599,10 +606,21 @@ export function MobileCartSection() {
         <div className="fixed right-0 bottom-[92px] left-0 z-30 mx-auto max-w-[390px] border-t border-gray-100 bg-white/95 px-6 py-3 backdrop-blur-xs">
           <button
             type="button"
-            onClick={submitRequirement}
-            className="font-outfit flex h-12 w-full items-center justify-center rounded-full bg-black text-sm font-bold tracking-wide text-white shadow-md transition hover:bg-gray-800 active:scale-[0.99]"
+            disabled={submitting}
+            onClick={() => {
+              setSubmitting(true);
+              submitRequirement();
+            }}
+            className="font-outfit flex h-12 w-full items-center justify-center rounded-full bg-black text-sm font-bold tracking-wide text-white shadow-md transition hover:bg-gray-800 active:scale-[0.99] disabled:opacity-70"
           >
-            Send Requirement
+            {submitting ? (
+              <span className="inline-flex items-center gap-2">
+                <ButtonSpinner />
+                Sending...
+              </span>
+            ) : (
+              "Send Requirement"
+            )}
           </button>
         </div>
       )}

@@ -9,9 +9,11 @@ export function AgeVerificationForm() {
   const router = useRouter();
   const [confirmed, setConfirmed] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
+  const [loading, setloading] = useState(false);
 
   function submit(event: React.FormEvent) {
     event.preventDefault();
+    setloading(true);
     if (confirmed) {
       router.push("/profile-setup");
     }
@@ -40,6 +42,8 @@ export function AgeVerificationForm() {
       <FlowNavButtons
         backHref="/digilocker/verification"
         submitLabel="Continue"
+        loading={loading}
+        loadingLabel="Processing..."
         disabled={!confirmed}
       />
       <p className="font-geist text-common-gray text-center text-xs md:text-sm">

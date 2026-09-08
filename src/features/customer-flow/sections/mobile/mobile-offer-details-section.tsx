@@ -8,15 +8,18 @@ import { QuantityStepper } from "@/features/customer-flow/components/quantity-st
 import type { ComboOffer } from "@/features/customer-flow/data/offers";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import { formatMrp } from "@/features/customer-flow/utils/currency";
+import { ImageSkeleton, ButtonSpinner } from "@/features/customer-flow/components/ui/skeleton";
 
 export function MobileOfferDetailsSection({ offer }: { offer: ComboOffer }) {
   const [quantity, setQuantity] = useState(1);
+  const [adding, setAdding] = useState(false);
   const { addComboToCart } = useCustomerFlow();
   return (
     <div className="min-h-dvh bg-white pb-28 md:hidden">
       <MobileHeader title="Offer Details" backHref="/offers" />
       <main className="mx-auto w-full max-w-[390px] px-6 pt-3">
         <div className="relative aspect-[16/10] overflow-hidden rounded-[20px] bg-[#f5f3ef]">
+          <ImageSkeleton className="absolute inset-0" />
           <Image src={offer.image} alt={offer.title} fill sizes="342px" className="object-cover" />
         </div>
         <div className="mt-4">
@@ -59,10 +62,21 @@ export function MobileOfferDetailsSection({ offer }: { offer: ComboOffer }) {
           <QuantityStepper value={quantity} onChange={setQuantity} />
           <button
             type="button"
-            onClick={() => addComboToCart(offer.id, quantity)}
-            className="font-outfit h-12 flex-1 rounded-full bg-black text-sm font-bold text-white transition hover:bg-gray-800 active:scale-[0.99]"
+            disabled={adding}
+            onClick={() => {
+              setAdding(true);
+              addComboToCart(offer.id, quantity);
+            }}
+            className="font-outfit h-12 flex-1 rounded-full bg-black text-sm font-bold text-white transition hover:bg-gray-800 active:scale-[0.99] disabled:opacity-70"
           >
-            Add Offer to Cart
+            {adding ? (
+              <span className="inline-flex items-center gap-2">
+                <ButtonSpinner />
+                Adding...
+              </span>
+            ) : (
+              "Add Offer to Cart"
+            )}
           </button>
         </div>
       </main>
