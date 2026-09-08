@@ -13,6 +13,7 @@ export function OtpForm() {
   const { verifyOtp } = useCustomerFlow();
   const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   if (error) {
     return (
       <div className="fixed inset-0 z-50 flex min-h-dvh flex-col bg-[#faf9f6] md:static md:mt-8 md:block md:min-h-0 md:bg-transparent">
@@ -52,6 +53,7 @@ export function OtpForm() {
       setError("The verification code is incorrect. Please try again.");
       return;
     }
+    setLoading(true);
     verifyOtp();
     router.push("/digilocker");
   }
@@ -83,7 +85,12 @@ export function OtpForm() {
       </div>
       <p className="sr-only">Prototype code: 1234</p>
       <div className="mt-10 md:mt-12">
-        <FlowNavButtons backHref="/" submitLabel="Verify & Proceed" />
+        <FlowNavButtons
+          backHref="/"
+          submitLabel="Verify & Proceed"
+          loading={loading}
+          loadingLabel="Verifying..."
+        />
       </div>
     </form>
   );

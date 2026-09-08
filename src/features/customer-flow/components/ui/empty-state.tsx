@@ -1,5 +1,8 @@
+"use client";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
+import { SkeletonCircle } from "@/features/customer-flow/components/ui/skeleton";
 
 type EmptyStateProps = {
   // icon: "box" | "star" | "tag";
@@ -11,11 +14,19 @@ type EmptyStateProps = {
 };
 
 export function EmptyState({ icon, title, description, actionLabel, actionHref }: EmptyStateProps) {
+  const [imageLoaded, setImageLoaded] = useState(false);
   return (
     <div className="flex flex-col items-center px-6 py-4 text-center md:px-12">
-      <div className="grid size-[80px] place-items-center rounded-full bg-[#F5EDE4] md:size-[100px]">
-        {/* <EmptyStateIcon type={icon} /> */}
-        <Image src={icon} alt={title} width={60} height={60} className="object-contain p-2" />
+      <div className="relative grid size-[80px] place-items-center rounded-full bg-[#F5EDE4] md:size-[100px]">
+        {!imageLoaded && <SkeletonCircle className="absolute size-full" />}
+        <Image
+          src={icon}
+          alt={title}
+          width={60}
+          height={60}
+          className={`object-contain p-2 transition-opacity ${imageLoaded ? "opacity-100" : "opacity-0"}`}
+          onLoad={() => setImageLoaded(true)}
+        />
       </div>
       <h2 className="font-unbounded text-common-black mt-6 text-xl font-black md:mt-8 md:text-2xl">
         {title}

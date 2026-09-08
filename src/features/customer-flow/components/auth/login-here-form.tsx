@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
+import { ButtonSpinner } from "@/features/customer-flow/components/ui/skeleton";
 
 export function LoginFormHere() {
   const router = useRouter();
@@ -15,6 +16,7 @@ export function LoginFormHere() {
   }>({ countryCode: "in", dialCode: "91" });
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<{ mobile?: string; password?: string }>({});
+  const [loading, setLoading] = useState(false);
 
   function handlePhoneChange(
     value: string,
@@ -34,6 +36,7 @@ export function LoginFormHere() {
     if (!password.trim()) next.password = "Password is required";
     setErrors(next);
     if (!next.mobile && !next.password) {
+      setLoading(true);
       loginHere(fullPhone, password);
       router.push("/digilocker");
     }
@@ -51,6 +54,7 @@ export function LoginFormHere() {
             placeholder="Enter mobile number"
             enableSearch
             searchPlaceholder="Search countries"
+            disabled={loading}
             containerStyle={{ width: "100%" }}
             inputStyle={{
               width: "100%",
@@ -92,6 +96,7 @@ export function LoginFormHere() {
           placeholder="Enter password"
           aria-invalid={Boolean(errors.password)}
           className="customer-input"
+          disabled={loading}
         />
         {errors.password && (
           <span
@@ -102,8 +107,15 @@ export function LoginFormHere() {
           </span>
         )}
       </label>
-      <button type="submit" className="customer-continue-button mt-4 md:mt-6">
-        Continue
+      <button type="submit" className="customer-continue-button mt-4 md:mt-6" disabled={loading}>
+        {loading ? (
+          <span className="inline-flex items-center gap-2">
+            <ButtonSpinner />
+            Continuing...
+          </span>
+        ) : (
+          "Continue"
+        )}
       </button>
       <p className="font-geist text-common-gray text-center text-sm md:text-base">
         Don&apos;t have an account?{" "}
@@ -111,6 +123,7 @@ export function LoginFormHere() {
           type="button"
           onClick={() => router.push("/")}
           className="text-common-black cursor-pointer font-semibold underline"
+          disabled={loading}
         >
           {" "}
           Register{" "}

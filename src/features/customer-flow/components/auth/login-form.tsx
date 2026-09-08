@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import { validateLogin } from "@/features/customer-flow/utils/login-validation";
+import { ButtonSpinner } from "@/features/customer-flow/components/ui/skeleton";
 
 export function LoginForm() {
   const router = useRouter();
@@ -10,11 +11,13 @@ export function LoginForm() {
   const [name, setName] = useState("");
   const [mobile, setMobile] = useState("");
   const [errors, setErrors] = useState<ReturnType<typeof validateLogin>>({});
+  const [loading, setLoading] = useState(false);
   function submit(event: React.FormEvent) {
     event.preventDefault();
     const next = validateLogin(name, mobile);
     setErrors(next);
     if (!next.name && !next.mobile) {
+      setLoading(true);
       login(name.trim(), mobile);
       router.push("/otp");
     }
@@ -34,6 +37,7 @@ export function LoginForm() {
           placeholder="Enter full name"
           aria-invalid={Boolean(errors.name)}
           className="customer-input"
+          disabled={loading}
         />
         {errors.name && (
           <span
@@ -59,6 +63,7 @@ export function LoginForm() {
           placeholder="Enter mobile number"
           aria-invalid={Boolean(errors.mobile)}
           className="customer-input"
+          disabled={loading}
         />
         {errors.mobile && (
           <span
@@ -69,8 +74,15 @@ export function LoginForm() {
           </span>
         )}
       </label>
-      <button type="submit" className="customer-continue-button mt-4 md:mt-6">
-        Continue
+      <button type="submit" className="customer-continue-button mt-4 md:mt-6" disabled={loading}>
+        {loading ? (
+          <span className="inline-flex items-center gap-2">
+            <ButtonSpinner />
+            Continuing...
+          </span>
+        ) : (
+          "Continue"
+        )}
       </button>
       <p className="font-geist text-common-gray text-center text-[11px] md:text-sm">
         We&apos;ll send you a one-time verification code to Admin.
@@ -82,6 +94,7 @@ export function LoginForm() {
           type="button"
           onClick={() => router.push("/login-here")}
           className="text-common-black cursor-pointer font-semibold underline"
+          disabled={loading}
         >
           {" "}
           Login here{" "}

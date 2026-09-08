@@ -1,5 +1,6 @@
 "use client";
 import type { InputHTMLAttributes } from "react";
+import { ButtonSpinner } from "@/features/customer-flow/components/ui/skeleton";
 export function TextField({
   label,
   error,
@@ -25,12 +26,24 @@ export function TextField({
 }
 export function PrimaryButton({
   className = "",
+  loading = false,
+  children,
   ...props
-}: React.ButtonHTMLAttributes<HTMLButtonElement>) {
+}: React.ButtonHTMLAttributes<HTMLButtonElement> & { loading?: boolean }) {
   return (
     <button
       {...props}
+      disabled={props.disabled || loading}
       className={`inline-flex min-h-12 items-center justify-center rounded-xl bg-[#7d4b22] px-5 text-sm font-bold tracking-wide text-white shadow-[0_8px_22px_rgba(83,46,20,0.2)] transition hover:bg-[#673b1b] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#a86d2a] disabled:opacity-50 ${className}`}
-    />
+    >
+      {loading ? (
+        <span className="inline-flex items-center gap-2">
+          <ButtonSpinner />
+          {children}
+        </span>
+      ) : (
+        children
+      )}
+    </button>
   );
 }
