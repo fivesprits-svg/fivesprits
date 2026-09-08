@@ -5,10 +5,12 @@ export function MobileHeader({
   title,
   subtitle,
   backHref,
+  isSearchEnabled = false,
 }: {
   title?: string;
   subtitle?: string;
   backHref?: string;
+  isSearchEnabled?: boolean;
 }) {
   const router = useRouter();
 
@@ -40,6 +42,21 @@ export function MobileHeader({
             </h3>
           )}
         </div>
+        {isSearchEnabled && (
+          <button
+            type="button"
+            aria-label="Search"
+            className="absolute right-6 grid size-9 cursor-pointer place-items-center text-gray-800 transition active:scale-95 md:right-10"
+          >
+            <Image
+              src="/customer-flow/icons/icon-search.svg"
+              alt="Search"
+              width={18}
+              height={18}
+              className="opacity-90"
+            />
+          </button>
+        )}
       </div>
     </header>
   );
