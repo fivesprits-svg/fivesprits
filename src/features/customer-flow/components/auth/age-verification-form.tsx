@@ -37,7 +37,11 @@ export function AgeVerificationForm() {
           I confirm that I am 25 years of age or older.
         </span>
       </button>
-      <FlowNavButtons backHref="/digilocker" submitLabel="Continue" disabled={!confirmed} />
+      <FlowNavButtons
+        backHref="/digilocker/verification"
+        submitLabel="Continue"
+        disabled={!confirmed}
+      />
       <p className="font-geist text-common-gray text-center text-xs md:text-sm">
         By continuing, you agree to our{" "}
         <button

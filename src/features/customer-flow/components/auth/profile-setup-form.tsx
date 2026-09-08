@@ -41,7 +41,7 @@ export function ProfileSetupForm() {
           <div className="relative">
             <input
               defaultValue={formatDisplayMobile(state.session?.mobile)}
-              className="customer-input bg-gray-50/80 pr-10 text-sm font-medium"
+              className="customer-input text-sm"
             />
           </div>
         </label>

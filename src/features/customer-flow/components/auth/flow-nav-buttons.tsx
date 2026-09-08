@@ -2,7 +2,7 @@
 import { useRouter } from "next/navigation";
 
 type FlowNavButtonsProps = {
-  backHref: string;
+  backHref?: string;
   submitLabel: string;
   onSubmit?: () => void;
   disabled?: boolean;
@@ -20,13 +20,17 @@ export function FlowNavButtons({
 }: FlowNavButtonsProps) {
   const router = useRouter();
 
+  const handleBack = () => {
+    if (backHref) {
+      router.push(backHref);
+    } else {
+      router.back();
+    }
+  };
+
   return (
     <div className="customer-form-nav">
-      <button
-        type="button"
-        onClick={() => router.push(backHref)}
-        className="customer-form-nav-back"
-      >
+      <button type="button" onClick={handleBack} className="customer-form-nav-back">
         Back
       </button>
       <button
