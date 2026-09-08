@@ -145,7 +145,7 @@ export function DesktopProfileSection() {
                           setProfilePhoto(null);
                           if (imageInputRef.current) imageInputRef.current.value = "";
                         }}
-                        className="text-red-500 hover:underline"
+                        className="cursor-pointer text-red-500 hover:underline"
                       >
                         Remove
                       </button>

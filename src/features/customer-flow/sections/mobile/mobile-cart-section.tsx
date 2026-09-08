@@ -607,7 +607,7 @@ export function MobileCartSection() {
         </div>
       )}
 
-      <MobileBottomNav active="Inquiry" />
+      <MobileBottomNav active="Request" />
       <ConfirmationDialog
         open={state.showConfirmation}
         onClose={() => {
