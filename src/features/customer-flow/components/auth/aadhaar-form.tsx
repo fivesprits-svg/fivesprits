@@ -7,7 +7,8 @@ import { FlowNavButtons } from "@/features/customer-flow/components/auth/flow-na
 
 export function AadhaarForm() {
   const router = useRouter();
-  const { verifyAadhaar } = useCustomerFlow();
+  const { state, verifyAadhaar } = useCustomerFlow();
+  const backHref = state.session?.cameFromLoginHere ? "/login-here" : "/otp";
   const [aadhaar, setAadhaar] = useState("");
   const [errors, setErrors] = useState<ReturnType<typeof validateAadhaar>>({});
   const [loading, setLoading] = useState(false);
@@ -48,7 +49,7 @@ export function AadhaarForm() {
         )}
       </label>
       <FlowNavButtons
-        backHref="/otp"
+        backHref={backHref}
         submitLabel="Proceed"
         loading={loading}
         loadingLabel="Processing..."
