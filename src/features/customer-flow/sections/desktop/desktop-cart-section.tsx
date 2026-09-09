@@ -17,9 +17,10 @@ import { ImageSkeleton, ButtonSpinner } from "@/features/customer-flow/component
 
 export function DesktopCartSection() {
   const router = useRouter();
-  const { state, setCartQuantity, removeFromCart, submitRequirement, dismissConfirmation } =
+  const { state, setCartQuantity, removeFromCart, submitRequirement, dismissConfirmation, logout } =
     useCustomerFlow();
   const [submitting, setSubmitting] = useState(false);
+  const [showConfirmPopup, setShowConfirmPopup] = useState(false);
 
   const isRegularUser = Boolean(state.session?.cameFromLoginHere || state.session?.mobile);
 
@@ -634,10 +635,7 @@ export function DesktopCartSection() {
               <button
                 type="button"
                 disabled={totalItemsCount === 0 || submitting}
-                onClick={() => {
-                  setSubmitting(true);
-                  submitRequirement();
-                }}
+                onClick={() => setShowConfirmPopup(true)}
                 className="font-outfit mt-6 flex h-12 w-full cursor-pointer items-center justify-center rounded-full bg-black text-sm font-bold tracking-wide text-white shadow-sm transition hover:bg-gray-800 disabled:opacity-40"
               >
                 {submitting ? (
@@ -654,10 +652,23 @@ export function DesktopCartSection() {
         </div>
 
         <ConfirmationDialog
-          open={state.showConfirmation}
-          onClose={() => {
+          open={showConfirmPopup}
+          loading={submitting}
+          onConfirm={() => {
+            setSubmitting(true);
+            submitRequirement();
+          }}
+          onDismiss={() => {
+            setShowConfirmPopup(false);
+            setSubmitting(false);
             dismissConfirmation();
-            router.push("/categories");
+            // router.push("/categories");
+          }}
+          onLogout={() => {
+            setShowConfirmPopup(false);
+            setSubmitting(false);
+            logout();
+            router.push("/");
           }}
         />
       </PortalShell>
