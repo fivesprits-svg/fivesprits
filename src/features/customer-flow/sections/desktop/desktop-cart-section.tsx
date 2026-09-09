@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ConfirmationDialog } from "@/features/customer-flow/components/confirmation-dialog";
 import { PortalShell } from "@/features/customer-flow/components/portal-shell";
@@ -12,11 +13,13 @@ import { sampleRequirementHistory } from "@/features/customer-flow/data/requirem
 import { buildStructuredCart } from "@/features/customer-flow/helpers/cart-view-model";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import { formatMrp } from "@/features/customer-flow/utils/currency";
+import { ImageSkeleton, ButtonSpinner } from "@/features/customer-flow/components/ui/skeleton";
 
 export function DesktopCartSection() {
   const router = useRouter();
   const { state, setCartQuantity, removeFromCart, submitRequirement, dismissConfirmation } =
     useCustomerFlow();
+  const [submitting, setSubmitting] = useState(false);
 
   const isRegularUser = Boolean(state.session?.cameFromLoginHere || state.session?.mobile);
 
@@ -181,6 +184,7 @@ export function DesktopCartSection() {
                           >
                             <div className="flex min-w-0 items-center gap-4">
                               <div className="relative size-18 shrink-0 overflow-hidden rounded-[16px] bg-[#FAF6F0] p-1.5">
+                                <ImageSkeleton className="absolute inset-0" />
                                 <Image
                                   src={product.image}
                                   alt={product.name}
@@ -270,6 +274,7 @@ export function DesktopCartSection() {
                           >
                             <div className="grid grid-cols-[300px_1fr] items-start gap-5">
                               <div className="relative aspect-[16/10] w-full overflow-hidden rounded-[20px] bg-white">
+                                <ImageSkeleton className="absolute inset-0" />
                                 <Image
                                   src={gift.offer.image}
                                   alt={gift.offer.gift}
@@ -295,6 +300,7 @@ export function DesktopCartSection() {
                                     >
                                       <div className="flex min-w-0 items-center gap-2">
                                         <div className="relative size-10 shrink-0 overflow-hidden rounded-lg bg-[#FAF6F0]">
+                                          <ImageSkeleton className="absolute inset-0" />
                                           <Image
                                             src={product.image}
                                             alt={product.name}
@@ -627,11 +633,21 @@ export function DesktopCartSection() {
 
               <button
                 type="button"
-                disabled={totalItemsCount === 0}
-                onClick={submitRequirement}
+                disabled={totalItemsCount === 0 || submitting}
+                onClick={() => {
+                  setSubmitting(true);
+                  submitRequirement();
+                }}
                 className="font-outfit mt-6 flex h-12 w-full cursor-pointer items-center justify-center rounded-full bg-black text-sm font-bold tracking-wide text-white shadow-sm transition hover:bg-gray-800 disabled:opacity-40"
               >
-                Send Requirement
+                {submitting ? (
+                  <span className="inline-flex items-center gap-2">
+                    <ButtonSpinner />
+                    Sending...
+                  </span>
+                ) : (
+                  "Send Requirement"
+                )}
               </button>
             </aside>
           </div>

@@ -14,10 +14,12 @@ import {
   quantitiesToSelection,
   selectionToQuantities,
 } from "@/features/customer-flow/helpers/gift-selection";
+import { ImageSkeleton, ButtonSpinner } from "@/features/customer-flow/components/ui/skeleton";
 
 export function MobileGiftSelectionSection() {
   const { state, addGiftToCart } = useCustomerFlow();
   const [showMaxLimitDialog, setShowMaxLimitDialog] = useState(false);
+  const [saving, setSaving] = useState(false);
   const savedSelection = state.cart.find(
     (line) => line.productId === giftOffer.id,
   )?.selectedProductIds;
@@ -55,6 +57,7 @@ export function MobileGiftSelectionSection() {
               >
                 <div>
                   <div className="relative aspect-square overflow-hidden rounded-[14px] bg-[#f5f3ef]">
+                    <ImageSkeleton className="absolute inset-0" />
                     <Image
                       src={product.image}
                       alt={product.name}
@@ -118,6 +121,7 @@ export function MobileGiftSelectionSection() {
             if (selected < 6) {
               e.preventDefault();
             } else {
+              setSaving(true);
               addGiftToCart(giftOffer.id, quantitiesToSelection(quantities));
             }
           }}
@@ -126,7 +130,14 @@ export function MobileGiftSelectionSection() {
             selected >= 6 ? "bg-black text-white" : "pointer-events-none bg-gray-200 text-gray-400"
           }`}
         >
-          Continue
+          {saving ? (
+            <span className="inline-flex items-center gap-2">
+              <ButtonSpinner />
+              Saving...
+            </span>
+          ) : (
+            "Continue"
+          )}
         </Link>
       </div>
       <MobileBottomNav active="Offer" />

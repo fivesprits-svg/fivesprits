@@ -7,9 +7,10 @@ import { FlowNavButtons } from "@/features/customer-flow/components/auth/flow-na
 
 export function AadhaarForm() {
   const router = useRouter();
-  const { state, verifyAadhaar } = useCustomerFlow();
+  const { state, verifyAadhaar, updateFormDraft } = useCustomerFlow();
   const backHref = state.session?.cameFromLoginHere ? "/login-here" : "/otp";
-  const [aadhaar, setAadhaar] = useState("");
+  const draft = state.session?.formDrafts?.aadhaar;
+  const [aadhaar, setAadhaar] = useState(draft ?? "");
   const [errors, setErrors] = useState<ReturnType<typeof validateAadhaar>>({});
   const [loading, setLoading] = useState(false);
 
@@ -31,7 +32,9 @@ export function AadhaarForm() {
         <input
           value={aadhaar}
           onChange={(event) => {
-            setAadhaar(formatAadhaar(event.target.value));
+            const next = formatAadhaar(event.target.value);
+            setAadhaar(next);
+            updateFormDraft({ type: "aadhaar", data: { aadhaar: next } });
             setErrors({});
           }}
           placeholder="Enter aadhaar card number"

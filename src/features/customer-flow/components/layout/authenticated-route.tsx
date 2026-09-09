@@ -2,6 +2,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
+import { AuthPageSkeleton } from "@/features/customer-flow/components/ui/skeleton";
 export function AuthenticatedRoute({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const { state, hydrated } = useCustomerFlow();
@@ -9,11 +10,6 @@ export function AuthenticatedRoute({ children }: { children: React.ReactNode }) 
   useEffect(() => {
     if (hydrated && !isAllowed) router.replace("/");
   }, [hydrated, isAllowed, router]);
-  if (!hydrated || !isAllowed)
-    return (
-      <main className="text-common-gray grid min-h-dvh place-items-center bg-white text-sm">
-        Verifying access…
-      </main>
-    );
+  if (!hydrated || !isAllowed) return <AuthPageSkeleton />;
   return children;
 }

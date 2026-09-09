@@ -4,24 +4,45 @@ import { useRouter } from "next/navigation";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
+import { ButtonSpinner } from "@/features/customer-flow/components/ui/skeleton";
 
 export function LoginFormHere() {
   const router = useRouter();
-  const { loginHere } = useCustomerFlow();
-  const [phoneValue, setPhoneValue] = useState("");
+  const { state, loginHere, updateFormDraft } = useCustomerFlow();
+  const draft = state.session?.formDrafts?.loginHere;
+  const [phoneValue, setPhoneValue] = useState(draft?.phoneValue ?? "");
   const [countryData, setCountryData] = useState<{
     countryCode: string;
     dialCode: string;
-  }>({ countryCode: "in", dialCode: "91" });
-  const [password, setPassword] = useState("");
+  }>({ countryCode: draft?.countryCode ?? "in", dialCode: draft?.dialCode ?? "91" });
+  const [password, setPassword] = useState(draft?.password ?? "");
   const [errors, setErrors] = useState<{ mobile?: string; password?: string }>({});
+  const [loading, setLoading] = useState(false);
+
+  function syncDraft(
+    nextPhone: string,
+    nextCountry: { countryCode: string; dialCode: string },
+    nextPassword: string,
+  ) {
+    updateFormDraft({
+      type: "login-here",
+      data: {
+        phoneValue: nextPhone,
+        countryCode: nextCountry.countryCode,
+        dialCode: nextCountry.dialCode,
+        password: nextPassword,
+      },
+    });
+  }
 
   function handlePhoneChange(
     value: string,
     data: { countryCode: string; dialCode: string; name?: string; format?: string },
   ) {
+    const nextCountry = { countryCode: data.countryCode, dialCode: data.dialCode };
     setPhoneValue(value);
-    setCountryData({ countryCode: data.countryCode, dialCode: data.dialCode });
+    setCountryData(nextCountry);
+    syncDraft(value, nextCountry, password);
     if (errors.mobile) setErrors((prev) => ({ ...prev, mobile: undefined }));
   }
 
@@ -34,6 +55,7 @@ export function LoginFormHere() {
     if (!password.trim()) next.password = "Password is required";
     setErrors(next);
     if (!next.mobile && !next.password) {
+      setLoading(true);
       loginHere(fullPhone, password);
       router.push("/digilocker");
     }
@@ -51,6 +73,7 @@ export function LoginFormHere() {
             placeholder="Enter mobile number"
             enableSearch
             searchPlaceholder="Search countries"
+            disabled={loading}
             containerStyle={{ width: "100%" }}
             inputStyle={{
               width: "100%",
@@ -88,10 +111,15 @@ export function LoginFormHere() {
         <input
           type="password"
           value={password}
-          onChange={(event) => setPassword(event.target.value)}
+          onChange={(event) => {
+            const next = event.target.value;
+            setPassword(next);
+            syncDraft(phoneValue, countryData, next);
+          }}
           placeholder="Enter password"
           aria-invalid={Boolean(errors.password)}
           className="customer-input"
+          disabled={loading}
         />
         {errors.password && (
           <span
@@ -102,8 +130,15 @@ export function LoginFormHere() {
           </span>
         )}
       </label>
-      <button type="submit" className="customer-continue-button mt-4 md:mt-6">
-        Continue
+      <button type="submit" className="customer-continue-button mt-4 md:mt-6" disabled={loading}>
+        {loading ? (
+          <span className="inline-flex items-center gap-2">
+            <ButtonSpinner />
+            Continuing...
+          </span>
+        ) : (
+          "Continue"
+        )}
       </button>
       <p className="font-geist text-common-gray text-center text-sm md:text-base">
         Don&apos;t have an account?{" "}
@@ -111,6 +146,7 @@ export function LoginFormHere() {
           type="button"
           onClick={() => router.push("/")}
           className="text-common-black cursor-pointer font-semibold underline"
+          disabled={loading}
         >
           {" "}
           Register{" "}

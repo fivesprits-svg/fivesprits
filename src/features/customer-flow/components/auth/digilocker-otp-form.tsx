@@ -12,8 +12,9 @@ import {
 
 export function DigilockerOtpForm() {
   const router = useRouter();
-  const { verifyDigilockerOtp } = useCustomerFlow();
-  const [otp, setOtp] = useState("");
+  const { state, verifyDigilockerOtp, updateFormDraft } = useCustomerFlow();
+  const draft = state.session?.formDrafts?.digilockerOtp;
+  const [otp, setOtp] = useState(draft ?? "");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -76,7 +77,9 @@ export function DigilockerOtpForm() {
           id="digilocker-otp"
           value={otp}
           onChange={(event) => {
-            setOtp(event.target.value.replace(/\D/g, "").slice(0, 4));
+            const next = event.target.value.replace(/\D/g, "").slice(0, 4);
+            setOtp(next);
+            updateFormDraft({ type: "digilocker-otp", data: { otp: next } });
             setError("");
           }}
           inputMode="numeric"

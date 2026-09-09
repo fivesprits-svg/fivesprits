@@ -2,8 +2,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 import type { ComboOffer } from "@/features/customer-flow/data/offers";
 import { formatMrp } from "@/features/customer-flow/utils/currency";
+import { Skeleton, ImageSkeleton } from "@/features/customer-flow/components/ui/skeleton";
 
 type ComboOfferCardProps = {
   offer: ComboOffer;
@@ -11,6 +13,7 @@ type ComboOfferCardProps = {
   onAdd: () => void;
   onQuantityChange: (value: number) => void;
   onRemove: () => void;
+  isLoading?: boolean;
 };
 
 export function ComboOfferCard({
@@ -19,19 +22,46 @@ export function ComboOfferCard({
   onAdd,
   onQuantityChange,
   onRemove,
+  isLoading = false,
 }: ComboOfferCardProps) {
+  const [imageLoaded, setImageLoaded] = useState(false);
+
+  if (isLoading) {
+    return (
+      <article className="overflow-hidden rounded-[28px] border border-gray-200/90 bg-white p-3.5 shadow-sm sm:p-4">
+        <Skeleton className="aspect-[20/10] w-full rounded-[20px]" />
+        <Skeleton className="mt-3.5 h-6 w-20 rounded-full" />
+        <Skeleton className="mt-2.5 h-6 w-3/4 rounded" />
+        <div className="mt-3 space-y-2 rounded-2xl bg-[#FAF6F0] p-3.5">
+          <Skeleton className="h-4 w-full rounded" />
+          <Skeleton className="h-4 w-5/6 rounded" />
+          <Skeleton className="h-4 w-4/5 rounded" />
+        </div>
+        <div className="mt-4 flex items-center justify-between">
+          <div className="flex items-baseline gap-2.5">
+            <Skeleton className="h-4 w-16 rounded" />
+            <Skeleton className="h-7 w-20 rounded" />
+          </div>
+          <Skeleton className="h-11 w-24 rounded-full sm:w-28" />
+        </div>
+      </article>
+    );
+  }
+
   return (
     <article className="group flex flex-col justify-between overflow-hidden rounded-[28px] border border-gray-200/90 bg-white p-3.5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md sm:p-4">
       <div>
         {/* Combo Hero Image */}
         <Link href={`/offers/${offer.id}`} className="block">
           <div className="relative aspect-[20/10] w-full overflow-hidden rounded-[20px] bg-[#f5f3ef]">
+            {!imageLoaded && <ImageSkeleton className="absolute inset-0" />}
             <Image
               src={offer.image}
               alt={offer.title}
               fill
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-              className="object-cover transition-transform duration-300 group-hover:scale-105"
+              className={`object-cover transition-all duration-300 group-hover:scale-105 ${imageLoaded ? "opacity-100" : "opacity-0"}`}
+              onLoad={() => setImageLoaded(true)}
             />
           </div>
         </Link>

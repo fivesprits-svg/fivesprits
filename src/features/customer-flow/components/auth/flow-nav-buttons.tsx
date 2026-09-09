@@ -1,5 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
+import { ButtonSpinner } from "@/features/customer-flow/components/ui/skeleton";
 
 type FlowNavButtonsProps = {
   backHref?: string;
@@ -30,7 +31,12 @@ export function FlowNavButtons({
 
   return (
     <div className="customer-form-nav">
-      <button type="button" onClick={handleBack} className="customer-form-nav-back">
+      <button
+        type="button"
+        onClick={handleBack}
+        className="customer-form-nav-back"
+        disabled={loading}
+      >
         Back
       </button>
       <button
@@ -39,7 +45,14 @@ export function FlowNavButtons({
         onClick={onSubmit}
         className="customer-form-nav-submit"
       >
-        {loading && loadingLabel ? loadingLabel : submitLabel}
+        {loading ? (
+          <span className="inline-flex items-center gap-2">
+            <ButtonSpinner />
+            {loadingLabel || submitLabel}
+          </span>
+        ) : (
+          submitLabel
+        )}
       </button>
     </div>
   );

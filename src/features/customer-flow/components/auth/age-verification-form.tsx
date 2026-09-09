@@ -4,14 +4,19 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { TermsOfServiceModal } from "@/features/customer-flow/components/auth/terms-of-service-modal";
 import { FlowNavButtons } from "@/features/customer-flow/components/auth/flow-nav-buttons";
+import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 
 export function AgeVerificationForm() {
   const router = useRouter();
-  const [confirmed, setConfirmed] = useState(false);
+  const { state, updateFormDraft } = useCustomerFlow();
+  const draft = state.session?.formDrafts?.ageVerification;
+  const [confirmed, setConfirmed] = useState(draft?.confirmed ?? false);
   const [showTerms, setShowTerms] = useState(false);
+  const [loading, setloading] = useState(false);
 
   function submit(event: React.FormEvent) {
     event.preventDefault();
+    setloading(true);
     if (confirmed) {
       router.push("/profile-setup");
     }
@@ -21,7 +26,11 @@ export function AgeVerificationForm() {
     <form onSubmit={submit} className="mt-8 w-full space-y-6 md:mt-10 md:max-w-md md:space-y-8">
       <button
         type="button"
-        onClick={() => setConfirmed(!confirmed)}
+        onClick={() => {
+          const next = !confirmed;
+          setConfirmed(next);
+          updateFormDraft({ type: "age-verification", data: { confirmed: next } });
+        }}
         className="border-common-border flex w-full items-start gap-4 rounded-2xl border p-5 text-left md:gap-5 md:p-6"
       >
         <div
@@ -40,6 +49,8 @@ export function AgeVerificationForm() {
       <FlowNavButtons
         backHref="/digilocker/verification"
         submitLabel="Continue"
+        loading={loading}
+        loadingLabel="Processing..."
         disabled={!confirmed}
       />
       <p className="font-geist text-common-gray text-center text-xs md:text-sm">
