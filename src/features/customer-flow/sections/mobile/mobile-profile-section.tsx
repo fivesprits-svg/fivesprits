@@ -480,7 +480,7 @@ export function MobileProfileSection() {
               <button
                 type="button"
                 onClick={() => setShowPermitModal(false)}
-                className="grid size-7 place-items-center rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-700"
+                className="grid size-7 cursor-pointer place-items-center rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-700"
                 aria-label="Close modal"
               >
                 ✕
@@ -617,7 +617,7 @@ export function MobileProfileSection() {
                   setShowPermitModal(false);
                   permitInputRef.current?.click();
                 }}
-                className="font-outfit flex h-11 flex-1 items-center justify-center gap-1.5 rounded-full bg-black px-3 text-xs font-bold tracking-wide text-white transition hover:bg-gray-800 active:scale-[0.99]"
+                className="font-outfit flex h-11 flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-full bg-black px-3 text-xs font-bold tracking-wide text-white transition hover:bg-gray-800 active:scale-[0.99]"
               >
                 <Image
                   src="/customer-flow/icons/icon-camera.svg"
@@ -638,7 +638,7 @@ export function MobileProfileSection() {
                   setShowPermitModal(false);
                 }}
                 aria-label="Remove permit document"
-                className="grid size-11 shrink-0 place-items-center rounded-full border border-red-200 bg-red-50 text-red-600 transition hover:bg-red-100 active:scale-95"
+                className="grid size-11 shrink-0 cursor-pointer place-items-center rounded-full border border-red-200 bg-red-50 text-red-600 transition hover:bg-red-100 active:scale-95"
                 title="Remove Document"
               >
                 <Image
@@ -653,7 +653,7 @@ export function MobileProfileSection() {
               <button
                 type="button"
                 onClick={() => setShowPermitModal(false)}
-                className="font-outfit flex h-11 items-center justify-center rounded-full border border-gray-200 bg-gray-50 px-4 text-xs font-bold text-gray-700 transition hover:bg-gray-100 active:scale-[0.99]"
+                className="font-outfit flex h-11 cursor-pointer items-center justify-center rounded-full border border-gray-200 bg-gray-50 px-4 text-xs font-bold text-gray-700 transition hover:bg-gray-100 active:scale-[0.99]"
               >
                 Close
               </button>
