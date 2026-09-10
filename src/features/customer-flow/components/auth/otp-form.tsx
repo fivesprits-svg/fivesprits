@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import { verifyOtpApi } from "@/features/customer-flow/services/auth-api";
+import { FlowNavButtons } from "@/features/customer-flow/components/auth/flow-nav-buttons";
 import {
   MobileHomeIndicator,
   // MobileStatusBar,
@@ -11,7 +12,7 @@ import {
 
 export function OtpForm() {
   const router = useRouter();
-  const { state, verifyOtp } = useCustomerFlow();
+  const { state, verifyOtp, updateFormDraft } = useCustomerFlow();
   const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -21,7 +22,7 @@ export function OtpForm() {
       <div className="fixed inset-0 z-50 flex min-h-dvh flex-col bg-[#faf9f6] md:static md:mt-8 md:block md:min-h-0 md:bg-transparent">
         {/* <MobileStatusBar /> */}
         <div className="flex flex-1 flex-col items-center justify-center px-10 text-center md:block md:px-0 md:text-left">
-          <div className="customer-icon-circle md:hidden">
+          <div className="customer-icon-circle bg-[#faf3eb] md:hidden">
             <Image src="/customer-flow/icons/error.svg" alt="" width={24} height={24} />
           </div>
           <h2 className="mt-8 text-[28px] font-bold md:mt-0 md:text-lg">Verification Failed</h2>
@@ -91,7 +92,9 @@ export function OtpForm() {
           id="otp"
           value={otp}
           onChange={(event) => {
-            setOtp(event.target.value.replace(/\D/g, "").slice(0, 4));
+            const next = event.target.value.replace(/\D/g, "").slice(0, 4);
+            setOtp(next);
+            updateFormDraft({ type: "otp", data: { otp: next } });
             setError("");
           }}
           inputMode="numeric"
@@ -107,20 +110,15 @@ export function OtpForm() {
           </span>
         ))}
       </div>
-      <button
-        type="submit"
-        disabled={loading || otp.length < 4}
-        className="customer-continue-button mt-10 flex items-center justify-center gap-2 disabled:opacity-60 md:mt-12"
-      >
-        {loading ? (
-          <>
-            <span className="inline-block size-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-            <span>Verifying...</span>
-          </>
-        ) : (
-          <span>Verify &amp; Proceed</span>
-        )}
-      </button>
+      <p className="sr-only">Prototype code: 1234</p>
+      <div className="mt-10 md:mt-12">
+        <FlowNavButtons
+          backHref="/"
+          submitLabel="Verify & Proceed"
+          loading={loading}
+          loadingLabel="Verifying..."
+        />
+      </div>
     </form>
   );
 }

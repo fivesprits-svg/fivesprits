@@ -1,14 +1,14 @@
 import type { Brand, Category, Product } from "@/features/customer-flow/types";
 
 export const categories: Category[] = [
-  { id: "beer", name: "Beer", image: "/customer-flow/categories/beer.png" },
-  { id: "wine", name: "Wine", image: "/customer-flow/categories/wine.png" },
-  { id: "whisky", name: "Whiskey", image: "/customer-flow/categories/whisky.png" },
-  { id: "scotch", name: "Scotch", image: "/customer-flow/categories/scotch.png" },
-  { id: "gin", name: "Gin", image: "/customer-flow/categories/gin.png" },
-  { id: "rum", name: "Rum", image: "/customer-flow/categories/rum.png" },
-  { id: "tequila", name: "Tequila", image: "/customer-flow/categories/tequila.png" },
-  { id: "brandy", name: "Brandy", image: "/customer-flow/categories/brandy.png" },
+  { id: "beer", name: "Beer", image: "/customer-flow/categories/cat-beer.svg" },
+  { id: "wine", name: "Wine", image: "/customer-flow/categories/cat-wine.svg" },
+  { id: "whisky", name: "Whiskey", image: "/customer-flow/categories/cat-whiskey.svg" },
+  { id: "scotch", name: "Scotch", image: "/customer-flow/categories/cat-scotch.svg" },
+  { id: "gin", name: "Gin", image: "/customer-flow/categories/cat-gin.svg" },
+  { id: "rum", name: "Rum", image: "/customer-flow/categories/cat-rum.svg" },
+  { id: "tequila", name: "Tequila", image: "/customer-flow/categories/cat-tequila.svg" },
+  { id: "brandy", name: "Brandy", image: "/customer-flow/categories/cat-brandy.svg" },
 ];
 
 export const brands: Brand[] = [
@@ -82,49 +82,49 @@ export const brands: Brand[] = [
     id: "budweiser",
     categoryId: "beer",
     name: "Budweiser",
-    image: "/customer-flow/categories/beer.png",
+    image: "/customer-flow/brands/brand-budweiser.svg",
   },
   {
     id: "heineken",
     categoryId: "beer",
     name: "Heineken",
-    image: "/customer-flow/categories/beer.png",
+    image: "/customer-flow/brands/brand-heineken.svg",
   },
   {
     id: "corona",
     categoryId: "beer",
     name: "Corona",
-    image: "/customer-flow/categories/beer.png",
+    image: "/customer-flow/brands/brand-corona.svg",
   },
   {
     id: "carlsberg",
     categoryId: "beer",
     name: "Carlsberg",
-    image: "/customer-flow/categories/beer.png",
+    image: "/customer-flow/brands/brand-calsberg.svg",
   },
   {
     id: "stella-artois",
     categoryId: "beer",
     name: "Stella Artois",
-    image: "/customer-flow/categories/beer.png",
+    image: "/customer-flow/brands/brand-stella.svg",
   },
   {
     id: "guinness",
     categoryId: "beer",
     name: "Guinness",
-    image: "/customer-flow/categories/beer.png",
+    image: "/customer-flow/brands/brand-guiness.svg",
   },
   {
     id: "hoegaarden",
     categoryId: "beer",
     name: "Hoegaarden",
-    image: "/customer-flow/categories/beer.png",
+    image: "/customer-flow/brands/brand-hoegarden.svg",
   },
   {
     id: "kingfisher",
     categoryId: "beer",
     name: "Kingfisher",
-    image: "/customer-flow/categories/beer.png",
+    image: "/customer-flow/brands/brand-kingfisher.svg",
   },
   {
     id: "island-cask",
@@ -157,6 +157,8 @@ export const brands: Brand[] = [
     image: "/customer-flow/brands/brand-three.png",
   },
 ];
+
+// export const brands: Brand[] = [];
 
 export const products: Product[] = [
   // --- Amber Reserve (Whisky) ---
@@ -993,34 +995,50 @@ export const products: Product[] = [
   {
     id: "budweiser-magnum-650",
     brandId: "budweiser",
-    name: "Budweiser Magnum Strong",
+    name: "Old Monk",
     pack: "650 ml",
     mrp: 260,
-    image: "/customer-flow/categories/beer.png",
+    image: "/customer-flow/products/product-oldmonk.svg",
   },
   {
     id: "budweiser-premium-330",
     brandId: "budweiser",
-    name: "Budweiser Premium King of Beers",
+    name: "Glenfiddich Solera",
     pack: "330 ml",
     mrp: 180,
-    image: "/customer-flow/categories/beer.png",
+    image: "/customer-flow/products/product-solera.svg",
   },
   {
     id: "budweiser-00-non-alcoholic",
     brandId: "budweiser",
-    name: "Budweiser 0.0 Non-Alcoholic",
+    name: "Lagavulin Classic",
     pack: "330 ml",
     mrp: 110,
-    image: "/customer-flow/categories/beer.png",
+    image: "/customer-flow/products/product-lagavulin.svg",
   },
   {
     id: "budweiser-magnum-can",
     brandId: "budweiser",
-    name: "Budweiser Magnum Can",
+    name: "Balvenie Wood",
     pack: "500 ml",
     mrp: 230,
-    image: "/customer-flow/categories/beer.png",
+    image: "/customer-flow/products/product-balvenie.svg",
+  },
+  {
+    id: "budweiser-talisker-can",
+    brandId: "budweiser",
+    name: "Talisker Storm",
+    pack: "500 ml",
+    mrp: 230,
+    image: "/customer-flow/products/product-talisker.svg",
+  },
+  {
+    id: "budweiser-oban-can",
+    brandId: "budweiser",
+    name: "Oban Highland",
+    pack: "500 ml",
+    mrp: 230,
+    image: "/customer-flow/products/product-oban.svg",
   },
 
   // --- Heineken (Beer) ---

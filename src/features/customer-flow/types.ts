@@ -33,4 +33,16 @@ export type CustomerFlowAction =
   | { type: "cart/remove"; productId: string }
   | { type: "requirement/submit" }
   | { type: "confirmation/dismiss" }
-  | { type: "session/logout" };
+  | { type: "session/logout" }
+  | { type: "form-draft/login"; name: string; mobile: string }
+  | {
+      type: "form-draft/login-here";
+      phoneValue: string;
+      countryCode: string;
+      dialCode: string;
+      password: string;
+    }
+  | { type: "form-draft/otp"; otp: string }
+  | { type: "form-draft/digilocker-otp"; otp: string }
+  | { type: "form-draft/aadhaar"; aadhaar: string }
+  | { type: "form-draft/age-verification"; confirmed: boolean };

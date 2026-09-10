@@ -20,14 +20,25 @@ export function DesktopLoginSection() {
           </h1>
         </div>
       </div>
-      <div className="flex items-center justify-center px-16">
+      <div className="flex items-start justify-center px-12 pt-4">
         <div className="w-full max-w-md">
-          <p className="text-brand-primary text-sm font-bold tracking-[0.25em]">CUSTOMER PORTAL</p>
-          <h2 className="font-unbounded text-common-black mt-4 text-4xl font-black uppercase">
+          {/* Logo */}
+          <div className="mb-12">
+            <Image
+              src="/logo.svg"
+              alt="Logo"
+              width={40}
+              height={40}
+              priority
+              className="h-auto w-[70px] object-contain"
+            />
+          </div>
+          {/* Welcome */}
+          <h2 className="font-unbounded text-common-black text-4xl font-black uppercase">
             Welcome
           </h2>
           <p className="customer-section-description mt-3">
-            Enter your mobile number to verify your identity and get started.{" "}
+            Enter your mobile number to verify your identity and get started.
           </p>
           <LoginForm />
         </div>

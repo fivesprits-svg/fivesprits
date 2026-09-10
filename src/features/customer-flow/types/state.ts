@@ -18,4 +18,12 @@ export type CustomerSession = {
   age?: number;
   ageVerified?: boolean;
   profileComplete?: boolean;
+  formDrafts?: {
+    login?: { name: string; mobile: string };
+    loginHere?: { phoneValue: string; countryCode: string; dialCode: string; password: string };
+    otp?: string;
+    digilockerOtp?: string;
+    aadhaar?: string;
+    ageVerification?: { confirmed: boolean };
+  };
 };

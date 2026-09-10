@@ -86,7 +86,7 @@ export function MobileProfileSection() {
             <button
               type="button"
               onClick={() => imageInputRef.current?.click()}
-              className="absolute right-0 bottom-0 grid size-8 place-items-center rounded-full border-2 border-white bg-[#a67854] text-white shadow-md"
+              className="absolute right-0 bottom-0 grid size-8 cursor-pointer place-items-center rounded-full border-2 border-white bg-[#a67854] text-white shadow-md"
               title={profilePhoto ? "Change Photo" : "Upload Photo"}
             >
               <Image src="/customer-flow/icons/icon-camera.svg" alt="" width={14} height={14} />
@@ -110,7 +110,7 @@ export function MobileProfileSection() {
             <button
               type="button"
               onClick={() => setShowImagePopup(true)}
-              className="text-[#a67854] hover:underline"
+              className="cursor-pointer text-[#a67854] hover:underline"
             >
               View
             </button>
@@ -118,7 +118,7 @@ export function MobileProfileSection() {
             <button
               type="button"
               onClick={() => imageInputRef.current?.click()}
-              className="text-gray-700 hover:text-[#a67854] hover:underline"
+              className="cursor-pointer text-gray-700 hover:text-[#a67854] hover:underline"
             >
               {profilePhoto ? "Change" : "Upload"}
             </button>
@@ -131,7 +131,7 @@ export function MobileProfileSection() {
                     setProfilePhoto(null);
                     if (imageInputRef.current) imageInputRef.current.value = "";
                   }}
-                  className="text-red-500 hover:underline"
+                  className="cursor-pointer text-red-500 hover:underline"
                 >
                   Remove
                 </button>
@@ -152,7 +152,7 @@ export function MobileProfileSection() {
                 alt="Locked"
                 width={18}
                 height={18}
-                className="opacity-40"
+                className="opacity-80"
               />
             </div>
           </div>
@@ -166,7 +166,7 @@ export function MobileProfileSection() {
                 alt="Locked"
                 width={18}
                 height={18}
-                className="opacity-40"
+                className="opacity-80"
               />
             </div>
           </div>
@@ -209,7 +209,7 @@ export function MobileProfileSection() {
                   <button
                     type="button"
                     onClick={() => setShowPermitModal(true)}
-                    className="text-[#a67854] hover:underline"
+                    className="cursor-pointer text-[#a67854] hover:underline"
                   >
                     View
                   </button>
@@ -221,7 +221,7 @@ export function MobileProfileSection() {
                       if (permitInputRef.current) permitInputRef.current.value = "";
                     }}
                     aria-label="Remove permit document"
-                    className="grid size-6 place-items-center rounded-md bg-red-50 text-red-500 transition hover:bg-red-100"
+                    className="grid size-6 cursor-pointer place-items-center rounded-md bg-red-50 text-red-500 transition hover:bg-red-100"
                     title="Remove"
                   >
                     <Image
@@ -238,7 +238,7 @@ export function MobileProfileSection() {
               <button
                 type="button"
                 onClick={() => permitInputRef.current?.click()}
-                className="profile-upload-btn flex items-center justify-center gap-2"
+                className="profile-upload-btn flex cursor-pointer items-center justify-center gap-2"
               >
                 <span>Upload Permit Copy</span>
                 <Image
@@ -319,13 +319,13 @@ export function MobileProfileSection() {
             </div>
             <div className="profile-field-value">
               <span className="flex-1 truncate">{profileData.mapsLocation}</span>
-              <Image
+              {/* <Image
                 src="/customer-flow/icons/lock.svg"
                 alt="Copy"
                 width={18}
                 height={18}
                 className="opacity-40"
-              />
+              /> */}
             </div>
           </div>
         </div>

@@ -5,7 +5,7 @@ import { IconCircle } from "@/features/customer-flow/components/ui/icon-circle";
 export function MobileAgeVerificationSection() {
   return (
     <AuthPageLayout>
-      <div className="flex min-h-[80dvh] flex-col items-center px-6 pt-12 pb-24 md:px-10 md:pt-16">
+      <div className="flex min-h-[80dvh] flex-col items-center px-6 pt-6 pb-24 md:px-10 md:pt-8">
         <IconCircle
           iconSrc="/customer-flow/icons/age-verification.svg"
           iconAlt="Age verification"

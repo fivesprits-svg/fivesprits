@@ -8,8 +8,9 @@ import { customerLoginApi } from "@/features/customer-flow/services/auth-api";
 
 export function LoginFormHere() {
   const router = useRouter();
-  const { loginHere } = useCustomerFlow();
-  const [phoneValue, setPhoneValue] = useState("");
+  const { state, loginHere, updateFormDraft } = useCustomerFlow();
+  const draft = state.session?.formDrafts?.loginHere;
+  const [phoneValue, setPhoneValue] = useState(draft?.phoneValue ?? "");
   const [countryData, setCountryData] = useState<{
     countryCode: string;
     dialCode: string;
@@ -19,12 +20,30 @@ export function LoginFormHere() {
   const [apiError, setApiError] = useState("");
   const [errors, setErrors] = useState<{ mobile?: string; password?: string }>({});
 
+  function syncDraft(
+    nextPhone: string,
+    nextCountry: { countryCode: string; dialCode: string },
+    nextPassword: string,
+  ) {
+    updateFormDraft({
+      type: "login-here",
+      data: {
+        phoneValue: nextPhone,
+        countryCode: nextCountry.countryCode,
+        dialCode: nextCountry.dialCode,
+        password: nextPassword,
+      },
+    });
+  }
+
   function handlePhoneChange(
     value: string,
     data: { countryCode: string; dialCode: string; name?: string; format?: string },
   ) {
+    const nextCountry = { countryCode: data.countryCode, dialCode: data.dialCode };
     setPhoneValue(value);
-    setCountryData({ countryCode: data.countryCode, dialCode: data.dialCode });
+    setCountryData(nextCountry);
+    syncDraft(value, nextCountry, password);
     if (errors.mobile) setErrors((prev) => ({ ...prev, mobile: undefined }));
     setApiError("");
   }
@@ -87,6 +106,7 @@ export function LoginFormHere() {
             placeholder="Enter mobile number"
             enableSearch
             searchPlaceholder="Search countries"
+            disabled={loading}
             containerStyle={{ width: "100%" }}
             inputStyle={{
               width: "100%",
@@ -124,10 +144,15 @@ export function LoginFormHere() {
         <input
           type="password"
           value={password}
-          onChange={(event) => setPassword(event.target.value)}
+          onChange={(event) => {
+            const next = event.target.value;
+            setPassword(next);
+            syncDraft(phoneValue, countryData, next);
+          }}
           placeholder="Enter password"
           aria-invalid={Boolean(errors.password)}
           className="customer-input"
+          disabled={loading}
         />
         {errors.password && (
           <span
@@ -167,7 +192,8 @@ export function LoginFormHere() {
         <button
           type="button"
           onClick={() => router.push("/")}
-          className="text-common-black font-semibold underline"
+          className="text-common-black cursor-pointer font-semibold underline"
+          disabled={loading}
         >
           {" "}
           Register{" "}

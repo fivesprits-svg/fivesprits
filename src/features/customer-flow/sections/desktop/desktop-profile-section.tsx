@@ -113,7 +113,7 @@ export function DesktopProfileSection() {
                   <button
                     type="button"
                     onClick={() => imageInputRef.current?.click()}
-                    className="absolute right-0 bottom-0 grid size-7 place-items-center rounded-full border-2 border-white bg-[#a67854] text-white shadow-md transition hover:bg-[#8f6442]"
+                    className="absolute right-0 bottom-0 grid size-7 cursor-pointer place-items-center rounded-full border-2 border-white bg-[#a67854] text-white shadow-md transition hover:bg-[#8f6442]"
                     title={profilePhoto ? "Change Photo" : "Upload Photo"}
                   >
                     <Image
@@ -142,7 +142,7 @@ export function DesktopProfileSection() {
                   <button
                     type="button"
                     onClick={() => setShowImagePopup(true)}
-                    className="text-[#a67854] hover:underline"
+                    className="cursor-pointer text-[#a67854] hover:underline"
                   >
                     View
                   </button>
@@ -150,7 +150,7 @@ export function DesktopProfileSection() {
                   <button
                     type="button"
                     onClick={() => imageInputRef.current?.click()}
-                    className="text-gray-700 hover:text-[#a67854] hover:underline"
+                    className="cursor-pointer text-gray-700 hover:text-[#a67854] hover:underline"
                   >
                     {profilePhoto ? "Change" : "Upload"}
                   </button>
@@ -163,7 +163,7 @@ export function DesktopProfileSection() {
                           setProfilePhoto(null);
                           if (imageInputRef.current) imageInputRef.current.value = "";
                         }}
-                        className="text-red-500 hover:underline"
+                        className="cursor-pointer text-red-500 hover:underline"
                       >
                         Remove
                       </button>
@@ -192,7 +192,7 @@ export function DesktopProfileSection() {
                 <button
                   type="button"
                   onClick={() => setShowLogoutPopup(true)}
-                  className="flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-red-200 bg-red-50/50 text-xs font-bold text-red-600 transition hover:bg-red-50"
+                  className="flex h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-red-200 bg-red-50/50 text-xs font-bold text-red-600 transition hover:bg-red-50"
                 >
                   <Image src="/customer-flow/icons/log-out.svg" alt="" width={15} height={15} />
                   Sign Out Account
@@ -254,7 +254,7 @@ export function DesktopProfileSection() {
                       <button
                         type="button"
                         onClick={() => handleEditField("permitNumber", profileData.permitNumber)}
-                        className="text-[11px] font-bold text-[#a67854] uppercase hover:underline"
+                        className="cursor-pointer text-[11px] font-bold text-[#a67854] uppercase hover:underline"
                       >
                         Edit
                       </button>
@@ -288,7 +288,7 @@ export function DesktopProfileSection() {
                           <button
                             type="button"
                             onClick={() => setShowPermitModal(true)}
-                            className="text-[11px] font-bold text-[#a67854] hover:underline"
+                            className="cursor-pointer text-[11px] font-bold text-[#a67854] hover:underline"
                           >
                             View
                           </button>
@@ -308,7 +308,7 @@ export function DesktopProfileSection() {
                               alt="Delete"
                               width={14}
                               height={14}
-                              className="size-3.5 opacity-80 hover:opacity-100"
+                              className="size-3.5 cursor-pointer opacity-80 hover:opacity-100"
                             />
                           </button>
                         </div>
@@ -376,7 +376,7 @@ export function DesktopProfileSection() {
                       <button
                         type="button"
                         onClick={() => handleEditField("address", profileData.address)}
-                        className="text-[11px] font-bold text-[#a67854] uppercase hover:underline"
+                        className="cursor-pointer text-[11px] font-bold text-[#a67854] uppercase hover:underline"
                       >
                         Edit
                       </button>
@@ -394,7 +394,7 @@ export function DesktopProfileSection() {
                       <button
                         type="button"
                         onClick={() => handleEditField("pincode", profileData.pincode)}
-                        className="text-[11px] font-bold text-[#a67854] uppercase hover:underline"
+                        className="cursor-pointer text-[11px] font-bold text-[#a67854] uppercase hover:underline"
                       >
                         Edit
                       </button>
@@ -412,7 +412,7 @@ export function DesktopProfileSection() {
                       <button
                         type="button"
                         onClick={() => handleEditField("mapsLocation", profileData.mapsLocation)}
-                        className="text-[11px] font-bold text-[#a67854] uppercase hover:underline"
+                        className="cursor-pointer text-[11px] font-bold text-[#a67854] uppercase hover:underline"
                       >
                         Edit
                       </button>

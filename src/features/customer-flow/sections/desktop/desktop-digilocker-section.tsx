@@ -4,20 +4,33 @@ import { AadhaarForm } from "@/features/customer-flow/components/auth/aadhaar-fo
 import { DesktopAuthPageLayout } from "@/features/customer-flow/components/ui/auth-page-layout";
 import { IconCircle } from "@/features/customer-flow/components/ui/icon-circle";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
+import { formatDisplayMobile } from "@/features/customer-flow/utils/validation";
 
 export function DesktopDigilockerSection() {
-  const { logout } = useCustomerFlow();
+  const { state } = useCustomerFlow();
   return (
     <DesktopAuthPageLayout>
       <div className="customer-desktop-card">
-        <div className="mb-4 flex justify-center">
-          <IconCircle
-            iconSrc="/customer-flow/icons/shield-badge.svg"
-            iconAlt="Shield"
-            iconWidth={100}
-            iconHeight={100}
-            variant="large"
-          />
+        <div className="text-left">
+          <h1 className="font-unbounded text-common-black text-2xl leading-tight font-extrabold">
+            Welcome
+          </h1>
+          <p className="font-outfit mt-1 text-sm font-semibold tracking-wide text-[#C9A07E]">
+            {formatDisplayMobile(state.session?.mobile)}
+          </p>
+        </div>
+        <div className="my-6 flex justify-center">
+          <div className="grid place-items-center rounded-full bg-[#faf6f0] p-6">
+            <div className="grid place-items-center rounded-full bg-[#f3e9db] p-4">
+              <IconCircle
+                iconSrc="/customer-flow/icons/shield-badge.svg"
+                iconAlt="Shield"
+                iconWidth={60}
+                iconHeight={60}
+                variant="large"
+              />
+            </div>
+          </div>
         </div>
 
         <div className="text-center">
@@ -32,7 +45,7 @@ export function DesktopDigilockerSection() {
 
         <div className="border-common-border mt-4 rounded-2xl border p-3">
           <div className="flex items-center gap-3">
-            <div className="bg-brand-light grid size-11 place-items-center rounded-xl">
+            <div className="grid size-12 shrink-0 place-items-center overflow-hidden rounded-2xl bg-[#FAF3EB]">
               <Image
                 src="/customer-flow/icons/digilocker-badge-icon.svg"
                 alt=""
@@ -55,11 +68,6 @@ export function DesktopDigilockerSection() {
         <div className="mt-5">
           <AadhaarForm />
         </div>
-
-        <button type="button" onClick={logout} className="customer-logout-button mt-5">
-          <Image src="/customer-flow/icons/log-out.svg" alt="" width={18} height={18} />
-          Logout
-        </button>
       </div>
     </DesktopAuthPageLayout>
   );

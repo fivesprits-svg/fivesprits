@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ConfirmationDialog } from "@/features/customer-flow/components/confirmation-dialog";
@@ -22,23 +21,28 @@ import {
   fetchGiftOffersApi,
   type GiftOfferDetail,
 } from "@/features/customer-flow/services/offers-api";
+import { EmptyState } from "@/features/customer-flow/components/ui/empty-state";
 import { sampleRequirementHistory } from "@/features/customer-flow/data/requirements-history";
 import { buildStructuredCart } from "@/features/customer-flow/helpers/cart-view-model";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import { formatMrp } from "@/features/customer-flow/utils/currency";
 import type { Brand, Product } from "@/features/customer-flow/types";
 import type { ComboOffer } from "@/features/customer-flow/data/offers";
+import { ImageSkeleton, ButtonSpinner } from "@/features/customer-flow/components/ui/skeleton";
 
 export function DesktopCartSection() {
   const router = useRouter();
   const {
     state,
-    addToCart,
     setCartQuantity,
     removeFromCart,
     submitRequirement,
     dismissConfirmation,
+    logout,
+    addToCart,
   } = useCustomerFlow();
+  const [submitting, setSubmitting] = useState(false);
+  const [showConfirmPopup, setShowConfirmPopup] = useState(false);
 
   const [productsList, setProductsList] = useState<Product[]>(defaultProducts);
   const [brandsList, setBrandsList] = useState<Brand[]>(defaultBrands);
@@ -128,25 +132,18 @@ export function DesktopCartSection() {
               </div>
 
               {totalItemsCount === 0 ? (
-                <div className="space-y-8">
-                  <div className="rounded-2xl border border-gray-200/80 bg-white p-12 text-center shadow-sm">
-                    <h2 className="font-unbounded text-lg font-bold text-gray-900">
-                      Your requirement list is empty
-                    </h2>
-                    <p className="font-geist mt-1 text-xs text-gray-500">
-                      Explore categories and add your preferred bottles or offers to this list.
-                    </p>
-                    <Link
-                      href="/categories"
-                      className="font-outfit mt-5 inline-flex h-11 items-center rounded-full bg-black px-6 text-xs font-bold tracking-wider text-white uppercase transition hover:bg-[#a67854]"
-                    >
-                      Browse Categories
-                    </Link>
-                  </div>
+                <div className="">
+                  <EmptyState
+                    icon="/customer-flow/icons/requirement0.svg"
+                    title="No Offers Available"
+                    description="No offers or products in your requirement list yet. Browse our catalogue to discover the best deals."
+                    actionLabel="Browse Catalogue"
+                    actionHref="/categories"
+                  />
 
                   {/* Requirement History for Regular Users when cart is empty */}
                   {isRegularUser && (
-                    <div className="space-y-4 pt-4">
+                    <div className="space-y-4">
                       <div className="flex items-center justify-between">
                         <div>
                           <h2 className="font-unbounded text-lg font-bold text-gray-950">
@@ -268,6 +265,7 @@ export function DesktopCartSection() {
                           >
                             <div className="flex min-w-0 items-center gap-4">
                               <div className="relative size-18 shrink-0 overflow-hidden rounded-[16px] bg-[#FAF6F0] p-1.5">
+                                <ImageSkeleton className="absolute inset-0" />
                                 <Image
                                   src={product.image}
                                   alt={product.name}
@@ -299,7 +297,7 @@ export function DesktopCartSection() {
                                 <button
                                   type="button"
                                   onClick={() => setCartQuantity(id, Math.max(1, quantity - 1))}
-                                  className="grid size-6 place-items-center text-base font-semibold text-[#a67854] disabled:opacity-40"
+                                  className="grid size-6 cursor-pointer place-items-center text-base font-semibold text-[#a67854] disabled:opacity-40"
                                   disabled={quantity <= 1}
                                   aria-label="Decrease quantity"
                                 >
@@ -311,7 +309,7 @@ export function DesktopCartSection() {
                                 <button
                                   type="button"
                                   onClick={() => setCartQuantity(id, quantity + 1)}
-                                  className="grid size-6 place-items-center text-base font-semibold text-[#a67854]"
+                                  className="grid size-6 cursor-pointer place-items-center text-base font-semibold text-[#a67854]"
                                   aria-label="Increase quantity"
                                 >
                                   +
@@ -322,7 +320,7 @@ export function DesktopCartSection() {
                                 type="button"
                                 onClick={() => removeFromCart(id)}
                                 aria-label={`Remove ${product.name}`}
-                                className="grid size-9 place-items-center rounded-2xl bg-[#FAF6F0] text-gray-400 transition hover:text-red-500"
+                                className="grid size-9 cursor-pointer place-items-center rounded-2xl bg-[#FAF6F0] text-gray-400 transition hover:text-red-500"
                               >
                                 <Image
                                   src="/customer-flow/icons/delete-btn.svg"
@@ -357,6 +355,7 @@ export function DesktopCartSection() {
                           >
                             <div className="grid grid-cols-[300px_1fr] items-start gap-5">
                               <div className="relative aspect-[16/10] w-full overflow-hidden rounded-[20px] bg-white">
+                                <ImageSkeleton className="absolute inset-0" />
                                 <Image
                                   src={gift.offer.image}
                                   alt={gift.offer.gift}
@@ -382,6 +381,7 @@ export function DesktopCartSection() {
                                     >
                                       <div className="flex min-w-0 items-center gap-2">
                                         <div className="relative size-10 shrink-0 overflow-hidden rounded-lg bg-[#FAF6F0]">
+                                          <ImageSkeleton className="absolute inset-0" />
                                           <Image
                                             src={product.image}
                                             alt={product.name}
@@ -436,7 +436,7 @@ export function DesktopCartSection() {
                                       type="button"
                                       onClick={() => removeFromCart(gift.id)}
                                       aria-label="Remove gift offer"
-                                      className="grid size-9 place-items-center rounded-2xl bg-white text-gray-400 shadow-2xs transition hover:text-red-500"
+                                      className="grid size-9 cursor-pointer place-items-center rounded-2xl bg-white text-gray-400 shadow-2xs transition hover:text-red-500"
                                     >
                                       <Image
                                         src="/customer-flow/icons/delete-btn.svg"
@@ -526,7 +526,7 @@ export function DesktopCartSection() {
                                         onClick={() =>
                                           setCartQuantity(id, Math.max(1, quantity - 1))
                                         }
-                                        className="grid size-6 place-items-center text-base font-semibold text-[#a67854] disabled:opacity-40"
+                                        className="grid size-6 cursor-pointer place-items-center text-base font-semibold text-[#a67854] disabled:opacity-40"
                                         disabled={quantity <= 1}
                                         aria-label="Decrease quantity"
                                       >
@@ -538,7 +538,7 @@ export function DesktopCartSection() {
                                       <button
                                         type="button"
                                         onClick={() => setCartQuantity(id, quantity + 1)}
-                                        className="grid size-6 place-items-center text-base font-semibold text-[#a67854]"
+                                        className="grid size-6 cursor-pointer place-items-center text-base font-semibold text-[#a67854]"
                                         aria-label="Increase quantity"
                                       >
                                         +
@@ -549,7 +549,7 @@ export function DesktopCartSection() {
                                       type="button"
                                       onClick={() => removeFromCart(id)}
                                       aria-label={`Remove ${offer.title}`}
-                                      className="grid size-9 place-items-center rounded-2xl bg-[#FAF6F0] text-gray-400 transition hover:text-red-500"
+                                      className="grid size-9 cursor-pointer place-items-center rounded-2xl bg-[#FAF6F0] text-gray-400 transition hover:text-red-500"
                                     >
                                       <Image
                                         src="/customer-flow/icons/delete-btn.svg"
@@ -604,10 +604,6 @@ export function DesktopCartSection() {
                                   </>
                                 )}
                               </div>
-                              <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700">
-                                <span className="size-1.5 rounded-full bg-emerald-500" />
-                                {history.status}
-                              </span>
                             </div>
 
                             {/* Items list */}
@@ -732,21 +728,41 @@ export function DesktopCartSection() {
 
               <button
                 type="button"
-                disabled={totalItemsCount === 0}
-                onClick={submitRequirement}
-                className="font-outfit mt-6 flex h-12 w-full items-center justify-center rounded-full bg-black text-sm font-bold tracking-wide text-white shadow-sm transition hover:bg-gray-800 disabled:opacity-40"
+                disabled={totalItemsCount === 0 || submitting}
+                onClick={() => setShowConfirmPopup(true)}
+                className="font-outfit mt-6 flex h-12 w-full cursor-pointer items-center justify-center rounded-full bg-black text-sm font-bold tracking-wide text-white shadow-sm transition hover:bg-gray-800 disabled:opacity-40"
               >
-                Send Requirement
+                {submitting ? (
+                  <span className="inline-flex items-center gap-2">
+                    <ButtonSpinner />
+                    Sending...
+                  </span>
+                ) : (
+                  "Send Requirement"
+                )}
               </button>
             </aside>
           </div>
         </div>
 
         <ConfirmationDialog
-          open={state.showConfirmation}
-          onClose={() => {
+          open={showConfirmPopup}
+          loading={submitting}
+          onConfirm={() => {
+            setSubmitting(true);
+            submitRequirement();
+          }}
+          onDismiss={() => {
+            setShowConfirmPopup(false);
+            setSubmitting(false);
             dismissConfirmation();
-            router.push("/categories");
+            // router.push("/categories");
+          }}
+          onLogout={() => {
+            setShowConfirmPopup(false);
+            setSubmitting(false);
+            logout();
+            router.push("/");
           }}
         />
       </PortalShell>

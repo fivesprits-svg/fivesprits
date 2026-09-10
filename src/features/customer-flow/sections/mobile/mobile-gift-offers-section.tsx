@@ -3,11 +3,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { MobileBottomNav } from "@/features/customer-flow/components/navigation/mobile-bottom-nav";
-import { MobileHeader } from "@/features/customer-flow/components/navigation/mobile-header";
 import { MobileOfferHero } from "@/features/customer-flow/components/offers/mobile-offer-hero";
 import { OfferTabs } from "@/features/customer-flow/components/offers/offer-tabs";
 import { giftOffer as defaultGiftOffer } from "@/features/customer-flow/data/offers";
 import { type GiftOfferDetail } from "@/features/customer-flow/services/offers-api";
+import { MobileHeader } from "../../components/navigation/mobile-header";
+import { ImageSkeleton } from "@/features/customer-flow/components/ui/skeleton";
 
 export function MobileGiftOffersSection({
   offer = defaultGiftOffer,
@@ -16,12 +17,13 @@ export function MobileGiftOffersSection({
 } = {}) {
   return (
     <div className="min-h-dvh bg-white pb-28 md:hidden">
-      <MobileHeader title="Offers" />
-      <main className="mx-auto w-full max-w-[390px] px-6">
+      <MobileHeader title="Offers" backHref="" />
+      <main className="mx-auto w-full max-w-[390px] px-6 pt-2">
         <OfferTabs active="gift" />
         <MobileOfferHero gift />
         <article className="mt-4 overflow-hidden rounded-[28px] border border-gray-200/90 bg-white p-3.5 shadow-sm">
           <div className="relative aspect-[16/10] overflow-hidden rounded-[20px] bg-[#f5f3ef]">
+            <ImageSkeleton className="absolute inset-0" />
             <Image
               src={offer.image}
               alt="Premium trolley gift"
@@ -47,7 +49,7 @@ export function MobileGiftOffersSection({
           </div>
           <Link
             href="/offers/gifts/select"
-            className="font-outfit mt-4 flex h-11 w-full items-center justify-center rounded-full bg-black text-sm font-bold tracking-wide text-white transition hover:bg-gray-800 active:scale-[0.99]"
+            className="font-outfit mt-4 flex h-11 w-full cursor-pointer items-center justify-center rounded-full bg-black text-sm font-bold tracking-wide text-white transition hover:bg-gray-800 active:scale-[0.99]"
           >
             View Offer
           </Link>

@@ -10,6 +10,7 @@ import { MaxLimitDialog } from "@/features/customer-flow/components/offers/max-l
 import {
   giftOffer as defaultGiftOffer,
   giftProducts as defaultGiftProducts,
+  giftOffer,
   type GiftProduct,
 } from "@/features/customer-flow/data/offers";
 import { type GiftOfferDetail } from "@/features/customer-flow/services/offers-api";
@@ -19,6 +20,7 @@ import {
   quantitiesToSelection,
   selectionToQuantities,
 } from "@/features/customer-flow/helpers/gift-selection";
+import { ImageSkeleton, ButtonSpinner } from "@/features/customer-flow/components/ui/skeleton";
 
 export function MobileGiftSelectionSection({
   offer: propOffer,
@@ -32,6 +34,7 @@ export function MobileGiftSelectionSection({
   const productsList = propProducts && propProducts.length > 0 ? propProducts : defaultGiftProducts;
   const [showMaxLimitDialog, setShowMaxLimitDialog] = useState(false);
 
+  const [saving, setSaving] = useState(false);
   const savedSelection = state.cart.find(
     (line) => line.productId === offer.id || line.productId === defaultGiftOffer.id,
   )?.selectedProductIds;
@@ -55,17 +58,9 @@ export function MobileGiftSelectionSection({
 
   return (
     <div className="min-h-dvh bg-white pb-48 md:hidden">
-      <MobileHeader title="Select Product" backHref="/offers/gifts" />
+      <MobileHeader title="Select Product" subtitle="Choose any 6 items" backHref="/offers/gifts" />
       <main className="mx-auto w-full max-w-[390px] px-6">
-        <div className="pt-2 text-center">
-          <p className="font-outfit text-[11px] font-extrabold tracking-wider text-[#a67854] uppercase">
-            EXCLUSIVE REWARDS
-          </p>
-          <h1 className="font-geist text-lg font-black text-gray-950">Choose any 6 items</h1>
-          <p className="font-geist mt-0.5 text-xs text-gray-500">
-            Complete the selection to unlock your {offer.gift}.
-          </p>
-        </div>
+        <div className="text-center"></div>
 
         <div id="gift-products" className="mt-4 grid grid-cols-2 gap-3">
           {productsList.map((product) => {
@@ -77,6 +72,7 @@ export function MobileGiftSelectionSection({
               >
                 <div>
                   <div className="relative aspect-square overflow-hidden rounded-[14px] bg-[#f5f3ef]">
+                    <ImageSkeleton className="absolute inset-0" />
                     <Image
                       src={product.image}
                       alt={product.name}
@@ -140,7 +136,8 @@ export function MobileGiftSelectionSection({
             if (selected < 6) {
               e.preventDefault();
             } else {
-              addGiftToCart(offer.id, quantitiesToSelection(quantities));
+              setSaving(true);
+              addGiftToCart(giftOffer.id, quantitiesToSelection(quantities));
             }
           }}
           aria-disabled={selected < 6}
@@ -148,7 +145,14 @@ export function MobileGiftSelectionSection({
             selected >= 6 ? "bg-black text-white" : "pointer-events-none bg-gray-200 text-gray-400"
           }`}
         >
-          Continue
+          {saving ? (
+            <span className="inline-flex items-center gap-2">
+              <ButtonSpinner />
+              Saving...
+            </span>
+          ) : (
+            "Continue"
+          )}
         </Link>
       </div>
       <MobileBottomNav active="Offer" />

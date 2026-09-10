@@ -7,26 +7,29 @@ import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-co
 import { formatDisplayMobile } from "@/features/customer-flow/utils/validation";
 
 export function MobileDigilockerSection() {
-  const { state, logout } = useCustomerFlow();
+  const { state } = useCustomerFlow();
   return (
     <AuthPageLayout>
       <div className="flex flex-col items-center px-6 pt-4 pb-16 md:px-12 md:pt-6 md:pb-20">
         <div className="w-full text-left">
-          <h1 className="font-unbounded text-common-black text-[24px] font-extrabold md:text-[26px]">
+          <h1 className="font-unbounded text-common-black text-[24px] leading-tight font-extrabold md:text-[26px]">
             Welcome
           </h1>
-          <p className="font-outfit text-common-gray mt-1 text-sm md:mt-1.5 md:text-base">
+          <p className="font-geist mt-1 text-sm font-semibold tracking-wide text-[#C9A07E] md:mt-1.5 md:text-base">
             {formatDisplayMobile(state.session?.mobile)}
           </p>
         </div>
 
-        <div className="my-6 md:my-8">
-          <IconCircle
-            iconSrc="/customer-flow/icons/shield-badge.svg"
-            iconAlt="Shield"
-            iconWidth={100}
-            iconHeight={100}
-          />
+        <div className="my-6 grid place-items-center rounded-full bg-[#faf6f0] p-6 md:my-8 md:p-8">
+          <div className="grid place-items-center rounded-full bg-[#f3e9db] p-4 md:p-5">
+            <IconCircle
+              iconSrc="/customer-flow/icons/shield-badge.svg"
+              iconAlt="Shield"
+              iconWidth={50}
+              iconHeight={50}
+              variant="large"
+            />
+          </div>
         </div>
 
         <div className="w-full text-center">
@@ -39,7 +42,7 @@ export function MobileDigilockerSection() {
 
         <div className="border-common-border mt-4 w-full rounded-2xl border p-3 md:mx-auto md:mt-6 md:max-w-md md:p-5">
           <div className="flex items-center gap-3 md:gap-4">
-            <div className="bg-brand-light grid size-11 place-items-center rounded-xl md:size-12">
+            <div className="grid size-12 shrink-0 place-items-center overflow-hidden rounded-2xl bg-[#FAF3EB]">
               <Image
                 src="/customer-flow/icons/digilocker-badge-icon.svg"
                 alt=""
@@ -61,11 +64,6 @@ export function MobileDigilockerSection() {
         <div className="mt-4 w-full md:mx-auto md:mt-6 md:max-w-md">
           <AadhaarForm />
         </div>
-
-        <button type="button" onClick={logout} className="customer-logout-button mt-4 md:mt-6">
-          <Image src="/customer-flow/icons/log-out.svg" alt="" width={18} height={18} />
-          Logout
-        </button>
       </div>
     </AuthPageLayout>
   );

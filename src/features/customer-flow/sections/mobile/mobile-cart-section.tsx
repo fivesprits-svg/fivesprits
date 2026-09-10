@@ -1,11 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { ConfirmationDialog } from "@/features/customer-flow/components/confirmation-dialog";
-import { MobileBottomNav } from "@/features/customer-flow/components/navigation/mobile-bottom-nav";
 import {
   brands as defaultBrands,
   products as defaultProducts,
@@ -21,23 +17,31 @@ import {
   fetchGiftOffersApi,
   type GiftOfferDetail,
 } from "@/features/customer-flow/services/offers-api";
+import { useRouter } from "next/navigation";
+import { ConfirmationDialog } from "@/features/customer-flow/components/confirmation-dialog";
+import { MobileBottomNav } from "@/features/customer-flow/components/navigation/mobile-bottom-nav";
+import { EmptyState } from "@/features/customer-flow/components/ui/empty-state";
 import { sampleRequirementHistory } from "@/features/customer-flow/data/requirements-history";
 import { buildStructuredCart } from "@/features/customer-flow/helpers/cart-view-model";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import { formatMrp } from "@/features/customer-flow/utils/currency";
 import type { Brand, Product } from "@/features/customer-flow/types";
 import type { ComboOffer } from "@/features/customer-flow/data/offers";
+import { ImageSkeleton, ButtonSpinner } from "@/features/customer-flow/components/ui/skeleton";
 
 export function MobileCartSection() {
   const router = useRouter();
   const {
     state,
-    addToCart,
     setCartQuantity,
     removeFromCart,
     submitRequirement,
     dismissConfirmation,
+    logout,
+    addToCart,
   } = useCustomerFlow();
+  const [submitting, setSubmitting] = useState(false);
+  const [showConfirmPopup, setShowConfirmPopup] = useState(false);
 
   const [productsList, setProductsList] = useState<Product[]>(defaultProducts);
   const [brandsList, setBrandsList] = useState<Brand[]>(defaultBrands);
@@ -100,37 +104,28 @@ export function MobileCartSection() {
   } = buildStructuredCart(state.cart, productsList, brandsList, comboOffersList, giftOfferDetail);
 
   return (
-    <div className="min-h-dvh bg-white pb-48 md:hidden">
-      {/* Header matching mockup */}
-      <header className="mx-auto w-full max-w-[390px] px-6 pt-5 pb-2">
-        <h1 className="font-unbounded text-3xl font-black tracking-tight text-gray-950 uppercase">
-          Requirement
-        </h1>
-        <p className="font-outfit mt-1 text-xs font-bold tracking-widest text-[#a67854] uppercase">
-          CHECKLIST
-        </p>
-      </header>
-
+    <div className="min-h-dvh w-full bg-white pb-48 md:hidden">
+      {/* <MobileHeader title="Request" backHref="" /> */}
+      <div className="relative px-6 pb-2">
+        <div className="mt-3">
+          <h1 className="font-outfit text-[36px] leading-none font-black tracking-tight text-black uppercase">
+            Requirement
+          </h1>
+          <p className="font-outfit mt-2 text-xs font-bold tracking-widest text-[#c9a07e] uppercase">
+            CHECKLIST
+          </p>
+        </div>
+      </div>
       <main className="mx-auto w-full max-w-[390px] px-6 pt-3">
         {totalItemsCount === 0 ? (
           <div className="space-y-8">
-            <div className="rounded-3xl border border-gray-100 bg-[#FAF9F7] p-8 text-center shadow-2xs">
-              <div className="mx-auto grid size-16 place-items-center rounded-full bg-white shadow-xs">
-                <Image src="/customer-flow/icons/empty.svg" alt="" width={32} height={32} />
-              </div>
-              <h2 className="font-unbounded mt-4 text-base font-bold text-gray-950">
-                Your requirement list is empty
-              </h2>
-              <p className="font-geist mx-auto mt-1.5 max-w-[240px] text-xs leading-relaxed text-gray-500">
-                Browse the catalogue and add items or curated offers to your checklist.
-              </p>
-              <Link
-                href="/categories"
-                className="font-outfit mt-5 inline-flex h-11 items-center rounded-full bg-black px-6 text-xs font-bold tracking-wider text-white uppercase"
-              >
-                Browse Catalogue
-              </Link>
-            </div>
+            <EmptyState
+              icon="/customer-flow/icons/requirement0.svg"
+              title="No Offers Available"
+              description="No offers or products in your requirement list yet. Browse our catalogue to discover the best deals."
+              actionLabel="Browse Catalogue"
+              actionHref="/categories"
+            />
 
             {/* Requirement History (shown for regular / logged-in users) */}
             {isRegularUser && (
@@ -245,6 +240,7 @@ export function MobileCartSection() {
                     >
                       <div className="flex min-w-0 items-center gap-3">
                         <div className="relative size-[68px] shrink-0 overflow-hidden rounded-[14px] bg-[#FAF6F0] p-1">
+                          <ImageSkeleton className="absolute inset-0" />
                           <Image
                             src={product.image}
                             alt={product.name}
@@ -333,6 +329,7 @@ export function MobileCartSection() {
                       className="rounded-[26px] border border-[#eee4d8] bg-[#FAF6F0] p-4 shadow-xs"
                     >
                       <div className="relative aspect-[16/9] w-full overflow-hidden rounded-[18px] bg-white">
+                        <ImageSkeleton className="absolute inset-0" />
                         <Image
                           src={gift.offer.image}
                           alt={gift.offer.gift}
@@ -360,6 +357,7 @@ export function MobileCartSection() {
                           >
                             <div className="flex min-w-0 items-center gap-2.5">
                               <div className="relative size-11 shrink-0 overflow-hidden rounded-lg bg-[#FAF6F0]">
+                                <ImageSkeleton className="absolute inset-0" />
                                 <Image
                                   src={product.image}
                                   alt={product.name}
@@ -449,6 +447,7 @@ export function MobileCartSection() {
                       className="rounded-[26px] border border-gray-200/90 bg-white p-4 shadow-sm"
                     >
                       <div className="relative aspect-[16/8] w-full overflow-hidden rounded-[18px] bg-[#f5f3ef]">
+                        <ImageSkeleton className="absolute inset-0" />
                         <Image
                           src={offer.image}
                           alt={offer.title}
@@ -624,10 +623,6 @@ export function MobileCartSection() {
                             {history.date}
                           </span>
                         </div>
-                        <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-700">
-                          <span className="size-1 rounded-full bg-emerald-500" />
-                          {history.status}
-                        </span>
                       </div>
 
                       {/* Items list */}
@@ -705,20 +700,41 @@ export function MobileCartSection() {
         <div className="fixed right-0 bottom-[92px] left-0 z-30 mx-auto max-w-[390px] border-t border-gray-100 bg-white/95 px-6 py-3 backdrop-blur-xs">
           <button
             type="button"
-            onClick={submitRequirement}
-            className="font-outfit flex h-12 w-full items-center justify-center rounded-full bg-black text-sm font-bold tracking-wide text-white shadow-md transition hover:bg-gray-800 active:scale-[0.99]"
+            disabled={submitting}
+            onClick={() => setShowConfirmPopup(true)}
+            className="font-outfit flex h-12 w-full items-center justify-center rounded-full bg-black text-sm font-bold tracking-wide text-white shadow-md transition hover:bg-gray-800 active:scale-[0.99] disabled:opacity-70"
           >
-            Send Requirement
+            {submitting ? (
+              <span className="inline-flex items-center gap-2">
+                <ButtonSpinner />
+                Sending...
+              </span>
+            ) : (
+              "Send Requirement"
+            )}
           </button>
         </div>
       )}
 
-      <MobileBottomNav active="Inquiry" />
+      <MobileBottomNav active="Request" />
       <ConfirmationDialog
-        open={state.showConfirmation}
-        onClose={() => {
+        open={showConfirmPopup}
+        loading={submitting}
+        onConfirm={() => {
+          setSubmitting(true);
+          submitRequirement();
+        }}
+        onDismiss={() => {
+          setShowConfirmPopup(false);
+          setSubmitting(false);
           dismissConfirmation();
-          router.push("/categories");
+          // router.push("/categories");
+        }}
+        onLogout={() => {
+          setShowConfirmPopup(false);
+          setSubmitting(false);
+          logout();
+          router.push("/");
         }}
       />
     </div>

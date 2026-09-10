@@ -1,9 +1,9 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import { formatDisplayMobile } from "@/features/customer-flow/utils/validation";
+import { FlowNavButtons } from "@/features/customer-flow/components/auth/flow-nav-buttons";
 
 export function ProfileSetupForm() {
   const router = useRouter();
@@ -41,28 +41,20 @@ export function ProfileSetupForm() {
           <div className="relative">
             <input
               defaultValue={formatDisplayMobile(state.session?.mobile)}
-              readOnly
-              className="customer-input cursor-not-allowed bg-gray-50/80 pr-10 text-sm font-medium text-gray-700"
-            />
-            <Image
-              src="/customer-flow/icons/lock.svg"
-              alt="Verified"
-              width={16}
-              height={16}
-              className="absolute top-1/2 right-3.5 -translate-y-1/2 opacity-40"
+              className="customer-input text-sm"
             />
           </div>
         </label>
       </div>
 
       <div className="pt-3">
-        <button
-          type="submit"
-          disabled={loading || !name.trim()}
-          className="customer-continue-button w-full"
-        >
-          {loading ? "Saving..." : "Save & Continue"}
-        </button>
+        <FlowNavButtons
+          backHref="/age-verification"
+          submitLabel="Save & Continue"
+          loading={loading}
+          loadingLabel="Saving..."
+          disabled={!name.trim()}
+        />
       </div>
     </form>
   );

@@ -24,17 +24,11 @@ export function DesktopProfileSetupSection() {
             />
           </div>
 
-          <div className="inline-flex items-center gap-1.5 rounded-full bg-[#f7f4ee] px-3 py-1 text-[11px] font-bold tracking-wider text-[#a67854] uppercase">
-            <span>Customer Onboarding</span>
-          </div>
-
           <h1 className="font-unbounded mt-2 text-2xl font-black text-gray-900 md:text-3xl">
             Profile Setup
           </h1>
           <p className="font-geist mt-1.5 max-w-lg text-xs leading-relaxed text-gray-500 md:text-sm">
-            {isLoginHereFlow
-              ? "Provide your delivery and permit credentials to unlock fast, authorized checkout."
-              : "Confirm your customer profile information to get started."}
+            Provide your delivery and permit credentials to unlock fast, authorized checkout.
           </p>
         </div>
 

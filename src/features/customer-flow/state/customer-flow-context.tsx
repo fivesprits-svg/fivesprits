@@ -103,6 +103,44 @@ function useCustomerFlowValue() {
         dispatch({ type: "session/logout" });
         window.localStorage.removeItem(STORAGE_KEY);
       },
+      updateFormDraft: (draft: {
+        type: "login" | "login-here" | "otp" | "digilocker-otp" | "aadhaar" | "age-verification";
+        data: Record<string, unknown>;
+      }) => {
+        switch (draft.type) {
+          case "login":
+            dispatch({
+              type: "form-draft/login",
+              name: draft.data.name as string,
+              mobile: draft.data.mobile as string,
+            });
+            break;
+          case "login-here":
+            dispatch({
+              type: "form-draft/login-here",
+              phoneValue: draft.data.phoneValue as string,
+              countryCode: draft.data.countryCode as string,
+              dialCode: draft.data.dialCode as string,
+              password: draft.data.password as string,
+            });
+            break;
+          case "otp":
+            dispatch({ type: "form-draft/otp", otp: draft.data.otp as string });
+            break;
+          case "digilocker-otp":
+            dispatch({ type: "form-draft/digilocker-otp", otp: draft.data.otp as string });
+            break;
+          case "aadhaar":
+            dispatch({ type: "form-draft/aadhaar", aadhaar: draft.data.aadhaar as string });
+            break;
+          case "age-verification":
+            dispatch({
+              type: "form-draft/age-verification",
+              confirmed: draft.data.confirmed as boolean,
+            });
+            break;
+        }
+      },
     }),
     [hydrated, state],
   );

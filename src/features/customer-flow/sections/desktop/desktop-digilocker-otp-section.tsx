@@ -5,7 +5,7 @@ export function DesktopDigilockerOtpSection() {
   return (
     <DesktopAuthPageLayout>
       <div className="customer-desktop-card">
-        <h1 className="font-unbounded text-common-black text-3xl font-black uppercase">
+        <h1 className="font-unbounded text-common-black mt-2 text-3xl font-black uppercase">
           Verify Your
           <br />
           Identity

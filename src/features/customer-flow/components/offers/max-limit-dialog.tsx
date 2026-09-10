@@ -44,7 +44,7 @@ export function MaxLimitDialog({
           type="button"
           onClick={onClose}
           aria-label="Close dialog"
-          className="absolute top-4 right-4 grid size-8 place-items-center rounded-full bg-gray-100 text-gray-500 transition hover:bg-gray-200 hover:text-gray-900"
+          className="absolute top-4 right-4 grid size-8 cursor-pointer place-items-center rounded-full bg-gray-100 text-gray-500 transition hover:bg-gray-200 hover:text-gray-900"
         >
           <svg
             className="size-4"
@@ -97,7 +97,7 @@ export function MaxLimitDialog({
         <button
           type="button"
           onClick={onClose}
-          className="font-outfit mt-5 flex h-11 w-full items-center justify-center rounded-full bg-black text-xs font-bold tracking-wider text-white uppercase shadow-md transition hover:bg-gray-800 active:scale-[0.99]"
+          className="font-outfit mt-5 flex h-11 w-full cursor-pointer items-center justify-center rounded-full bg-black text-xs font-bold tracking-wider text-white uppercase shadow-md transition hover:bg-gray-800 active:scale-[0.99]"
         >
           Got It
         </button>

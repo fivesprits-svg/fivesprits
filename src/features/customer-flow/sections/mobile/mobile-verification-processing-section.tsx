@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import { mockVerifyAadhaar } from "@/features/customer-flow/utils/verification-mock";
 import { AuthPageLayout } from "@/features/customer-flow/components/ui/auth-page-layout";
-import { IconCircle } from "@/features/customer-flow/components/ui/icon-circle";
+import Image from "next/image";
 
 export function MobileVerificationProcessingSection() {
   const router = useRouter();
@@ -32,50 +32,39 @@ export function MobileVerificationProcessingSection() {
     return () => clearTimeout(timer);
   }, [hydrated, state.session, completeVerification, router]);
 
-  if (!hydrated) {
-    return (
-      <AuthPageLayout>
-        <div className="flex min-h-[80dvh] flex-col items-center justify-center px-6 text-center md:px-12">
-          <IconCircle
-            iconSrc="/customer-flow/icons/lock.svg"
-            iconAlt="Verification"
-            iconWidth={32}
-            iconHeight={32}
-            variant="large"
-          />
-          <h1 className="customer-section-title mt-8 md:mt-10 md:text-[32px]">
-            Verification in Progress
-          </h1>
-          <p className="customer-section-description mt-4 max-w-[280px] md:mt-5 md:max-w-sm md:text-base md:leading-relaxed">
-            Please wait while we securely verify your order details and payment credentials.
-          </p>
-          <div className="mt-8 md:mt-10">
-            <div className="border-common-border border-t-brand-primary size-8 animate-spin rounded-full border-4 md:size-10" />
-          </div>
-        </div>
-      </AuthPageLayout>
-    );
-  }
-
   return (
     <AuthPageLayout>
-      <div className="flex min-h-[80dvh] flex-col items-center justify-center px-6 text-center md:px-12">
-        <IconCircle
-          iconSrc="/customer-flow/icons/lock.svg"
-          iconAlt="Verification"
-          iconWidth={32}
-          iconHeight={32}
-          variant="large"
-        />
-        <h1 className="customer-section-title mt-8 md:mt-10 md:text-[32px]">
-          Verification in Progress
+      <div className="flex min-h-[80dvh] flex-col items-center px-6 pt-6 pb-24 md:px-12 md:pt-8 md:pb-28">
+        <div className="my-6 grid place-items-center rounded-full bg-[#faf6f0] p-6 md:my-8 md:p-8">
+          <div className="grid place-items-center rounded-full bg-[#f3e9db] p-4 md:p-5">
+            <div className="grid size-20 place-items-center rounded-full bg-white/80">
+              <Image
+                src="/customer-flow/icons/shield-badge.svg"
+                alt="Verification"
+                width={50}
+                height={50}
+              />
+            </div>
+          </div>
+        </div>
+        <h1 className="font-unbounded text-common-black mt-2 text-center text-[26px] leading-tight font-black md:text-[32px]">
+          Verification in
+          <br />
+          Progress
         </h1>
-        <p className="customer-section-description mt-4 max-w-[280px] md:mt-5 md:max-w-sm md:text-base md:leading-relaxed">
+        <p className="customer-section-description mt-4 max-w-[280px] text-center md:mt-5 md:max-w-sm md:text-base md:leading-relaxed">
           Please wait while we securely verify your order details and payment credentials.
         </p>
         <div className="mt-8 md:mt-10">
           <div className="border-common-border border-t-brand-primary size-8 animate-spin rounded-full border-4 md:size-10" />
         </div>
+        <button
+          type="button"
+          onClick={() => router.push("/digilocker/otp")}
+          className="customer-form-nav-back mt-8 md:mt-10"
+        >
+          Back
+        </button>
       </div>
     </AuthPageLayout>
   );

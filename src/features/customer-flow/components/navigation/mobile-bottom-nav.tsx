@@ -7,14 +7,14 @@ import { MobileHomeIndicator } from "@/features/customer-flow/components/navigat
 const items = [
   { href: "/categories", label: "Product", icon: "/customer-flow/icons/home.svg" },
   { href: "/offers", label: "Offer", icon: "/customer-flow/icons/offer.svg" },
-  { href: "/cart", label: "Inquiry", icon: "/customer-flow/icons/cart.svg" },
+  { href: "/cart", label: "Request", icon: "/customer-flow/icons/cart.svg" },
   { href: "/profile", label: "Profile", icon: "/customer-flow/icons/profile.svg" },
 ];
 
 export function MobileBottomNav({ active }: { active: string }) {
   const { cartCount } = useCustomerFlow();
   const isActive = (label: string) =>
-    active === label || (label === "Inquiry" && (active === "Cart" || active === "Inquiry"));
+    active === label || (label === "Request" && (active === "Cart" || active === "Request"));
 
   return (
     <>
@@ -32,8 +32,15 @@ export function MobileBottomNav({ active }: { active: string }) {
           >
             <Image src={item.icon} alt="" width={20} height={20} />
             <span className={isActive(item.label) ? "block" : "sr-only"}>{item.label}</span>
-            {item.label === "Inquiry" && cartCount > 0 && (
-              <span className="absolute -top-3 right-1 grid size-5 place-items-center rounded-full bg-[#c9a07e] text-[10px] text-black">
+            {item.label === "Request" && cartCount > 0 && (
+              // <span className="absolute -top-3 right-1 grid size-5 place-items-center rounded-full bg-[#c9a07e] text-[10px] text-black">
+              //   {cartCount}
+              // </span>
+              <span
+                className={`absolute -top-3 grid size-5 place-items-center rounded-full bg-[#c9a07e] text-[10px] text-black ${
+                  isActive(item.label) ? "-right-3" : "right-1"
+                }`}
+              >
                 {cartCount}
               </span>
             )}

@@ -7,7 +7,7 @@ import { requestOtpApi } from "@/features/customer-flow/services/auth-api";
 
 export function LoginForm() {
   const router = useRouter();
-  const { login } = useCustomerFlow();
+  const { login, updateFormDraft } = useCustomerFlow();
   const [name, setName] = useState("");
   const [mobile, setMobile] = useState("");
   const [loading, setLoading] = useState(false);
@@ -44,14 +44,17 @@ export function LoginForm() {
         <input
           value={name}
           onChange={(event) => {
-            setName(event.target.value);
-            if (event.target.value.trim() && errors.name) {
+            const next = event.target.value;
+            setName(next);
+            updateFormDraft({ type: "login", data: { name: next, mobile } });
+            if (next.trim() && errors.name) {
               setErrors((prev) => ({ ...prev, name: undefined }));
             }
           }}
           placeholder="Enter full name"
           aria-invalid={Boolean(errors.name)}
           className="customer-input"
+          disabled={loading}
         />
         {errors.name && (
           <span
@@ -69,6 +72,7 @@ export function LoginForm() {
           onChange={(event) => {
             const next = event.target.value.replace(/\D/g, "").slice(0, 10);
             setMobile(next);
+            updateFormDraft({ type: "login", data: { name, mobile: next } });
             if (/^\d{10}$/.test(next) && errors.mobile) {
               setErrors((prev) => ({ ...prev, mobile: undefined }));
             }
@@ -77,6 +81,7 @@ export function LoginForm() {
           placeholder="Enter mobile number"
           aria-invalid={Boolean(errors.mobile)}
           className="customer-input"
+          disabled={loading}
         />
         {errors.mobile && (
           <span
@@ -121,6 +126,7 @@ export function LoginForm() {
           type="button"
           onClick={() => router.push("/login-here")}
           className="text-common-black cursor-pointer font-semibold underline"
+          disabled={loading}
         >
           {" "}
           Login here{" "}

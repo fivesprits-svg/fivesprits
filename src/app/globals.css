@@ -20,8 +20,8 @@
   --color-otp-active-border: #c9a07e;
   --color-otp-inactive-border: #eaeaea;
   --color-otp-dot: #999999;
-  --color-age-checkbox-border: #e5e7eb;
-  --color-age-checkbox-checked: #a67854;
+  --color-age-checkbox-border: #c9a07e;
+  --color-age-checkbox-checked: #faf3eb;
 
   --font-family-unbounded: "Unbounded", sans-serif;
   --font-family-geist: "Geist", sans-serif;
@@ -39,12 +39,15 @@
   .font-unbounded {
     font-family: var(--font-family-unbounded);
   }
+
   .font-geist {
     font-family: var(--font-family-geist);
   }
+
   .font-outfit {
     font-family: var(--font-family-outfit);
   }
+
   .customer-welcome-title {
     font-family: var(--font-family-unbounded);
     font-weight: 900;
@@ -241,6 +244,57 @@
     background-color: #fef2f2;
   }
 
+  .customer-form-nav {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .customer-form-nav-back {
+    font-family: var(--font-family-outfit);
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 1;
+    letter-spacing: 0%;
+    color: var(--color-common-black);
+    width: 50%;
+    height: 50px;
+    border-radius: 130px;
+    background-color: var(--color-common-white);
+    border: 1.5px solid var(--color-common-border);
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+
+  .customer-form-nav-back:hover {
+    opacity: 0.8;
+  }
+
+  .customer-form-nav-submit {
+    font-family: var(--font-family-outfit);
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 1;
+    letter-spacing: 0%;
+    color: var(--color-common-white);
+    width: 50%;
+    height: 50px;
+    border-radius: 130px;
+    background-color: var(--color-common-black);
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+
+  .customer-form-nav-submit:hover {
+    opacity: 0.9;
+  }
+
+  .customer-form-nav-submit:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
   .customer-checkbox {
     width: 24px;
     height: 24px;
@@ -316,6 +370,18 @@
       font-size: 17px;
     }
 
+    .customer-form-nav-back {
+      height: 50px;
+      font-size: 18px;
+      border-radius: 140px;
+    }
+
+    .customer-form-nav-submit {
+      height: 50px;
+      font-size: 18px;
+      border-radius: 140px;
+    }
+
     .customer-checkbox {
       width: 28px;
       height: 28px;
@@ -343,7 +409,10 @@
     background: var(--color-common-white);
     border: 1px solid var(--color-common-border);
     border-radius: 24px;
-    padding: 48px;
+    padding-top: 24px;
+    padding-bottom: 24px;
+    padding-left: 40px;
+    padding-right: 40px;
     box-shadow: 0 24px 80px rgba(0, 0, 0, 0.08);
   }
 
@@ -647,10 +716,12 @@
     .catalogue-card-category {
       max-width: 100px;
     }
+
     .catalogue-card-category-image {
       width: 90px;
       height: 90px;
     }
+
     .catalogue-card-category-title {
       font-size: 13px;
     }
@@ -660,10 +731,12 @@
     .catalogue-card-category {
       max-width: 110px;
     }
+
     .catalogue-card-category-image {
       width: 100px;
       height: 100px;
     }
+
     .catalogue-card-category-title {
       font-size: 14px;
     }
@@ -708,6 +781,7 @@
       width: 160px;
       height: 115px;
     }
+
     .catalogue-card-brand-title {
       font-size: 14px;
     }
@@ -718,6 +792,7 @@
       width: 180px;
       height: 130px;
     }
+
     .catalogue-card-brand-title {
       font-size: 15px;
     }
@@ -746,13 +821,16 @@
     .catalogue-card-product-image {
       height: 180px;
     }
+
     .catalogue-card-product-name {
       font-size: 15px;
       line-height: 20px;
     }
+
     .catalogue-card-product-pack {
       font-size: 13px;
     }
+
     .catalogue-card-product-price {
       font-size: 16px;
     }
@@ -900,5 +978,28 @@
 
   .catalogue-card-product-remove-btn:hover {
     background: #fef2f2;
+  }
+
+  .skeleton {
+    background: linear-gradient(90deg, #f0ede8 25%, #e8e4de 50%, #f0ede8 75%);
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.5s ease-in-out infinite;
+    border-radius: 8px;
+  }
+
+  .skeleton-circle {
+    background: linear-gradient(90deg, #f0ede8 25%, #e8e4de 50%, #f0ede8 75%);
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.5s ease-in-out infinite;
+    border-radius: 50%;
+  }
+
+  @keyframes skeleton-shimmer {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -200% 0;
+    }
   }
 }

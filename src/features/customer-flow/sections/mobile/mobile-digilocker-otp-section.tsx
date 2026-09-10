@@ -5,7 +5,7 @@ export function MobileDigilockerOtpSection() {
   return (
     <AuthPageLayout>
       <div className="px-6 pt-6 pb-24 md:px-12 md:pt-8 md:pb-28">
-        <h1 className="font-unbounded text-common-black text-[28px] leading-tight font-black uppercase md:text-[36px] md:leading-tight">
+        <h1 className="font-unbounded text-common-black mt-2 text-[30px] leading-tight font-black uppercase md:text-[36px] md:leading-tight">
           Verify Your
           <br />
           Identity

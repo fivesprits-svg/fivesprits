@@ -26,7 +26,7 @@ export function QuantityStepper({
           onClick={() => value > 1 && onChange(value - 1)}
           className={`${
             compact ? "size-6 text-base" : "size-7 text-lg"
-          } grid place-items-center font-semibold text-[#a67854] transition hover:scale-110 active:scale-95 disabled:opacity-40`}
+          } grid cursor-pointer place-items-center font-semibold text-[#a67854] transition hover:scale-110 active:scale-95 disabled:opacity-40`}
         >
           −
         </button>
@@ -41,7 +41,7 @@ export function QuantityStepper({
           type="button"
           aria-label="Increase quantity"
           onClick={() => onChange(value + 1)}
-          className={`${
+          className={`cursor-pointer ${
             compact ? "size-6 text-base" : "size-7 text-lg"
           } grid place-items-center font-semibold text-[#a67854] transition hover:scale-110 active:scale-95`}
         >
@@ -54,7 +54,7 @@ export function QuantityStepper({
           type="button"
           aria-label="Remove item"
           onClick={onRemove}
-          className={`${
+          className={`cursor-pointer ${
             compact ? "size-8 rounded-xl" : "size-10 rounded-2xl"
           } grid shrink-0 place-items-center bg-[#FAF6F0] transition hover:bg-[#f3ede3] active:scale-95`}
         >

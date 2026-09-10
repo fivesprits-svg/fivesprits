@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import { ResendTimer } from "@/features/customer-flow/components/ui/resend-timer";
+import { FlowNavButtons } from "@/features/customer-flow/components/auth/flow-nav-buttons";
 import {
   MobileHomeIndicator,
   // MobileStatusBar,
@@ -11,8 +12,9 @@ import {
 
 export function DigilockerOtpForm() {
   const router = useRouter();
-  const { verifyDigilockerOtp } = useCustomerFlow();
-  const [otp, setOtp] = useState("");
+  const { state, verifyDigilockerOtp, updateFormDraft } = useCustomerFlow();
+  const draft = state.session?.formDrafts?.digilockerOtp;
+  const [otp, setOtp] = useState(draft ?? "");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -37,7 +39,7 @@ export function DigilockerOtpForm() {
       <div className="fixed inset-0 z-50 flex min-h-dvh flex-col bg-[#faf9f6] md:static md:mt-8 md:block md:min-h-0 md:bg-transparent">
         {/* <MobileStatusBar /> */}
         <div className="flex flex-1 flex-col items-center justify-center px-10 text-center md:block md:px-0 md:text-left">
-          <div className="customer-icon-circle md:hidden">
+          <div className="">
             <Image src="/customer-flow/icons/error.svg" alt="" width={24} height={24} />
           </div>
           <h2 className="mt-8 text-[28px] font-bold md:mt-0 md:text-lg">Verification Failed</h2>
@@ -75,7 +77,9 @@ export function DigilockerOtpForm() {
           id="digilocker-otp"
           value={otp}
           onChange={(event) => {
-            setOtp(event.target.value.replace(/\D/g, "").slice(0, 4));
+            const next = event.target.value.replace(/\D/g, "").slice(0, 4);
+            setOtp(next);
+            updateFormDraft({ type: "digilocker-otp", data: { otp: next } });
             setError("");
           }}
           inputMode="numeric"
@@ -94,9 +98,14 @@ export function DigilockerOtpForm() {
       <div className="mt-6 md:mt-8">
         <ResendTimer initialSeconds={60} onResend={handleResend} />
       </div>
-      <button type="submit" disabled={loading} className="customer-continue-button mt-8 md:mt-10">
-        {loading ? "Verifying..." : "Verify & Proceed"}
-      </button>
+      <div className="mt-8 md:mt-10">
+        <FlowNavButtons
+          backHref="/digilocker"
+          submitLabel="Verify & Proceed"
+          loading={loading}
+          loadingLabel="Verifying..."
+        />
+      </div>
     </form>
   );
 }

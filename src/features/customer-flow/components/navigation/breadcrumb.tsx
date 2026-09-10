@@ -6,14 +6,20 @@ export type BreadcrumbItem = {
   href?: string;
 };
 
-export function Breadcrumb({ items }: { items: BreadcrumbItem[] }) {
+export function Breadcrumb({
+  items,
+  homeHref = "/categories",
+}: {
+  items: BreadcrumbItem[];
+  homeHref?: string;
+}) {
   return (
     <nav
       aria-label="Breadcrumb"
       className="mb-4 flex items-center gap-1.5 text-xs font-medium text-gray-400"
     >
       <Link
-        href="/categories"
+        href={homeHref}
         className="flex items-center gap-1 text-gray-500 transition-colors hover:text-[#a67854]"
       >
         <span>Home</span>

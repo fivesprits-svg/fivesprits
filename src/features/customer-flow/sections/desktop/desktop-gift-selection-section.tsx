@@ -94,7 +94,7 @@ export function DesktopGiftSelectionSection({
               return (
                 <article
                   key={product.id}
-                  className="group flex flex-col justify-between overflow-hidden rounded-[22px] border border-gray-200/90 bg-white p-3 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md sm:p-3.5"
+                  className="group flex cursor-pointer flex-col justify-between overflow-hidden rounded-[22px] border border-gray-200/90 bg-white p-3 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md sm:p-3.5"
                 >
                   <div>
                     <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[16px] bg-[#f5f3ef]">
@@ -136,7 +136,7 @@ export function DesktopGiftSelectionSection({
                         <button
                           type="button"
                           onClick={() => handleUpdateQuantity(product.id, 1)}
-                          className="font-outfit flex h-8 items-center justify-center rounded-full bg-black px-5 text-xs font-bold text-white transition hover:bg-gray-800 active:scale-[0.99] sm:h-9"
+                          className="font-outfit flex h-8 cursor-pointer items-center justify-center rounded-full bg-black px-5 text-xs font-bold text-white transition hover:bg-gray-800 active:scale-[0.99] sm:h-9"
                         >
                           Add
                         </button>

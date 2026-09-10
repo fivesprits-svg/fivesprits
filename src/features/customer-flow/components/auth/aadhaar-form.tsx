@@ -3,11 +3,14 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import { validateAadhaar, formatAadhaar } from "@/features/customer-flow/utils/validation";
+import { FlowNavButtons } from "@/features/customer-flow/components/auth/flow-nav-buttons";
 
 export function AadhaarForm() {
   const router = useRouter();
-  const { verifyAadhaar } = useCustomerFlow();
-  const [aadhaar, setAadhaar] = useState("");
+  const { state, verifyAadhaar, updateFormDraft } = useCustomerFlow();
+  const backHref = state.session?.cameFromLoginHere ? "/login-here" : "/otp";
+  const draft = state.session?.formDrafts?.aadhaar;
+  const [aadhaar, setAadhaar] = useState(draft ?? "");
   const [errors, setErrors] = useState<ReturnType<typeof validateAadhaar>>({});
   const [loading, setLoading] = useState(false);
 
@@ -29,7 +32,9 @@ export function AadhaarForm() {
         <input
           value={aadhaar}
           onChange={(event) => {
-            setAadhaar(formatAadhaar(event.target.value));
+            const next = formatAadhaar(event.target.value);
+            setAadhaar(next);
+            updateFormDraft({ type: "aadhaar", data: { aadhaar: next } });
             setErrors({});
           }}
           placeholder="Enter aadhaar card number"
@@ -46,9 +51,12 @@ export function AadhaarForm() {
           </span>
         )}
       </label>
-      <button type="submit" disabled={loading} className="customer-continue-button">
-        {loading ? "Processing..." : "Proceed"}
-      </button>
+      <FlowNavButtons
+        backHref={backHref}
+        submitLabel="Proceed"
+        loading={loading}
+        loadingLabel="Processing..."
+      />
     </form>
   );
 }
