@@ -3,6 +3,7 @@ import { useSearchParams } from "next/navigation";
 import { MobileBottomNav } from "@/features/customer-flow/components/navigation/mobile-bottom-nav";
 import { MobileHeader } from "@/features/customer-flow/components/navigation/mobile-header";
 import { CatalogueCard } from "@/features/customer-flow/components/catalogue-card";
+import { EmptyState } from "@/features/customer-flow/components/ui/empty-state";
 import { getBrand, getProductsByBrand } from "@/features/customer-flow/data/catalogue";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import { formatMrp } from "@/features/customer-flow/utils/currency";
@@ -23,6 +24,7 @@ export function MobileProductsSection({
   const brand = propBrand ?? getBrand(brandId) ?? null;
   const products =
     propProducts && propProducts.length > 0 ? propProducts : getProductsByBrand(brandId);
+  const isEmpty = products.length === 0;
 
   const cartLines = state.cart;
   const requestedIds = new Set(cartLines.map((line) => line.productId).filter((id) => id != null));
@@ -35,41 +37,51 @@ export function MobileProductsSection({
         isSearchEnabled={true}
       />
       <main className="mx-auto w-full max-w-[390px] px-6 pt-5">
-        <div className="grid grid-cols-2 gap-3">
-          {products.map((product) => {
-            const quantity = 1;
-            const isRequested = requestedIds.has(product.id);
-            const item = cartLines.find((line) => line.productId === product.id);
-            return (
-              <CatalogueCard
-                key={product.id}
-                variant="product"
-                image={product.image}
-                title={product.name}
-                subtitle={product.pack}
-                price={formatMrp(product.mrp)}
-                originalPrice={isRequested ? formatMrp(product.mrp) : undefined}
-                actionLabel={isRequested ? "Requested" : "Add"}
-                actionVariant={isRequested ? "requested" : "add"}
-                onAction={() => {
-                  if (!isRequested) {
-                    addToCart(product.id, quantity);
-                  }
-                }}
-                quantity={item?.quantity}
-                onQuantityChange={(value) => {
-                  if (item) {
+        {isEmpty ? (
+          <EmptyState
+            icon="/customer-flow/icons/category0.svg"
+            title="No Products Yet"
+            description="We're currently curating this selection. Please check back soon or explore our other collections."
+            actionLabel="Browse Categories"
+            actionHref="/categories"
+          />
+        ) : (
+          <div className="grid grid-cols-2 gap-3">
+            {products.map((product) => {
+              const quantity = 1;
+              const isRequested = requestedIds.has(product.id);
+              const item = cartLines.find((line) => line.productId === product.id);
+              return (
+                <CatalogueCard
+                  key={product.id}
+                  variant="product"
+                  image={product.image}
+                  title={product.name}
+                  subtitle={product.pack}
+                  price={formatMrp(product.mrp)}
+                  originalPrice={isRequested ? formatMrp(product.mrp) : undefined}
+                  actionLabel={isRequested ? "Requested" : "Add"}
+                  actionVariant={isRequested ? "requested" : "add"}
+                  onAction={() => {
+                    if (!isRequested) {
+                      addToCart(product.id, quantity);
+                    }
+                  }}
+                  quantity={item?.quantity}
+                  onQuantityChange={(value) => {
+                    if (item) {
+                      removeFromCart(product.id);
+                      addToCart(product.id, value);
+                    }
+                  }}
+                  onRemove={() => {
                     removeFromCart(product.id);
-                    addToCart(product.id, value);
-                  }
-                }}
-                onRemove={() => {
-                  removeFromCart(product.id);
-                }}
-              />
-            );
-          })}
-        </div>
+                  }}
+                />
+              );
+            })}
+          </div>
+        )}
       </main>
       <MobileBottomNav active="Product" />
     </div>

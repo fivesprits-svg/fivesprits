@@ -62,7 +62,7 @@ export function DesktopBrandsSection({
             /* Empty state with hero image */
             <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-2">
               <EmptyState
-                icon="star"
+                icon="/customer-flow/icons/brands0.svg"
                 title="No Brands Available"
                 description="We are currently curating our brand list. Please check back soon or explore our existing collections."
                 actionLabel="Back to Collections"
