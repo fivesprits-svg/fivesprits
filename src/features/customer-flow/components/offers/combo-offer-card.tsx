@@ -106,7 +106,7 @@ export function ComboOfferCard({
 
       <div className="mt-4">
         <div className="flex items-center justify-between gap-3">
-          {/* Price Section - Left */}
+          {/* Price Section */}
           <div className="flex items-baseline gap-2.5">
             <span className="font-geist text-base font-medium text-gray-400 line-through sm:text-lg">
               {formatMrp(offer.mrp)}
@@ -116,60 +116,60 @@ export function ComboOfferCard({
               {formatMrp(offer.salePrice)}
             </span>
           </div>
+        </div>
 
-          {/* Add / Quantity Section - Right */}
-          {quantity == null ? (
-            <button
-              type="button"
-              onClick={onAdd}
-              className="font-outfit flex h-11 shrink-0 cursor-pointer items-center justify-center rounded-full bg-black px-7 text-sm font-bold tracking-wide text-white transition hover:bg-gray-800 active:scale-[0.99] sm:h-12 sm:px-8 sm:text-base"
-            >
-              Add
-            </button>
-          ) : (
-            <div className="flex h-11 items-center gap-2 sm:h-12">
-              <div className="flex h-full w-32 items-center justify-between rounded-full bg-[#FAF6F0] px-3 sm:w-36 sm:px-4">
-                <button
-                  type="button"
-                  onClick={() => onQuantityChange(Math.max(1, quantity - 1))}
-                  className="grid size-8 cursor-pointer place-items-center text-xl font-semibold text-[#a67854] transition hover:scale-110 active:scale-95 disabled:opacity-40"
-                  aria-label="Decrease quantity"
-                  disabled={quantity <= 1}
-                >
-                  −
-                </button>
+        {/* Add / Quantity Section */}
+        {quantity == null ? (
+          <button
+            type="button"
+            onClick={onAdd}
+            className="font-outfit mt-3 flex h-11 w-full cursor-pointer items-center justify-center rounded-full bg-black px-7 text-sm font-bold tracking-wide text-white transition hover:bg-gray-800 active:scale-[0.99] sm:h-12 sm:px-8 sm:text-base"
+          >
+            Add
+          </button>
+        ) : (
+          <div className="mt-3 flex h-11 w-full items-center justify-between gap-2 sm:h-12">
+            <div className="flex h-full w-full items-center justify-between rounded-full bg-[#FAF6F0] px-3 sm:px-4">
+              <button
+                type="button"
+                onClick={() => onQuantityChange(Math.max(1, quantity - 1))}
+                className="grid size-8 cursor-pointer place-items-center text-xl font-semibold text-[#a67854] transition hover:scale-110 active:scale-95 disabled:opacity-40"
+                aria-label="Decrease quantity"
+                disabled={quantity <= 1}
+              >
+                −
+              </button>
 
-                <span className="font-geist text-sm font-black text-black sm:text-base">
-                  {String(quantity).padStart(2, "0")}
-                </span>
-
-                <button
-                  type="button"
-                  onClick={() => onQuantityChange(quantity + 1)}
-                  className="grid size-8 cursor-pointer place-items-center text-xl font-semibold text-[#a67854] transition hover:scale-110 active:scale-95"
-                  aria-label="Increase quantity"
-                >
-                  +
-                </button>
-              </div>
+              <span className="font-geist text-sm font-black text-black sm:text-base">
+                {String(quantity).padStart(2, "0")}
+              </span>
 
               <button
                 type="button"
-                onClick={onRemove}
-                className="grid size-11 shrink-0 cursor-pointer place-items-center rounded-2xl bg-[#FAF6F0] transition hover:bg-[#f3ede3] active:scale-95 sm:size-12"
-                aria-label="Remove offer"
+                onClick={() => onQuantityChange(quantity + 1)}
+                className="grid size-8 cursor-pointer place-items-center text-xl font-semibold text-[#a67854] transition hover:scale-110 active:scale-95"
+                aria-label="Increase quantity"
               >
-                <Image
-                  src="/customer-flow/icons/delete-btn.svg"
-                  alt="Remove"
-                  width={20}
-                  height={20}
-                  className="size-5 object-contain"
-                />
+                +
               </button>
             </div>
-          )}
-        </div>
+
+            <button
+              type="button"
+              onClick={onRemove}
+              className="grid size-11 shrink-0 cursor-pointer place-items-center rounded-2xl bg-[#FAF6F0] transition hover:bg-[#f3ede3] active:scale-95 sm:size-12"
+              aria-label="Remove offer"
+            >
+              <Image
+                src="/customer-flow/icons/delete-btn.svg"
+                alt="Remove"
+                width={20}
+                height={20}
+                className="size-5 object-contain"
+              />
+            </button>
+          </div>
+        )}
       </div>
     </article>
   );
