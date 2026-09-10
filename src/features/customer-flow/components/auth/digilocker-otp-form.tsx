@@ -86,14 +86,27 @@ export function DigilockerOtpForm() {
           autoFocus
           className="absolute inset-0 z-10 size-full cursor-text opacity-0"
         />
-        {[0, 1, 2, 3].map((index) => (
-          <span
-            key={index}
-            className={`customer-otp-box ${index === otp.length ? "customer-otp-box-active" : ""} ${otp[index] ? "customer-otp-box-filled" : ""}`}
-          >
-            {otp[index] ? <span>{otp[index]}</span> : <span className="customer-otp-dot" />}
-          </span>
-        ))}
+        {[0, 1, 2, 3].map((index) => {
+          const isActive = index === otp.length;
+          const isFilled = Boolean(otp[index]);
+
+          return (
+            <span
+              key={index}
+              className={`customer-otp-box ${
+                isActive ? "customer-otp-box-active" : ""
+              } ${isFilled ? "customer-otp-box-filled" : ""}`}
+            >
+              {isFilled ? (
+                <span>{otp[index]}</span>
+              ) : isActive ? (
+                <span className="customer-otp-cursor" aria-hidden="true" />
+              ) : (
+                <span className="customer-otp-dot" />
+              )}
+            </span>
+          );
+        })}
       </div>
       <div className="mt-6 md:mt-8">
         <ResendTimer initialSeconds={60} onResend={handleResend} />

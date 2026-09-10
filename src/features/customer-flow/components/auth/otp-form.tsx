@@ -102,14 +102,27 @@ export function OtpForm() {
           autoFocus
           className="absolute inset-0 z-10 size-full cursor-text opacity-0"
         />
-        {[0, 1, 2, 3].map((index) => (
-          <span
-            key={index}
-            className={`customer-otp-box ${index === otp.length ? "customer-otp-box-active" : ""} ${otp[index] ? "customer-otp-box-filled" : ""}`}
-          >
-            {otp[index] ?? "•"}
-          </span>
-        ))}
+        {[0, 1, 2, 3].map((index) => {
+          const isActive = index === otp.length;
+          const isFilled = Boolean(otp[index]);
+
+          return (
+            <span
+              key={index}
+              className={`customer-otp-box ${
+                isActive ? "customer-otp-box-active" : ""
+              } ${isFilled ? "customer-otp-box-filled" : ""}`}
+            >
+              {isFilled ? (
+                otp[index]
+              ) : isActive ? (
+                <span className="customer-otp-cursor" aria-hidden="true" />
+              ) : (
+                "•"
+              )}
+            </span>
+          );
+        })}
       </div>
       <p className="sr-only">Prototype code: 1234</p>
       <div className="mt-10 md:mt-12">
