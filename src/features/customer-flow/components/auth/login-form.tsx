@@ -7,9 +7,10 @@ import { requestOtpApi } from "@/features/customer-flow/services/auth-api";
 
 export function LoginForm() {
   const router = useRouter();
-  const { login, updateFormDraft } = useCustomerFlow();
-  const [name, setName] = useState("");
-  const [mobile, setMobile] = useState("");
+  const { state, login, updateFormDraft } = useCustomerFlow();
+  const loginDraft = state.session?.formDrafts?.login;
+  const [name, setName] = useState(loginDraft?.name ?? "");
+  const [mobile, setMobile] = useState(loginDraft?.mobile ?? "");
   const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState("");
   const [errors, setErrors] = useState<ReturnType<typeof validateLogin>>({});

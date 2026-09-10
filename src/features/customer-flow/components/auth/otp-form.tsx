@@ -13,7 +13,8 @@ import {
 export function OtpForm() {
   const router = useRouter();
   const { state, verifyOtp, updateFormDraft } = useCustomerFlow();
-  const [otp, setOtp] = useState("");
+  const otpDraft = state.session?.formDrafts?.otp;
+  const [otp, setOtp] = useState(otpDraft ?? "");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 

@@ -40,7 +40,7 @@ export function DesktopCartSection() {
     submitRequirement,
     dismissConfirmation,
     logout,
-    addToCart,
+    // addToCart,
   } = useCustomerFlow();
   const [submitting, setSubmitting] = useState(false);
   const [showConfirmPopup, setShowConfirmPopup] = useState(false);
@@ -240,7 +240,7 @@ export function DesktopCartSection() {
                                   {formatMrp(history.totalSalePrice)}
                                 </span>
                               </div>
-                              <button
+                              {/* <button
                                 type="button"
                                 onClick={() => {
                                   history.items.forEach((item) => {
@@ -253,7 +253,7 @@ export function DesktopCartSection() {
                                 className="font-outfit rounded-full bg-black px-5 py-2 text-xs font-bold text-white transition hover:bg-[#a67854]"
                               >
                                 Repeat Inquiry
-                              </button>
+                              </button> */}
                             </div>
                           </article>
                         ))}
@@ -668,7 +668,7 @@ export function DesktopCartSection() {
                                   {formatMrp(history.totalSalePrice)}
                                 </span>
                               </div>
-                              <button
+                              {/* <button
                                 type="button"
                                 onClick={() => {
                                   history.items.forEach((item) => {
@@ -681,7 +681,7 @@ export function DesktopCartSection() {
                                 className="font-outfit rounded-full bg-black px-5 py-2 text-xs font-bold text-white transition hover:bg-[#a67854]"
                               >
                                 Repeat Inquiry
-                              </button>
+                              </button> */}
                             </div>
                           </article>
                         ))}

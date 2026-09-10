@@ -39,7 +39,7 @@ export function MobileCartSection() {
     submitRequirement,
     dismissConfirmation,
     logout,
-    addToCart,
+    // addToCart,
   } = useCustomerFlow();
   const [submitting, setSubmitting] = useState(false);
   const [showConfirmPopup, setShowConfirmPopup] = useState(false);
@@ -219,7 +219,7 @@ export function MobileCartSection() {
                             {formatMrp(history.totalSalePrice)}
                           </p>
                         </div>
-                        <button
+                        {/* <button
                           type="button"
                           onClick={() => {
                             history.items.forEach((item) => {
@@ -232,7 +232,7 @@ export function MobileCartSection() {
                           className="font-outfit rounded-full bg-black px-4 py-1.5 text-[11px] font-bold text-white transition hover:bg-gray-800"
                         >
                           Repeat Inquiry
-                        </button>
+                        </button> */}
                       </div>
                     </article>
                   ))}
@@ -687,7 +687,7 @@ export function MobileCartSection() {
                             {formatMrp(history.totalSalePrice)}
                           </p>
                         </div>
-                        <button
+                        {/* <button
                           type="button"
                           onClick={() => {
                             history.items.forEach((item) => {
@@ -700,7 +700,7 @@ export function MobileCartSection() {
                           className="font-outfit rounded-full bg-black px-4 py-1.5 text-[11px] font-bold text-white transition hover:bg-gray-800"
                         >
                           Repeat Inquiry
-                        </button>
+                        </button> */}
                       </div>
                     </article>
                   ))}
