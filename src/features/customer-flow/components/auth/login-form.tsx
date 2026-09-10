@@ -74,8 +74,23 @@ export function LoginForm() {
             const next = event.target.value.replace(/\D/g, "").slice(0, 10);
             setMobile(next);
             updateFormDraft({ type: "login", data: { name, mobile: next } });
-            if (/^\d{10}$/.test(next) && errors.mobile) {
-              setErrors((prev) => ({ ...prev, mobile: undefined }));
+            if (errors.mobile) {
+              if (next.length === 0) {
+                setErrors((prev) => ({
+                  ...prev,
+                  mobile: "Mobile Number is required",
+                }));
+              } else if (next.length < 10) {
+                setErrors((prev) => ({
+                  ...prev,
+                  mobile: "Mobile Number must be 10 digits",
+                }));
+              } else {
+                setErrors((prev) => ({
+                  ...prev,
+                  mobile: undefined,
+                }));
+              }
             }
           }}
           inputMode="numeric"
