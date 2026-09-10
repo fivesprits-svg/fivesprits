@@ -13,6 +13,7 @@ interface ConfirmationDialogProps {
   onDismiss: () => void;
   onLogout: () => void;
   loading?: boolean;
+  logoutLoading?: boolean;
 }
 
 export function ConfirmationDialog({
@@ -21,6 +22,7 @@ export function ConfirmationDialog({
   onDismiss,
   onLogout,
   loading = false,
+  logoutLoading = false,
 }: ConfirmationDialogProps) {
   const [step, setStep] = useState<Step>("confirm");
 
@@ -48,7 +50,11 @@ export function ConfirmationDialog({
             onDismiss={onDismiss}
           />
         ) : (
-          <SuccessStepContent onDismiss={onDismiss} onLogout={onLogout} />
+          <SuccessStepContent
+            onDismiss={onDismiss}
+            onLogout={onLogout}
+            logoutLoading={logoutLoading}
+          />
         )}
       </div>
     </div>
@@ -105,9 +111,11 @@ function ConfirmStepContent({
 function SuccessStepContent({
   onDismiss,
   onLogout,
+  logoutLoading,
 }: {
   onDismiss: () => void;
   onLogout: () => void;
+  logoutLoading: boolean;
 }) {
   return (
     <>
@@ -129,9 +137,17 @@ function SuccessStepContent({
         <button
           type="button"
           onClick={onLogout}
-          className="font-outfit flex h-12 w-full items-center justify-center rounded-2xl bg-[#f5f0eb] text-sm font-bold tracking-wide text-[#1a1a1a] transition hover:bg-[#ece5db] active:scale-[0.98]"
+          disabled={logoutLoading}
+          className="font-outfit flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#f5f0eb] text-sm font-bold tracking-wide text-[#1a1a1a] transition hover:bg-[#ece5db] active:scale-[0.98] disabled:opacity-60"
         >
-          Logout
+          {logoutLoading ? (
+            <>
+              <ButtonSpinner />
+              Logging out...
+            </>
+          ) : (
+            "Logout"
+          )}
         </button>
       </div>
     </>

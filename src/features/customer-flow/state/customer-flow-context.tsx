@@ -102,6 +102,9 @@ function useCustomerFlowValue() {
       logout: () => {
         dispatch({ type: "session/logout" });
         window.localStorage.removeItem(STORAGE_KEY);
+        window.localStorage.removeItem("customer_access_token");
+        window.localStorage.removeItem("access_token");
+        window.localStorage.removeItem("customer_user");
       },
       updateFormDraft: (draft: {
         type: "login" | "login-here" | "otp" | "digilocker-otp" | "aadhaar" | "age-verification";

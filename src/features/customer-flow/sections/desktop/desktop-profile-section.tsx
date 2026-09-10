@@ -1,17 +1,21 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { PortalShell } from "@/features/customer-flow/components/portal-shell";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import { formatDisplayMobile } from "@/features/customer-flow/utils/validation";
 import { fetchCustomerProfileApi } from "@/features/customer-flow/services/user-api";
+import { logoutApi } from "@/features/customer-flow/services/auth-api";
+import { ButtonSpinner } from "@/features/customer-flow/components/ui/skeleton";
 
 export function DesktopProfileSection() {
   const router = useRouter();
   const { state, logout } = useCustomerFlow();
   const [showLogoutPopup, setShowLogoutPopup] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [logoutError, setLogoutError] = useState("");
   const [showImagePopup, setShowImagePopup] = useState(false);
   const [showPermitModal, setShowPermitModal] = useState(false);
   const [editingField, setEditingField] = useState<string | null>(null);
@@ -72,6 +76,21 @@ export function DesktopProfileSection() {
     setEditingField(null);
     setEditValue("");
   }
+
+  const handleLogout = useCallback(async () => {
+    if (isLoggingOut) return;
+    setIsLoggingOut(true);
+    setLogoutError("");
+    try {
+      await logoutApi();
+      logout();
+      router.push("/");
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Logout failed. Please try again.";
+      setLogoutError(message);
+      setIsLoggingOut(false);
+    }
+  }, [isLoggingOut, logout, router]);
 
   return (
     <div className="hidden md:block">
@@ -442,21 +461,37 @@ export function DesktopProfileSection() {
           <div className="profile-popup-card">
             <h2 className="profile-popup-title">Logout Confirmation</h2>
             <p className="profile-popup-subtitle mt-3">Are you sure you want to sign out?</p>
+            {logoutError && (
+              <p className="mt-3 rounded-xl border border-red-200 bg-red-50 p-3 text-center text-xs font-medium text-red-700">
+                {logoutError}
+              </p>
+            )}
             <div className="mt-7 flex gap-3">
               <button
                 type="button"
-                onClick={() => {
-                  logout();
-                  router.push("/");
-                }}
-                className="profile-popup-save-btn"
+                onClick={handleLogout}
+                disabled={isLoggingOut}
+                className="profile-popup-save-btn flex items-center justify-center gap-2 disabled:opacity-60"
               >
-                Confirm
+                {isLoggingOut ? (
+                  <>
+                    <ButtonSpinner />
+                    Logging out...
+                  </>
+                ) : (
+                  "Confirm"
+                )}
               </button>
               <button
                 type="button"
-                onClick={() => setShowLogoutPopup(false)}
-                className="profile-popup-cancel-btn"
+                onClick={() => {
+                  if (!isLoggingOut) {
+                    setShowLogoutPopup(false);
+                    setLogoutError("");
+                  }
+                }}
+                disabled={isLoggingOut}
+                className="profile-popup-cancel-btn disabled:opacity-60"
               >
                 Cancel
               </button>

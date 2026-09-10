@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { ConfirmationDialog } from "@/features/customer-flow/components/confirmation-dialog";
 import { PortalShell } from "@/features/customer-flow/components/portal-shell";
@@ -16,6 +16,7 @@ import {
 } from "@/features/customer-flow/data/offers";
 import { fetchProductsApi } from "@/features/customer-flow/services/products-api";
 import { fetchBrandsApi } from "@/features/customer-flow/services/brands-api";
+import { logoutApi } from "@/features/customer-flow/services/auth-api";
 import {
   fetchComboOffersApi,
   fetchGiftOffersApi,
@@ -43,6 +44,7 @@ export function DesktopCartSection() {
   } = useCustomerFlow();
   const [submitting, setSubmitting] = useState(false);
   const [showConfirmPopup, setShowConfirmPopup] = useState(false);
+  const [logoutLoading, setLogoutLoading] = useState(false);
 
   const [productsList, setProductsList] = useState<Product[]>(defaultProducts);
   const [brandsList, setBrandsList] = useState<Brand[]>(defaultBrands);
@@ -89,6 +91,20 @@ export function DesktopCartSection() {
   }, []);
 
   const isRegularUser = Boolean(state.session?.cameFromLoginHere || state.session?.mobile);
+
+  const handleLogout = useCallback(async () => {
+    if (logoutLoading) return;
+    setShowConfirmPopup(false);
+    setSubmitting(false);
+    setLogoutLoading(true);
+    try {
+      await logoutApi();
+      logout();
+      router.push("/");
+    } catch {
+      setLogoutLoading(false);
+    }
+  }, [logoutLoading, logout, router]);
 
   const {
     regularItems,
@@ -748,6 +764,7 @@ export function DesktopCartSection() {
         <ConfirmationDialog
           open={showConfirmPopup}
           loading={submitting}
+          logoutLoading={logoutLoading}
           onConfirm={() => {
             setSubmitting(true);
             submitRequirement();
@@ -758,12 +775,7 @@ export function DesktopCartSection() {
             dismissConfirmation();
             // router.push("/categories");
           }}
-          onLogout={() => {
-            setShowConfirmPopup(false);
-            setSubmitting(false);
-            logout();
-            router.push("/");
-          }}
+          onLogout={handleLogout}
         />
       </PortalShell>
     </div>

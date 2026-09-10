@@ -1,3 +1,5 @@
+import { getAuthToken } from "./api-client";
+
 const getBaseUrl = () => {
   const envUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
   const clean = envUrl.replace(/\/+$/, "");
@@ -118,6 +120,31 @@ export async function customerLoginApi(payload: CustomerLoginPayload): Promise<
     const errorMsg =
       (Array.isArray(json?.message) ? json.message.join(", ") : json?.message) ||
       "Invalid mobile number or password.";
+    throw new Error(errorMsg);
+  }
+  return json;
+}
+
+export async function logoutApi(): Promise<AuthApiResponse<null>> {
+  const baseUrl = getBaseUrl();
+  const token = getAuthToken();
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+
+  const res = await fetch(`${baseUrl}/auth/logout`, {
+    method: "POST",
+    headers,
+  });
+
+  const json = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    const errorMsg =
+      (Array.isArray(json?.message) ? json.message.join(", ") : json?.message) ||
+      "Logout failed. Please try again.";
     throw new Error(errorMsg);
   }
   return json;
