@@ -66,19 +66,19 @@ const iconByVariant: Record<ToastVariant, React.ReactNode> = {
 
 const colorByVariant: Record<ToastVariant, { text: string; border: string; bg: string }> = {
   success: {
-    text: "text-[#16a34a]",
-    border: "border-[#16a34a]/30",
-    bg: "bg-[#16a34a]/5",
+    text: "text-white",
+    border: "border-[#15803d]",
+    bg: "bg-[#16a34a]",
   },
   error: {
-    text: "text-[#b83a32]",
-    border: "border-[#b83a32]/30",
-    bg: "bg-[#b83a32]/5",
+    text: "text-white",
+    border: "border-[#991b1b]",
+    bg: "bg-[#b83a32]",
   },
   info: {
-    text: "text-[#a67854]",
-    border: "border-[#a67854]/30",
-    bg: "bg-[#a67854]/5",
+    text: "text-white",
+    border: "border-[#8a6a4d]",
+    bg: "bg-[#a67854]",
   },
 };
 
@@ -120,17 +120,17 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
             <div
               key={toast.id}
               role="status"
-              className={`pointer-events-auto flex w-full items-start gap-2.5 rounded-2xl border px-4 py-3 shadow-lg shadow-black/5 backdrop-blur ${colors.border} ${colors.bg}`}
+              className={`pointer-events-auto flex w-full items-start gap-2.5 rounded-2xl border px-4 py-3 shadow-lg shadow-black/20 ${colors.border} ${colors.bg}`}
             >
               <span className={`mt-0.5 ${colors.text}`}>{iconByVariant[toast.variant]}</span>
-              <p className="text-common-black flex-1 text-sm leading-snug font-medium">
+              <p className={`${colors.text} flex-1 text-sm leading-snug font-medium`}>
                 {toast.message}
               </p>
               <button
                 type="button"
                 onClick={() => dismiss(toast.id)}
                 aria-label="Dismiss notification"
-                className="text-common-gray hover:text-common-black -m-1 shrink-0 cursor-pointer rounded-lg p-1"
+                className={`${colors.text} -m-1 shrink-0 cursor-pointer rounded-lg p-1 opacity-70 hover:opacity-100`}
               >
                 <svg
                   className="size-3.5"
