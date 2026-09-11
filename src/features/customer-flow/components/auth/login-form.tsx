@@ -2,12 +2,14 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
+import { useToast } from "@/features/customer-flow/components/ui/toast";
 import { validateLogin } from "@/features/customer-flow/utils/login-validation";
 import { requestOtpApi } from "@/features/customer-flow/services/auth-api";
 
 export function LoginForm() {
   const router = useRouter();
   const { state, login, updateFormDraft } = useCustomerFlow();
+  const { success, error: showError } = useToast();
   const loginDraft = state.session?.formDrafts?.login;
   const [name, setName] = useState(loginDraft?.name ?? "");
   const [mobile, setMobile] = useState(loginDraft?.mobile ?? "");
@@ -28,11 +30,13 @@ export function LoginForm() {
           mobileNumber: mobile,
         });
         login(name.trim(), mobile);
+        success("Verification code sent. Check your request to get the OTP.");
         router.push("/otp");
       } catch (err: unknown) {
         const message =
           err instanceof Error ? err.message : "Failed to generate OTP. Please try again.";
         setApiError(message);
+        showError(message);
       } finally {
         setLoading(false);
       }

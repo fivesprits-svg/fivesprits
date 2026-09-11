@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { CustomerFlowProvider } from "@/features/customer-flow/state/customer-flow-context";
+import { ToastProvider } from "@/features/customer-flow/components/ui/toast";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -18,7 +19,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         >
           Skip to content
         </a>
-        <CustomerFlowProvider>{children}</CustomerFlowProvider>
+        <CustomerFlowProvider>
+          <ToastProvider>{children}</ToastProvider>
+        </CustomerFlowProvider>
       </body>
     </html>
   );

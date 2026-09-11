@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
+import { useToast } from "@/features/customer-flow/components/ui/toast";
 import { verifyOtpApi } from "@/features/customer-flow/services/auth-api";
 import { FlowNavButtons } from "@/features/customer-flow/components/auth/flow-nav-buttons";
 import {
@@ -13,6 +14,7 @@ import {
 export function OtpForm() {
   const router = useRouter();
   const { state, verifyOtp, updateFormDraft } = useCustomerFlow();
+  const { success, error: showError } = useToast();
   const otpDraft = state.session?.formDrafts?.otp;
   const [otp, setOtp] = useState(otpDraft ?? "");
   const [error, setError] = useState("");
@@ -72,6 +74,7 @@ export function OtpForm() {
       }
 
       verifyOtp();
+      success("Mobile number verified. Welcome to Five Spirits!");
       router.push("/digilocker");
     } catch (err: unknown) {
       const message =
@@ -79,6 +82,7 @@ export function OtpForm() {
           ? err.message
           : "The verification code is incorrect. Please check the code shared by the administrator and try again.";
       setError(message);
+      showError(message);
     } finally {
       setLoading(false);
     }
