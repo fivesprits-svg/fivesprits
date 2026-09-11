@@ -4,11 +4,13 @@ import { useRouter } from "next/navigation";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
+import { useToast } from "@/features/customer-flow/components/ui/toast";
 import { customerLoginApi } from "@/features/customer-flow/services/auth-api";
 
 export function LoginFormHere() {
   const router = useRouter();
   const { state, loginHere, updateFormDraft } = useCustomerFlow();
+  const { success, error: showError } = useToast();
   const draft = state.session?.formDrafts?.loginHere;
   const [phoneValue, setPhoneValue] = useState(draft?.phoneValue ?? "");
   const [countryData, setCountryData] = useState<{
@@ -84,10 +86,12 @@ export function LoginFormHere() {
         }
 
         loginHere(fullPhone, password);
+        success("Logged in successfully.");
         router.push("/digilocker");
       } catch (err: unknown) {
         const message = err instanceof Error ? err.message : "Invalid mobile number or password.";
         setApiError(message);
+        showError(message);
       } finally {
         setLoading(false);
       }
