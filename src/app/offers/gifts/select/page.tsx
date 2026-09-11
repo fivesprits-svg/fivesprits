@@ -5,7 +5,7 @@ import { fetchGiftOffersApi } from "@/features/customer-flow/services/offers-api
 
 export default async function GiftSelectionPage() {
   const data = await fetchGiftOffersApi();
-
+  console.log("GiftSelectionPage data:", data);
   return (
     <AuthenticatedRoute>
       <MobileGiftSelectionSection offer={data?.giftOffer} productsList={data?.giftProducts} />
