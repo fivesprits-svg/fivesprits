@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { PortalShell } from "@/features/customer-flow/components/portal-shell";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import { formatDisplayMobile } from "@/features/customer-flow/utils/validation";
+import { formatGoogleMapsUrl } from "@/features/customer-flow/utils/maps";
 import { fetchCustomerProfileApi, uploadFileApi } from "@/features/customer-flow/services/user-api";
 import { updateProfileApi } from "@/features/customer-flow/services/profile-api";
 import { logoutApi } from "@/features/customer-flow/services/auth-api";
@@ -99,17 +100,21 @@ export function DesktopProfileSection() {
     setSaveError("");
     try {
       const payload: Record<string, string> = {};
+      let finalValue = editValue.trim();
       if (editingField === "mapsLocation") {
-        payload.googleMapsLocation = editValue;
+        if (finalValue && !/^https?:\/\//i.test(finalValue)) {
+          finalValue = `https://${finalValue}`;
+        }
+        payload.googleMapsLocation = finalValue;
       } else {
-        payload[editingField] = editValue;
+        payload[editingField] = finalValue;
       }
       await updateProfileApi(payload);
       setProfileData((prev) => ({
         ...prev,
         ...(editingField === "mapsLocation"
-          ? { mapsLocation: editValue }
-          : { [editingField]: editValue }),
+          ? { mapsLocation: finalValue }
+          : { [editingField]: finalValue }),
       }));
       setEditingField(null);
       setEditValue("");
@@ -550,7 +555,7 @@ export function DesktopProfileSection() {
                     <div className="flex h-11 items-center justify-between rounded-xl border border-gray-200 bg-white px-3.5 text-xs font-medium text-gray-800">
                       <span className="truncate">{profileData.mapsLocation}</span>
                       <a
-                        href={profileData.mapsLocation}
+                        href={formatGoogleMapsUrl(profileData.mapsLocation)}
                         target="_blank"
                         rel="noreferrer"
                         className="ml-2 text-[11px] font-semibold text-[#a67854] hover:underline"

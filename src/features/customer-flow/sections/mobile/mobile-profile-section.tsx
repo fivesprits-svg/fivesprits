@@ -7,6 +7,7 @@ import { MobileBottomNav } from "@/features/customer-flow/components/navigation/
 import { MobileHeader } from "@/features/customer-flow/components/navigation/mobile-header";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import { formatDisplayMobile } from "@/features/customer-flow/utils/validation";
+import { formatGoogleMapsUrl } from "@/features/customer-flow/utils/maps";
 import { fetchCustomerProfileApi, uploadFileApi } from "@/features/customer-flow/services/user-api";
 import { updateProfileApi } from "@/features/customer-flow/services/profile-api";
 import { logoutApi } from "@/features/customer-flow/services/auth-api";
@@ -96,17 +97,21 @@ export function MobileProfileSection() {
     setSaveError("");
     try {
       const payload: Record<string, string> = {};
+      let finalValue = editValue.trim();
       if (editingField === "mapsLocation") {
-        payload.googleMapsLocation = editValue;
+        if (finalValue && !/^https?:\/\//i.test(finalValue)) {
+          finalValue = `https://${finalValue}`;
+        }
+        payload.googleMapsLocation = finalValue;
       } else {
-        payload[editingField] = editValue;
+        payload[editingField] = finalValue;
       }
       await updateProfileApi(payload);
       setProfileData((prev) => ({
         ...prev,
         ...(editingField === "mapsLocation"
-          ? { mapsLocation: editValue }
-          : { [editingField]: editValue }),
+          ? { mapsLocation: finalValue }
+          : { [editingField]: finalValue }),
       }));
       setEditingField(null);
       setEditValue("");
@@ -444,15 +449,16 @@ export function MobileProfileSection() {
                 Edit
               </button>
             </div>
-            <div className="profile-field-value">
+            <div className="profile-field-value flex items-center justify-between">
               <span className="flex-1 truncate">{profileData.mapsLocation}</span>
-              {/* <Image
-                src="/customer-flow/icons/lock.svg"
-                alt="Copy"
-                width={18}
-                height={18}
-                className="opacity-40"
-              /> */}
+              <a
+                href={formatGoogleMapsUrl(profileData.mapsLocation)}
+                target="_blank"
+                rel="noreferrer"
+                className="ml-2 text-[11px] font-semibold text-[#a67854] hover:underline"
+              >
+                Open Maps
+              </a>
             </div>
           </div>
         </div>
