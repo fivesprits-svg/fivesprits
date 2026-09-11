@@ -13,6 +13,11 @@ import {
   clearCartApi,
   type CartItemPayload,
 } from "@/features/customer-flow/services/cart-api";
+import {
+  submitOrderApi,
+  getOrderHistoryApi,
+  type SubmitOrderPayload,
+} from "@/features/customer-flow/services/orders-api";
 import { products as defaultProducts } from "@/features/customer-flow/data/catalogue";
 import {
   comboOffers as defaultComboOffers,
@@ -186,8 +191,12 @@ function useCustomerFlowValue() {
         removeCartItemApi(productId).catch(() => {});
         dispatch({ type: "cart/remove", productId });
       },
-      submitRequirement: () => {
-        clearCartApi().catch(() => {});
+      submitRequirement: async (payload?: SubmitOrderPayload) => {
+        if (payload) {
+          await submitOrderApi(payload);
+        }
+        await clearCartApi();
+        await getOrderHistoryApi();
         dispatch({ type: "requirement/submit" });
       },
       dismissConfirmation: () => dispatch({ type: "confirmation/dismiss" }),

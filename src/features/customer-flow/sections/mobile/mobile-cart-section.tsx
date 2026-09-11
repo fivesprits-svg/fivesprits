@@ -9,6 +9,7 @@ import {
 import {
   comboOffers as defaultComboOffers,
   giftOffer as defaultGiftOffer,
+  giftProducts,
 } from "@/features/customer-flow/data/offers";
 import { fetchProductsApi } from "@/features/customer-flow/services/products-api";
 import { fetchBrandsApi } from "@/features/customer-flow/services/brands-api";
@@ -18,13 +19,20 @@ import {
   fetchGiftOffersApi,
   type GiftOfferDetail,
 } from "@/features/customer-flow/services/offers-api";
+import { fetchCustomerProfileApi } from "@/features/customer-flow/services/user-api";
+import { getOrderHistoryApi } from "@/features/customer-flow/services/orders-api";
+// import type { OrderHistoryEntry } from "@/features/customer-flow/services/orders-api";
 import { useRouter } from "next/navigation";
 import { ConfirmationDialog } from "@/features/customer-flow/components/confirmation-dialog";
 import { MobileBottomNav } from "@/features/customer-flow/components/navigation/mobile-bottom-nav";
 import { EmptyState } from "@/features/customer-flow/components/ui/empty-state";
-import { sampleRequirementHistory } from "@/features/customer-flow/data/requirements-history";
+import {
+  sampleRequirementHistory,
+  type RequirementHistoryEntry,
+} from "@/features/customer-flow/data/requirements-history";
 import { buildStructuredCart } from "@/features/customer-flow/helpers/cart-view-model";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
+import { useToast } from "@/features/customer-flow/components/ui/toast";
 import { formatMrp } from "@/features/customer-flow/utils/currency";
 import type { Brand, Product } from "@/features/customer-flow/types";
 import type { ComboOffer } from "@/features/customer-flow/data/offers";
@@ -49,6 +57,10 @@ export function MobileCartSection() {
   const [brandsList, setBrandsList] = useState<Brand[]>(defaultBrands);
   const [comboOffersList, setComboOffersList] = useState<ComboOffer[]>(defaultComboOffers);
   const [giftOfferDetail, setGiftOfferDetail] = useState<GiftOfferDetail>(defaultGiftOffer);
+  const [requirementHistory, setRequirementHistory] =
+    useState<RequirementHistoryEntry[]>(sampleRequirementHistory);
+  const [profileData, setProfileData] = useState({ address: "", permitNumber: "" });
+  const { success: showSuccessToast, error: showErrorToast } = useToast();
 
   useEffect(() => {
     let isMounted = true;
@@ -82,6 +94,45 @@ export function MobileCartSection() {
       }
       if (gifts?.giftOffer) setGiftOfferDetail(gifts.giftOffer);
     });
+
+    fetchCustomerProfileApi().then((user) => {
+      if (!isMounted || !user) return;
+      setProfileData({
+        address: user.address ?? "",
+        permitNumber: user.permitNumber ?? "",
+      });
+    });
+
+    getOrderHistoryApi()
+      .then((orders) => {
+        if (!isMounted || !orders || orders.length === 0) return;
+        const mapped: RequirementHistoryEntry[] = orders.map((order) => ({
+          id: order._id,
+          requirementNo: order.orderNumber ?? order._id,
+          date: order.createdAt
+            ? new Date(order.createdAt).toLocaleDateString("en-IN", {
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+              })
+            : "",
+          status: (order.status as RequirementHistoryEntry["status"]) ?? "In Review",
+          permitNumber: order.permitNumber ?? "",
+          deliveryAddress: order.deliveryAddress ?? "",
+          totalItems: order.totalItems ?? order.items?.length ?? 0,
+          totalOriginalMrp: order.totalMrp ?? 0,
+          totalSalePrice: order.totalSalePrice ?? 0,
+          items: (order.items ?? []).map((item) => ({
+            name: item.name ?? item.productId,
+            pack: item.pack ?? "",
+            quantity: item.quantity,
+            price: item.salePrice ?? item.mrp ?? 0,
+            image: item.image ?? "/customer-flow/products/reserve-whisky.png",
+          })),
+        }));
+        setRequirementHistory(mapped);
+      })
+      .catch(() => {});
 
     return () => {
       isMounted = false;
@@ -156,7 +207,7 @@ export function MobileCartSection() {
                 </div>
 
                 <div className="space-y-3.5">
-                  {sampleRequirementHistory.map((history) => (
+                  {requirementHistory.map((history) => (
                     <article
                       key={history.id}
                       className="rounded-[24px] border border-gray-200/80 bg-[#FAF9F7] p-4 shadow-xs"
@@ -561,7 +612,7 @@ export function MobileCartSection() {
             )}
 
             {/* 4. SUMMARY BOX */}
-            <div className="rounded-[26px] border border-[#E8E8E8] bg-[#F8F8F8] p-5 shadow-xs">
+            <div className="rounded-[26px] border border-[#E8E8E8] bg-[#F8F8F8] p-4 shadow-xs">
               <div className="space-y-2.5">
                 {availableItemsCount > 0 && (
                   <div className="flex items-center justify-between">
@@ -599,15 +650,15 @@ export function MobileCartSection() {
               <div className="my-3.5 h-px bg-[#E8E3DC]" />
 
               <div className="flex items-center justify-between">
-                <div className="flex items-baseline gap-3">
+                <div className="flex items-baseline gap-2">
                   <span className="font-geist text-lg font-bold text-[#8C827A] line-through">
                     {formatMrp(totalOriginalMrp)}
                   </span>
-                  <span className="font-geist text-2xl font-black tracking-tight text-gray-950">
+                  <span className="font-geist text-xl font-black tracking-tight text-gray-950">
                     {formatMrp(totalSalePrice)}
                   </span>
                 </div>
-                <span className="font-geist text-xl font-black text-gray-950">Total</span>
+                <span className="font-geist text-lg font-black text-gray-950">Total</span>
               </div>
             </div>
 
@@ -624,7 +675,7 @@ export function MobileCartSection() {
                 </div>
 
                 <div className="space-y-3.5">
-                  {sampleRequirementHistory.map((history) => (
+                  {requirementHistory.map((history) => (
                     <article
                       key={history.id}
                       className="rounded-[24px] border border-gray-200/80 bg-[#FAF9F7] p-4 shadow-xs"
@@ -737,15 +788,49 @@ export function MobileCartSection() {
         open={showConfirmPopup}
         loading={submitting}
         logoutLoading={logoutLoading}
-        onConfirm={() => {
+        onConfirm={async () => {
           setSubmitting(true);
-          submitRequirement();
+          try {
+            const orderItems = state.cart.map((line) => {
+              let mrp = 0;
+              let salePrice = 0;
+              if (line.itemType === "combo") {
+                const offer = comboOffersList.find((o) => o.id === line.productId);
+                mrp = offer?.mrp ?? 0;
+                salePrice = offer?.salePrice ?? 0;
+              } else if (line.itemType === "gift") {
+                mrp = giftProducts.reduce((sum, p) => sum + p.mrp, 0);
+                salePrice = giftProducts.reduce((sum, p) => sum + p.salePrice, 0);
+              } else {
+                const product = productsList.find((p) => p.id === line.productId);
+                mrp = product?.mrp ?? 0;
+                salePrice = product?.mrp ?? 0;
+              }
+              return {
+                productId: line.productId,
+                quantity: line.quantity,
+                itemType: line.itemType ?? "product",
+                ...(line.selectedProductIds ? { selectedProductIds: line.selectedProductIds } : {}),
+                mrp,
+                salePrice,
+              };
+            });
+            await submitRequirement({
+              items: orderItems,
+              deliveryAddress: profileData.address,
+              permitNumber: profileData.permitNumber,
+            });
+            showSuccessToast("Requirement submitted successfully.");
+          } catch (err) {
+            showErrorToast(err instanceof Error ? err.message : "Failed to submit requirement.");
+            setSubmitting(false);
+            return;
+          }
         }}
         onDismiss={() => {
           setShowConfirmPopup(false);
           setSubmitting(false);
           dismissConfirmation();
-          // router.push("/categories");
         }}
         onLogout={handleLogout}
       />
