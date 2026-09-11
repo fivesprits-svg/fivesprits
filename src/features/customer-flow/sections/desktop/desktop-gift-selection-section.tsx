@@ -52,7 +52,7 @@ export function DesktopGiftSelectionSection({
     }
     setQuantities((current) => ({ ...current, [productId]: newQuantity }));
   };
-
+  console.log("productlist:", productsList);
   return (
     <div className="hidden md:block">
       <PortalShell title="Select Products" eyebrow="Gift offer" backHref="/offers/gifts">

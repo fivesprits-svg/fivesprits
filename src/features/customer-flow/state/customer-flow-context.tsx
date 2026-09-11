@@ -5,8 +5,67 @@ import {
   customerFlowReducer,
   initialCustomerFlowState,
 } from "@/features/customer-flow/state/customer-flow-reducer";
+import {
+  addToCartApi,
+  getCartApi,
+  removeCartItemApi,
+  updateCartItemApi,
+  clearCartApi,
+  type CartItemPayload,
+} from "@/features/customer-flow/services/cart-api";
+import { products as defaultProducts } from "@/features/customer-flow/data/catalogue";
+import {
+  comboOffers as defaultComboOffers,
+  giftOffer as defaultGiftOffer,
+  giftProducts as defaultGiftProducts,
+} from "@/features/customer-flow/data/offers";
 
 const STORAGE_KEY = "five-spirits-customer-flow-v1";
+
+function lookupProductPrice(productId: string): { mrp: number; sale: number } {
+  const product = defaultProducts.find((p) => p.id === productId);
+  if (product) return { mrp: product.mrp, sale: product.mrp };
+  return { mrp: 0, sale: 0 };
+}
+
+function lookupComboPrice(offerId: string): { mrp: number; sale: number } {
+  const offer = defaultComboOffers.find((o) => o.id === offerId);
+  if (offer) return { mrp: offer.mrp, sale: offer.salePrice };
+  return { mrp: 0, sale: 0 };
+}
+
+function lookupGiftPrice(): { mrp: number; sale: number } {
+  const totalMrp = defaultGiftProducts.reduce((sum, p) => sum + p.mrp, 0);
+  const totalSale = defaultGiftProducts.reduce((sum, p) => sum + p.salePrice, 0);
+  return {
+    mrp: totalMrp || defaultGiftOffer.requiredQuantity * 5150,
+    sale: totalSale || defaultGiftOffer.requiredQuantity * 3890,
+  };
+}
+
+function buildCartItemPayload(
+  productId: string,
+  quantity: number,
+  itemType: string,
+  selectedProductIds?: string[],
+): CartItemPayload {
+  let price = { mrp: 0, sale: 0 };
+  if (itemType === "combo") {
+    price = lookupComboPrice(productId);
+  } else if (itemType === "gift") {
+    price = lookupGiftPrice();
+  } else {
+    price = lookupProductPrice(productId);
+  }
+  return {
+    productId,
+    quantity,
+    itemType,
+    ...(selectedProductIds ? { selectedProductIds } : {}),
+    mrpAmount: price.mrp,
+    salesAmount: price.sale,
+  };
+}
 
 type CustomerFlowContextValue = ReturnType<typeof useCustomerFlowValue>;
 const CustomerFlowContext = createContext<CustomerFlowContextValue | null>(null);
@@ -60,6 +119,22 @@ function useCustomerFlowValue() {
     } finally {
       setHydrated(true);
     }
+
+    getCartApi()
+      .then((items) => {
+        if (items && items.length > 0) {
+          items.forEach((item) => {
+            dispatch({
+              type: "cart/add",
+              productId: item.productId,
+              quantity: item.quantity,
+              itemType: (item.itemType as "product" | "combo" | "gift") ?? "product",
+              ...(item.selectedProductIds ? { selectedProductIds: item.selectedProductIds } : {}),
+            });
+          });
+        }
+      })
+      .catch(() => {});
   }, []);
 
   useEffect(() => {
@@ -84,22 +159,40 @@ function useCustomerFlowValue() {
       completeProfile: () => dispatch({ type: "session/profile-complete" }),
       selectCategory: (categoryId: string) => dispatch({ type: "selection/category", categoryId }),
       selectBrand: (brandId: string) => dispatch({ type: "selection/brand", brandId }),
-      addToCart: (productId: string, quantity: number) =>
-        dispatch({ type: "cart/add", productId, quantity }),
-      addComboToCart: (offerId: string, quantity: number) =>
-        dispatch({ type: "cart/add", productId: offerId, itemType: "combo", quantity }),
-      addGiftToCart: (offerId: string, selectedProductIds: string[]) =>
+      addToCart: async (productId: string, quantity: number) => {
+        const payload = buildCartItemPayload(productId, quantity, "product");
+        addToCartApi([payload]).catch(() => {});
+        dispatch({ type: "cart/add", productId, quantity });
+      },
+      addComboToCart: async (offerId: string, quantity: number) => {
+        const payload = buildCartItemPayload(offerId, quantity, "combo");
+        addToCartApi([payload]).catch(() => {});
+        dispatch({ type: "cart/add", productId: offerId, itemType: "combo", quantity });
+      },
+      addGiftToCart: async (offerId: string, selectedProductIds: string[]) => {
+        const payload = buildCartItemPayload(offerId, 1, "gift", selectedProductIds);
+        addToCartApi([payload]).catch(() => {});
         dispatch({
           type: "cart/gift",
           productId: offerId,
           selectedProductIds,
-        }),
-      setCartQuantity: (productId: string, quantity: number) =>
-        dispatch({ type: "cart/quantity", productId, quantity }),
-      removeFromCart: (productId: string) => dispatch({ type: "cart/remove", productId }),
-      submitRequirement: () => dispatch({ type: "requirement/submit" }),
+        });
+      },
+      setCartQuantity: async (productId: string, quantity: number) => {
+        updateCartItemApi(productId, { quantity }).catch(() => {});
+        dispatch({ type: "cart/quantity", productId, quantity });
+      },
+      removeFromCart: async (productId: string) => {
+        removeCartItemApi(productId).catch(() => {});
+        dispatch({ type: "cart/remove", productId });
+      },
+      submitRequirement: () => {
+        clearCartApi().catch(() => {});
+        dispatch({ type: "requirement/submit" });
+      },
       dismissConfirmation: () => dispatch({ type: "confirmation/dismiss" }),
       logout: () => {
+        clearCartApi().catch(() => {});
         dispatch({ type: "session/logout" });
         window.localStorage.removeItem(STORAGE_KEY);
         window.localStorage.removeItem("customer_access_token");
