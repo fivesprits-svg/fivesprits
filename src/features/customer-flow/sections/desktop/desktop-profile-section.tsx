@@ -7,8 +7,10 @@ import { PortalShell } from "@/features/customer-flow/components/portal-shell";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import { formatDisplayMobile } from "@/features/customer-flow/utils/validation";
 import { fetchCustomerProfileApi } from "@/features/customer-flow/services/user-api";
+import { updateProfileApi } from "@/features/customer-flow/services/profile-api";
 import { logoutApi } from "@/features/customer-flow/services/auth-api";
 import { ButtonSpinner } from "@/features/customer-flow/components/ui/skeleton";
+import { DatePickerField } from "@/features/customer-flow/components/ui/date-picker-field";
 
 export function DesktopProfileSection() {
   const router = useRouter();
@@ -39,15 +41,14 @@ export function DesktopProfileSection() {
     name: state.session?.name || "Member",
     mobile: formatDisplayMobile(state.session?.mobile),
     permitNumber: "PRM-2026-00587",
+    dateOfBirth: "",
     address: "42, MG Road, Sector 15, Gurugram, Haryana",
     pincode: "122001",
     mapsLocation: "https://maps.google.com/?q=Gurugram",
   });
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveError, setSaveError] = useState("");
 
-  console.log(
-    "fetch customer profile api data:",
-    fetchCustomerProfileApi().then((user) => console.log("user data:", user)),
-  );
   useEffect(() => {
     let isMounted = true;
     fetchCustomerProfileApi().then((user) => {
@@ -57,6 +58,10 @@ export function DesktopProfileSection() {
           name: user.name || user.username || prev.name,
           mobile: formatDisplayMobile(user.mobileNumber || state.session?.mobile) || prev.mobile,
           permitNumber: user.permitNumber || prev.permitNumber,
+          dateOfBirth: user.dateOfBirth || prev.dateOfBirth,
+          address: user.address || prev.address,
+          pincode: user.pincode || prev.pincode,
+          mapsLocation: user.googleMapsLocation || prev.mapsLocation,
         }));
       }
     });
@@ -70,15 +75,32 @@ export function DesktopProfileSection() {
     setEditValue(currentValue);
   }
 
-  function handleSaveField() {
-    if (editingField) {
+  async function handleSaveField() {
+    if (!editingField) return;
+    setIsSaving(true);
+    setSaveError("");
+    try {
+      const payload: Record<string, string> = {};
+      if (editingField === "mapsLocation") {
+        payload.googleMapsLocation = editValue;
+      } else {
+        payload[editingField] = editValue;
+      }
+      await updateProfileApi(payload);
       setProfileData((prev) => ({
         ...prev,
-        [editingField]: editValue,
+        ...(editingField === "mapsLocation"
+          ? { mapsLocation: editValue }
+          : { [editingField]: editValue }),
       }));
+      setEditingField(null);
+      setEditValue("");
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Failed to save. Please try again.";
+      setSaveError(message);
+    } finally {
+      setIsSaving(false);
     }
-    setEditingField(null);
-    setEditValue("");
   }
 
   const handleLogout = useCallback(async () => {
@@ -267,6 +289,16 @@ export function DesktopProfileSection() {
                         className="opacity-40"
                       />
                     </div>
+                  </div>
+
+                  <div className="col-span-2">
+                    <DatePickerField
+                      label="Date of Birth"
+                      value={profileData.dateOfBirth}
+                      onChange={(value) => {
+                        setProfileData((prev) => ({ ...prev, dateOfBirth: value }));
+                      }}
+                    />
                   </div>
 
                   <div>
@@ -819,15 +851,39 @@ export function DesktopProfileSection() {
               onChange={(e) => setEditValue(e.target.value)}
               className="profile-popup-input mt-4"
               autoFocus
+              disabled={isSaving}
             />
+            {saveError && (
+              <p className="mt-3 rounded-xl border border-red-200 bg-red-50 p-3 text-center text-xs font-medium text-red-700">
+                {saveError}
+              </p>
+            )}
             <div className="mt-5 flex gap-3">
-              <button type="button" onClick={handleSaveField} className="profile-popup-save-btn">
-                Save
+              <button
+                type="button"
+                onClick={handleSaveField}
+                disabled={isSaving}
+                className="profile-popup-save-btn flex items-center justify-center gap-2 disabled:opacity-60"
+              >
+                {isSaving ? (
+                  <>
+                    <ButtonSpinner />
+                    Saving...
+                  </>
+                ) : (
+                  "Save"
+                )}
               </button>
               <button
                 type="button"
-                onClick={() => setEditingField(null)}
-                className="profile-popup-cancel-btn"
+                onClick={() => {
+                  if (!isSaving) {
+                    setEditingField(null);
+                    setSaveError("");
+                  }
+                }}
+                disabled={isSaving}
+                className="profile-popup-cancel-btn disabled:opacity-60"
               >
                 Cancel
               </button>

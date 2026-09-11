@@ -3,6 +3,7 @@ import { apiFetch, getAuthToken } from "./api-client";
 export interface CustomerProfile {
   _id: string;
   name: string;
+  lastName?: string;
   username?: string;
   mobileNumber?: string;
   email?: string;
@@ -10,6 +11,9 @@ export interface CustomerProfile {
   permitNumber?: string;
   dateOfBirth?: string;
   age?: number;
+  address?: string;
+  pincode?: string;
+  googleMapsLocation?: string;
   userType?: string;
   createdAt?: string;
 }
