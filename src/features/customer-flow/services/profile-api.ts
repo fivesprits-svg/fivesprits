@@ -2,6 +2,7 @@ import { apiFetch } from "./api-client";
 
 export interface UpdateProfilePayload {
   name?: string;
+  firstName?: string;
   lastName?: string;
   email?: string;
   dateOfBirth?: string;
@@ -9,11 +10,16 @@ export interface UpdateProfilePayload {
   address?: string;
   pincode?: string;
   googleMapsLocation?: string;
+  profileImageUrl?: string | null;
+  permitDocumentUrl?: string | null;
+  profileFileId?: string | null;
+  permitDocumentFileId?: string | null;
 }
 
 export interface ProfileUpdateResponse {
   _id: string;
   name: string;
+  firstName?: string;
   lastName?: string;
   email?: string;
   mobileNumber?: string;
@@ -22,6 +28,10 @@ export interface ProfileUpdateResponse {
   address?: string;
   pincode?: string;
   googleMapsLocation?: string;
+  profileImageUrl?: string | null;
+  permitDocumentUrl?: string | null;
+  profileFileId?: string | null;
+  permitDocumentFileId?: string | null;
 }
 
 export async function updateProfileApi(

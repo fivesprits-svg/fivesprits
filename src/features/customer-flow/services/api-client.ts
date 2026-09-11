@@ -13,6 +13,54 @@ export const getAuthToken = (): string | null => {
   );
 };
 
+export interface UploadResult {
+  _id: string;
+  name: string;
+  originalName: string;
+  filePath: string;
+  fileUrl: string;
+  fileType: string;
+  fileSize: number;
+}
+
+export async function apiUpload(
+  file: File,
+  folder: string,
+  recordId?: string,
+): Promise<{ success?: boolean; status?: number; message?: string; data: UploadResult }> {
+  const baseUrl = getBaseUrl();
+  const url = `${baseUrl}/upload`;
+  const token = getAuthToken();
+
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("folder", folder);
+  if (recordId) {
+    formData.append("recordId", recordId);
+  }
+
+  const headers: Record<string, string> = {};
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+
+  const res = await fetch(url, {
+    method: "POST",
+    headers,
+    body: formData,
+  });
+
+  const json = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    const errorMsg =
+      (Array.isArray(json?.message) ? json.message.join(", ") : json?.message) ||
+      `Upload failed with status ${res.status}`;
+    throw new Error(errorMsg);
+  }
+
+  return json;
+}
+
 const inFlightRequests = new Map<string, Promise<unknown>>();
 
 export async function apiFetch<T>(

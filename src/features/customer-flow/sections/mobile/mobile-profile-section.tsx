@@ -7,7 +7,8 @@ import { MobileBottomNav } from "@/features/customer-flow/components/navigation/
 import { MobileHeader } from "@/features/customer-flow/components/navigation/mobile-header";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import { formatDisplayMobile } from "@/features/customer-flow/utils/validation";
-import { fetchCustomerProfileApi } from "@/features/customer-flow/services/user-api";
+import { formatGoogleMapsUrl } from "@/features/customer-flow/utils/maps";
+import { fetchCustomerProfileApi, uploadFileApi } from "@/features/customer-flow/services/user-api";
 import { updateProfileApi } from "@/features/customer-flow/services/profile-api";
 import { logoutApi } from "@/features/customer-flow/services/auth-api";
 import { ButtonSpinner } from "@/features/customer-flow/components/ui/skeleton";
@@ -32,28 +33,28 @@ export function MobileProfileSection() {
     url?: string;
     type?: "pdf" | "image" | "doc";
     uploaded: boolean;
-  } | null>({
-    name: "Excise_Permit_2026.pdf",
-    type: "pdf",
-    uploaded: true,
-  });
+  } | null>(null);
 
   const [profileData, setProfileData] = useState({
-    name: state.session?.name || "Member",
+    name: state.session?.name || "",
     mobile: formatDisplayMobile(state.session?.mobile),
-    permitNumber: "PRM-2026-00587",
+    permitNumber: "",
     dateOfBirth: "",
-    address: "42, MG Road, Sector 15, Gurugram, Haryana",
-    pincode: "122001",
-    mapsLocation: "maps.google.com/rajesh-store",
+    address: "",
+    pincode: "",
+    mapsLocation: "",
   });
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState("");
+  const [userId, setUserId] = useState("");
+  const [isUploading, setIsUploading] = useState<string | null>(null);
+  const [uploadError, setUploadError] = useState("");
 
   useEffect(() => {
     let isMounted = true;
     fetchCustomerProfileApi().then((user) => {
       if (isMounted && user) {
+        setUserId(user._id || "");
         setProfileData((prev) => ({
           ...prev,
           name: user.name || user.username || prev.name,
@@ -64,6 +65,20 @@ export function MobileProfileSection() {
           pincode: user.pincode || prev.pincode,
           mapsLocation: user.googleMapsLocation || prev.mapsLocation,
         }));
+        if (user.profileImageUrl) {
+          setProfilePhoto(user.profileImageUrl);
+        }
+        if (user.permitDocumentUrl) {
+          const url = user.permitDocumentUrl;
+          const isImage = /\.(png|jpe?g|webp|gif|svg)$/i.test(url);
+          const isPdf = /\.pdf$/i.test(url);
+          setPermitDocument({
+            name: user.permitNumber || "permit-document",
+            url,
+            type: isImage ? "image" : isPdf ? "pdf" : "doc",
+            uploaded: true,
+          });
+        }
       }
     });
     return () => {
@@ -82,17 +97,21 @@ export function MobileProfileSection() {
     setSaveError("");
     try {
       const payload: Record<string, string> = {};
+      let finalValue = editValue.trim();
       if (editingField === "mapsLocation") {
-        payload.googleMapsLocation = editValue;
+        if (finalValue && !/^https?:\/\//i.test(finalValue)) {
+          finalValue = `https://${finalValue}`;
+        }
+        payload.googleMapsLocation = finalValue;
       } else {
-        payload[editingField] = editValue;
+        payload[editingField] = finalValue;
       }
       await updateProfileApi(payload);
       setProfileData((prev) => ({
         ...prev,
         ...(editingField === "mapsLocation"
-          ? { mapsLocation: editValue }
-          : { [editingField]: editValue }),
+          ? { mapsLocation: finalValue }
+          : { [editingField]: finalValue }),
       }));
       setEditingField(null);
       setEditValue("");
@@ -101,6 +120,74 @@ export function MobileProfileSection() {
       setSaveError(message);
     } finally {
       setIsSaving(false);
+    }
+  }
+
+  async function handleProfilePhotoUpload(file: File) {
+    setIsUploading("photo");
+    setUploadError("");
+    try {
+      const { fileUrl, _id } = await uploadFileApi(file, "uploads", userId);
+      setProfilePhoto(fileUrl);
+      await updateProfileApi({ profileImageUrl: fileUrl, profileFileId: _id });
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Upload failed";
+      setUploadError(message);
+    } finally {
+      setIsUploading(null);
+    }
+  }
+
+  async function handlePermitDocUpload(file: File) {
+    setIsUploading("permit");
+    setUploadError("");
+    try {
+      const { fileUrl, _id } = await uploadFileApi(file, "uploads", userId);
+      const isImage = file.type.startsWith("image/");
+      const isPdf = file.type === "application/pdf";
+      setPermitDocument({
+        name: file.name,
+        url: fileUrl,
+        type: isImage ? "image" : isPdf ? "pdf" : "doc",
+        uploaded: true,
+      });
+      await updateProfileApi({ permitDocumentUrl: fileUrl, permitDocumentFileId: _id });
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Upload failed";
+      setUploadError(message);
+    } finally {
+      setIsUploading(null);
+    }
+  }
+
+  async function handleRemoveProfilePhoto() {
+    setProfilePhoto(null);
+    if (imageInputRef.current) imageInputRef.current.value = "";
+    try {
+      await updateProfileApi({ profileImageUrl: null, profileFileId: null });
+    } catch {
+      /* silent */
+    }
+  }
+
+  async function handleRemovePermitDoc() {
+    setPermitDocument(null);
+    if (permitInputRef.current) permitInputRef.current.value = "";
+    try {
+      await updateProfileApi({ permitDocumentUrl: null, permitDocumentFileId: null });
+    } catch {
+      /* silent */
+    }
+  }
+
+  async function handleSaveDateOfBirth(value: string) {
+    setProfileData((prev) => ({ ...prev, dateOfBirth: value }));
+    setUploadError("");
+    try {
+      await updateProfileApi({ dateOfBirth: value });
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Failed to save date of birth";
+      setUploadError(message);
     }
   }
 
@@ -149,8 +236,7 @@ export function MobileProfileSection() {
               className="hidden"
               onChange={(e) => {
                 if (e.target.files && e.target.files[0]) {
-                  const url = URL.createObjectURL(e.target.files[0]);
-                  setProfilePhoto(url);
+                  handleProfilePhotoUpload(e.target.files[0]);
                 }
               }}
             />
@@ -171,17 +257,14 @@ export function MobileProfileSection() {
               onClick={() => imageInputRef.current?.click()}
               className="cursor-pointer text-gray-700 hover:text-[#a67854] hover:underline"
             >
-              {profilePhoto ? "Change" : "Upload"}
+              {isUploading === "photo" ? "Uploading..." : profilePhoto ? "Change" : "Upload"}
             </button>
             {profilePhoto && (
               <>
                 <span className="text-gray-300">•</span>
                 <button
                   type="button"
-                  onClick={() => {
-                    setProfilePhoto(null);
-                    if (imageInputRef.current) imageInputRef.current.value = "";
-                  }}
+                  onClick={handleRemoveProfilePhoto}
                   className="cursor-pointer text-red-500 hover:underline"
                 >
                   Remove
@@ -189,6 +272,12 @@ export function MobileProfileSection() {
               </>
             )}
           </div>
+
+          {uploadError && (
+            <p className="mx-auto mt-2 w-full max-w-[320px] rounded-lg border border-red-200 bg-red-50 p-2 text-center text-[11px] font-medium text-red-700">
+              {uploadError}
+            </p>
+          )}
 
           <h1 className="font-unbounded mt-2 text-xl font-bold">{profileData.name}</h1>
         </div>
@@ -225,9 +314,7 @@ export function MobileProfileSection() {
           <DatePickerField
             label="Date of Birth"
             value={profileData.dateOfBirth}
-            onChange={(value) => {
-              setProfileData((prev) => ({ ...prev, dateOfBirth: value }));
-            }}
+            onChange={handleSaveDateOfBirth}
           />
 
           <div>
@@ -275,10 +362,7 @@ export function MobileProfileSection() {
                   <span className="text-gray-300">|</span>
                   <button
                     type="button"
-                    onClick={() => {
-                      setPermitDocument(null);
-                      if (permitInputRef.current) permitInputRef.current.value = "";
-                    }}
+                    onClick={handleRemovePermitDoc}
                     aria-label="Remove permit document"
                     className="grid size-6 cursor-pointer place-items-center rounded-md bg-red-50 text-red-500 transition hover:bg-red-100"
                     title="Remove"
@@ -299,7 +383,7 @@ export function MobileProfileSection() {
                 onClick={() => permitInputRef.current?.click()}
                 className="profile-upload-btn flex cursor-pointer items-center justify-center gap-2"
               >
-                <span>Upload Permit Copy</span>
+                <span>{isUploading === "permit" ? "Uploading..." : "Upload Permit Copy"}</span>
                 <Image
                   src="/customer-flow/icons/icon-camera.svg"
                   alt=""
@@ -316,18 +400,7 @@ export function MobileProfileSection() {
               className="hidden"
               onChange={(e) => {
                 if (e.target.files && e.target.files[0]) {
-                  const file = e.target.files[0];
-                  const url = URL.createObjectURL(file);
-                  const isImage =
-                    file.type.startsWith("image/") ||
-                    /\.(png|jpe?g|webp|gif|svg)$/i.test(file.name);
-                  const isPdf = file.type === "application/pdf" || /\.pdf$/i.test(file.name);
-                  setPermitDocument({
-                    name: file.name,
-                    url,
-                    type: isImage ? "image" : isPdf ? "pdf" : "doc",
-                    uploaded: true,
-                  });
+                  handlePermitDocUpload(e.target.files[0]);
                 }
               }}
             />
@@ -376,15 +449,16 @@ export function MobileProfileSection() {
                 Edit
               </button>
             </div>
-            <div className="profile-field-value">
+            <div className="profile-field-value flex items-center justify-between">
               <span className="flex-1 truncate">{profileData.mapsLocation}</span>
-              {/* <Image
-                src="/customer-flow/icons/lock.svg"
-                alt="Copy"
-                width={18}
-                height={18}
-                className="opacity-40"
-              /> */}
+              <a
+                href={formatGoogleMapsUrl(profileData.mapsLocation)}
+                target="_blank"
+                rel="noreferrer"
+                className="ml-2 text-[11px] font-semibold text-[#a67854] hover:underline"
+              >
+                Open Maps
+              </a>
             </div>
           </div>
         </div>
@@ -486,8 +560,7 @@ export function MobileProfileSection() {
                 <button
                   type="button"
                   onClick={() => {
-                    setProfilePhoto(null);
-                    if (imageInputRef.current) imageInputRef.current.value = "";
+                    handleRemoveProfilePhoto();
                     setShowImagePopup(false);
                   }}
                   className="rounded-full border border-red-200 py-2.5 text-xs font-bold text-red-600 hover:bg-red-50"
@@ -673,8 +746,7 @@ export function MobileProfileSection() {
               <button
                 type="button"
                 onClick={() => {
-                  setPermitDocument(null);
-                  if (permitInputRef.current) permitInputRef.current.value = "";
+                  handleRemovePermitDoc();
                   setShowPermitModal(false);
                 }}
                 aria-label="Remove permit document"

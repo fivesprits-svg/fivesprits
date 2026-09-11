@@ -7,6 +7,8 @@ export type CartLine = {
 };
 export type CustomerSession = {
   name: string;
+  firstName?: string;
+  lastName?: string;
   mobile: string;
   verified: boolean;
   cameFromLoginHere?: boolean;
