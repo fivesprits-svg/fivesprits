@@ -17,7 +17,7 @@ export function DesktopGiftOffersSection({
       <PortalShell title="Offers" eyebrow="Exclusive rewards">
         <div className="mx-auto max-w-7xl">
           {/* Breadcrumb Navigation */}
-          <Breadcrumb items={[{ label: "Offers" }]} />
+          <Breadcrumb items={[{ label: "Offers", href: "/offers" }, { label: "Gift Offers" }]} />
 
           {/* Header Title Section - Gifts specific */}
           <div className="mb-6 flex items-end justify-between border-b border-gray-200/80 pb-5">

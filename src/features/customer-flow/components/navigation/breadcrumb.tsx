@@ -16,7 +16,7 @@ export function Breadcrumb({
   return (
     <nav
       aria-label="Breadcrumb"
-      className="mb-4 flex items-center gap-1.5 text-xs font-medium text-gray-400"
+      className="mb-4 flex flex-wrap items-center gap-1.5 text-xs font-medium text-gray-400"
     >
       <Link
         href={homeHref}
