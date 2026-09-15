@@ -24,7 +24,7 @@ export function DesktopOffersSection({
       <PortalShell title="Offers" eyebrow="Limited time">
         <div className="mx-auto max-w-7xl">
           {/* Breadcrumb Navigation */}
-          <Breadcrumb items={[{ label: "Offers" }]} />
+          <Breadcrumb items={[{ label: "combo-Offers" }]} />
 
           {/* Header Title Section */}
           <div className="mb-6 flex items-end justify-between border-b border-gray-200/80 pb-5">
@@ -42,7 +42,7 @@ export function DesktopOffersSection({
             <div className="flex rounded-full border border-gray-200 bg-white p-1 text-xs font-bold shadow-sm">
               <span className="rounded-full bg-gray-900 px-5 py-2 text-white">Combo Offers</span>
               <Link
-                href="/offers/gifts"
+                href="/gift-offers"
                 className="px-5 py-2 text-gray-600 transition hover:text-black"
               >
                 Gift Offers

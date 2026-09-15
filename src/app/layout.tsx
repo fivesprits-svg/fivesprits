@@ -4,8 +4,8 @@ import { ToastProvider } from "@/features/customer-flow/components/ui/toast";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Five Spirits | Customer Catalogue",
-  description: "Browse the Five Spirits catalogue and send your product requirement.",
+  title: "The Five Spirits | Customer Catalogue",
+  description: "Browse The Five Spirits catalogue and send your product requirement.",
   icons: "/logo.svg",
 };
 

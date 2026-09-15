@@ -90,7 +90,7 @@ export function DesktopCategoriesSection({
                       Explore Categories ↓
                     </a>
                     <Link
-                      href="/offers"
+                      href="/combo-offers"
                       className="font-outfit group inline-flex h-12 items-center gap-2 rounded-full border border-gray-300 bg-white px-7 text-xs font-bold tracking-wider text-gray-800 uppercase shadow-xs transition hover:border-gray-400 hover:bg-gray-50"
                     >
                       <span>Exclusive Offers</span>
@@ -256,13 +256,13 @@ export function DesktopCategoriesSection({
               <div className="flex items-center gap-3">
                 <Image
                   src="/logo.svg"
-                  alt="Five Spirit"
+                  alt="The Five Spirits"
                   width={32}
                   height={53}
                   className="h-10 w-auto object-contain"
                 />
                 <span className="font-unbounded text-xl font-black tracking-tight text-black">
-                  Five Spirit
+                  The Five Spirits
                 </span>
               </div>
               <p className="font-geist mt-3 max-w-sm text-xs leading-relaxed text-gray-500">
@@ -287,7 +287,7 @@ export function DesktopCategoriesSection({
                   </Link>
                 </li>
                 <li>
-                  <Link href="/offers" className="hover:text-black">
+                  <Link href="/combo-offers" className="hover:text-black">
                     Exclusive Offers
                   </Link>
                 </li>
@@ -326,7 +326,7 @@ export function DesktopCategoriesSection({
                   <span>State Excise Policy</span>
                 </li>
                 <li>
-                  <span>Age Verification (21+)</span>
+                  <span>Age Verification (25+)</span>
                 </li>
                 <li>
                   <span>Terms of Service</span>

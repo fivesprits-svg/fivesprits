@@ -68,8 +68,9 @@ export function TermsOfServiceModal({ open, onClose }: TermsOfServiceModalProps)
                 1. Acceptance of Terms
               </h3>
               <p className="font-geist text-common-gray mt-2 text-xs leading-relaxed md:text-sm">
-                By accessing or using Five Spirit, you agree to be bound by these Terms of Service.
-                If you do not agree to all of these terms, you may not access or use our services.
+                By accessing or using The Five Spirits, you agree to be bound by these Terms of
+                Service. If you do not agree to all of these terms, you may not access or use our
+                services.
               </p>
             </section>
 
@@ -78,9 +79,9 @@ export function TermsOfServiceModal({ open, onClose }: TermsOfServiceModalProps)
                 2. Eligibility
               </h3>
               <p className="font-geist text-common-gray mt-2 text-xs leading-relaxed md:text-sm">
-                You must be at least 25 years of age to use our services. By using Five Spirit, you
-                represent and warrant that you meet the minimum age requirement and have the legal
-                capacity to enter into a binding agreement.
+                You must be at least 25 years of age to use our services. By using The Five Spirits,
+                you represent and warrant that you meet the minimum age requirement and have the
+                legal capacity to enter into a binding agreement.
               </p>
             </section>
 
@@ -136,7 +137,7 @@ export function TermsOfServiceModal({ open, onClose }: TermsOfServiceModalProps)
                 7. Limitation of Liability
               </h3>
               <p className="font-geist text-common-gray mt-2 text-xs leading-relaxed md:text-sm">
-                In no event shall Five Spirit, nor its directors, employees, partners, agents,
+                In no event shall The Five Spirits, nor its directors, employees, partners, agents,
                 suppliers, or affiliates, be liable for any indirect, incidental, special,
                 consequential, or punitive damages, including without limitation, loss of profits,
                 data, use, goodwill, or other intangible losses.

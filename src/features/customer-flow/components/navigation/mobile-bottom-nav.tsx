@@ -6,7 +6,7 @@ import { MobileHomeIndicator } from "@/features/customer-flow/components/navigat
 
 const items = [
   { href: "/categories", label: "Product", icon: "/customer-flow/icons/home.svg" },
-  { href: "/offers", label: "Offer", icon: "/customer-flow/icons/offer.svg" },
+  { href: "/combo-offers", label: "Offer", icon: "/customer-flow/icons/offer.svg" },
   { href: "/cart", label: "Request", icon: "/customer-flow/icons/cart.svg" },
   { href: "/profile", label: "Profile", icon: "/customer-flow/icons/profile.svg" },
 ];

@@ -22,10 +22,10 @@ export function MobileCategoriesSection({
       {/* Top Header Bar */}
       <header className="flex h-14 items-center justify-between px-6 pt-2">
         <div className="relative size-8">
-          <Image src="/logo.svg" alt="Five Spirit" fill className="object-contain" priority />
+          <Image src="/logo.svg" alt="The Five Spirits" fill className="object-contain" priority />
         </div>
         <h1 className="font-unbounded text-lg font-black tracking-tight text-gray-950">
-          {isEmpty ? "Categories" : "Five Spirit"}
+          {isEmpty ? "Categories" : "The Five Spirits"}
         </h1>
         {isEmpty ? (
           <div className="size-9" />
@@ -82,7 +82,7 @@ export function MobileCategoriesSection({
               <ImageSkeleton className="absolute inset-0 rounded-2xl" />
               <Image
                 src="/customer-flow/hero/hero-right-visual.webp"
-                alt="Five Spirit Catalogue Hero"
+                alt="The Five Spirits Catalogue Hero"
                 fill
                 priority
                 sizes="165px"

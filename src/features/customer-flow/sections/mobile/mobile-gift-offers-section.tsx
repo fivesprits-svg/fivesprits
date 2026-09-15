@@ -48,7 +48,7 @@ export function MobileGiftOffersSection({
             <p className="font-geist mt-1.5 text-[11px] text-gray-500">{offer.terms}</p>
           </div>
           <Link
-            href="/offers/gifts/select"
+            href="/gift-offers/select"
             className="font-outfit mt-4 flex h-11 w-full cursor-pointer items-center justify-center rounded-full bg-black text-sm font-bold tracking-wide text-white transition hover:bg-gray-800 active:scale-[0.99]"
           >
             View Offer

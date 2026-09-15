@@ -38,6 +38,30 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  async redirects() {
+    return [
+      {
+        source: "/offers",
+        destination: "/combo-offers",
+        permanent: false,
+      },
+      {
+        source: "/offers/gifts",
+        destination: "/gift-offers",
+        permanent: false,
+      },
+      {
+        source: "/offers/gifts/select",
+        destination: "/gift-offers/select",
+        permanent: false,
+      },
+      {
+        source: "/offers/:offerId",
+        destination: "/combo-offers/:offerId",
+        permanent: false,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

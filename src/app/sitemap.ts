@@ -22,6 +22,9 @@ const STATIC_SITEMAP_ROUTES = [
   { path: "/offers/empty", changeFrequency: "weekly", priority: 0.4 },
   { path: "/offers/gifts", changeFrequency: "weekly", priority: 0.7 },
   { path: "/offers/gifts/select", changeFrequency: "weekly", priority: 0.6 },
+  { path: "/combo-offers", changeFrequency: "weekly", priority: 0.8 },
+  { path: "/gift-offers", changeFrequency: "weekly", priority: 0.7 },
+  { path: "/gift-offers/select", changeFrequency: "weekly", priority: 0.6 },
   { path: "/cart", changeFrequency: "yearly", priority: 0.4 },
   { path: "/profile", changeFrequency: "yearly", priority: 0.4 },
 ] as const satisfies ReadonlyArray<{

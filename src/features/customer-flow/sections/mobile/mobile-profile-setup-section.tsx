@@ -17,7 +17,7 @@ export function MobileProfileSetupSection() {
             <div className="flex items-center gap-2 md:justify-center">
               <div className="bg-brand-primary size-3 rounded-full" />
               <span className="font-outfit text-common-black text-lg font-bold md:text-xl md:font-extrabold">
-                FIVE SPIRIT
+                THE FIVE SPIRITS
               </span>
             </div>
             <h1 className="customer-section-title mt-4 md:mt-6 md:text-center md:text-[32px]">
@@ -33,7 +33,7 @@ export function MobileProfileSetupSection() {
         ) : (
           <>
             <div className="flex h-[108px] items-center gap-3 md:h-[120px] md:justify-center">
-              <Image src="/logo.svg" alt="Five Spirit" width={44} height={76} />
+              <Image src="/logo.svg" alt="The Five Spirits" width={44} height={76} />
             </div>
             <h1 className="customer-section-title mt-4 md:mt-6 md:text-center md:text-[32px]">
               Profile Setup

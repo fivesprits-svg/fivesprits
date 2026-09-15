@@ -16,7 +16,7 @@ export function MobileOfferDetailsSection({ offer }: { offer: ComboOffer }) {
   const { addComboToCart } = useCustomerFlow();
   return (
     <div className="min-h-dvh bg-white pb-28 md:hidden">
-      <MobileHeader title="Offer Details" backHref="/offers" />
+      <MobileHeader title="Offer Details" backHref="/combo-offers" />
       <main className="mx-auto w-full max-w-[390px] px-6 pt-3">
         <div className="relative aspect-[16/10] overflow-hidden rounded-[20px] bg-[#f5f3ef]">
           <ImageSkeleton className="absolute inset-0" />

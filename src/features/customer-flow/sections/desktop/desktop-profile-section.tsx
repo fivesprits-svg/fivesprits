@@ -317,11 +317,11 @@ export function DesktopProfileSection() {
                 <div className="mt-4 w-full divide-y divide-gray-100 rounded-xl border border-gray-100 bg-gray-50/70 p-3 text-xs">
                   <div className="flex items-center justify-between pb-2">
                     <span className="text-gray-500">DigiLocker Status</span>
-                    <span className="font-semibold text-emerald-700">Verified</span>
+                    <span className="font-semibold text-emerald-700">--</span>
                   </div>
                   <div className="flex items-center justify-between pt-2">
                     <span className="text-gray-500">Permit Status</span>
-                    <span className="font-semibold text-[#a67854]">Authorized</span>
+                    <span className="font-semibold text-[#a67854]">--</span>
                   </div>
                 </div>
               </div>

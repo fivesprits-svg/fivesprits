@@ -55,15 +55,11 @@ export function DesktopGiftSelectionSection({
   console.log("productlist:", productsList);
   return (
     <div className="hidden md:block">
-      <PortalShell title="Select Products" eyebrow="Gift offer" backHref="/offers/gifts">
+      <PortalShell title="Select Products" eyebrow="Gift offer" backHref="/gift-offers">
         <div className="mx-auto max-w-7xl">
           {/* Breadcrumb Navigation */}
           <Breadcrumb
-            items={[
-              { label: "Offers", href: "/offers" },
-              { label: "Gift Offers", href: "/offers/gifts" },
-              { label: "Gift Selection" },
-            ]}
+            items={[{ label: "gift-Offers", href: "/gift-offers" }, { label: "Gift Selection" }]}
           />
 
           {/* Header Section */}

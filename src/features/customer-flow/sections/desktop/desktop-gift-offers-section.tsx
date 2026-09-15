@@ -17,7 +17,7 @@ export function DesktopGiftOffersSection({
       <PortalShell title="Offers" eyebrow="Exclusive rewards">
         <div className="mx-auto max-w-7xl">
           {/* Breadcrumb Navigation */}
-          <Breadcrumb items={[{ label: "Offers", href: "/offers" }, { label: "Gift Offers" }]} />
+          <Breadcrumb items={[{ label: "gift-Offers" }]} />
 
           {/* Header Title Section - Gifts specific */}
           <div className="mb-6 flex items-end justify-between border-b border-gray-200/80 pb-5">
@@ -33,7 +33,10 @@ export function DesktopGiftOffersSection({
               </p>
             </div>
             <div className="flex rounded-full border border-gray-200 bg-white p-1 text-xs font-bold shadow-sm">
-              <Link href="/offers" className="px-5 py-2 text-gray-600 transition hover:text-black">
+              <Link
+                href="/combo-offers"
+                className="px-5 py-2 text-gray-600 transition hover:text-black"
+              >
                 Combo Offers
               </Link>
               <span className="rounded-full bg-gray-900 px-5 py-2 text-white">Gift Offers</span>
@@ -71,7 +74,7 @@ export function DesktopGiftOffersSection({
               </div>
               <div className="mt-6 flex items-center justify-end">
                 <Link
-                  href="/offers/gifts/select"
+                  href="/gift-offers/select"
                   className="font-outfit flex h-11 cursor-pointer items-center justify-center rounded-full bg-black px-8 text-sm font-bold tracking-wide text-white transition hover:bg-gray-800 active:scale-[0.99] sm:h-12 sm:text-base"
                 >
                   View Offer

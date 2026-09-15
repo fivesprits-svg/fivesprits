@@ -31,11 +31,11 @@ export function Breadcrumb({
           <div key={`${item.label}-${index}`} className="flex items-center gap-1.5">
             <span className="text-gray-300">/</span>
             {isLast || !item.href ? (
-              <span className="font-semibold text-gray-800 capitalize">{item.label}</span>
+              <span className="font-semibold text-gray-800">{item.label}</span>
             ) : (
               <Link
                 href={item.href}
-                className="text-gray-500 capitalize transition-colors hover:text-[#a67854]"
+                className="text-gray-500 transition-colors hover:text-[#a67854]"
               >
                 {item.label}
               </Link>

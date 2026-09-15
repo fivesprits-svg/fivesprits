@@ -15,7 +15,9 @@ export function DesktopLoginHereSection() {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
         <div className="absolute right-16 bottom-16 left-16 text-white">
-          <p className="text-brand-primary text-sm font-semibold tracking-[0.3em]">FIVE SPIRITS</p>
+          <p className="text-brand-primary text-sm font-semibold tracking-[0.3em]">
+            THE FIVE SPIRITS
+          </p>
           <h1 className="mt-5 max-w-xl text-6xl leading-[1.04] font-black">
             Exceptional spirits, carefully selected.
           </h1>
@@ -27,7 +29,7 @@ export function DesktopLoginHereSection() {
           <div className="mb-12">
             <Image
               src="/logo.svg"
-              alt="Logo"
+              alt="The Five Spirits Logo"
               width={40}
               height={40}
               priority

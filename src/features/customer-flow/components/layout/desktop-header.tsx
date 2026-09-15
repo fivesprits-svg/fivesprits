@@ -11,6 +11,16 @@ export function DesktopHeader() {
 
   function isActive(href: string) {
     if (href === "/cart") return pathname === "/cart";
+    if (href === "/combo-offers" || href === "/offers") {
+      return (
+        pathname === "/combo-offers" ||
+        pathname.startsWith("/combo-offers/") ||
+        pathname === "/gift-offers" ||
+        pathname.startsWith("/gift-offers/") ||
+        pathname === "/offers" ||
+        pathname.startsWith("/offers/")
+      );
+    }
     return pathname === href || pathname.startsWith(href + "/");
   }
 
@@ -22,14 +32,14 @@ export function DesktopHeader() {
         <Link href="/categories" className="flex items-center gap-3">
           <Image
             src="/logo.svg"
-            alt="Five Spirit"
+            alt="The Five Spirits"
             width={32}
             height={53}
             className="h-10 w-auto object-contain"
             priority
           />
           <span className="font-unbounded text-xl font-black tracking-tight text-black">
-            Five Spirit
+            The Five Spirits
           </span>
         </Link>
 
@@ -43,9 +53,9 @@ export function DesktopHeader() {
             Categories
           </Link>
           <Link
-            href="/offers"
+            href="/combo-offers"
             className={`pb-1 transition-colors hover:text-[#a67854] ${
-              isActive("/offers") ? "border-b-2 border-black text-black" : "text-gray-500"
+              isActive("/combo-offers") ? "border-b-2 border-black text-black" : "text-gray-500"
             }`}
           >
             Offers

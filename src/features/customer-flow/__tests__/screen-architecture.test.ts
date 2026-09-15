@@ -28,13 +28,14 @@ describe("customer-flow screen architecture", () => {
       "src/features/customer-flow/components/layout/desktop-header.tsx",
     );
 
-    expect(mobileNavigation).toContain('{ href: "/offers", label: "Offer"');
-    expect(desktopNavigation).toContain('href="/offers"');
-    expect(source("src/app/offers/page.tsx")).toContain("MobileOffersSection");
-    expect(source("src/app/offers/empty/page.tsx")).toContain("MobileEmptyOffersSection");
-    expect(source("src/app/offers/[offerId]/page.tsx")).toContain("MobileOfferDetailsSection");
-    expect(source("src/app/offers/gifts/page.tsx")).toContain("MobileGiftOffersSection");
-    expect(source("src/app/offers/gifts/select/page.tsx")).toContain("MobileGiftSelectionSection");
+    expect(mobileNavigation).toContain('{ href: "/combo-offers", label: "Offer"');
+    expect(desktopNavigation).toContain('href="/combo-offers"');
+    expect(source("src/app/combo-offers/page.tsx")).toContain("MobileOffersSection");
+    expect(source("src/app/combo-offers/[offerId]/page.tsx")).toContain(
+      "MobileOfferDetailsSection",
+    );
+    expect(source("src/app/gift-offers/page.tsx")).toContain("MobileGiftOffersSection");
+    expect(source("src/app/gift-offers/select/page.tsx")).toContain("MobileGiftSelectionSection");
   });
 
   it("provides the profile screen and logout confirmation route", () => {

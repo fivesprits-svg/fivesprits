@@ -7,13 +7,13 @@ export function OfferTabs({ active }: { active: "combo" | "gift" }) {
       className="grid h-10 grid-cols-2 rounded-full border border-black/10 bg-white p-1 text-xs font-semibold"
     >
       <Link
-        href="/offers"
+        href="/combo-offers"
         className={`grid place-items-center rounded-full ${active === "combo" ? "bg-black text-white" : "text-[#666]"}`}
       >
         Combo offer
       </Link>
       <Link
-        href="/offers/gifts"
+        href="/gift-offers"
         className={`grid place-items-center rounded-full ${active === "gift" ? "bg-black text-white" : "text-[#666]"}`}
       >
         Gift Offer

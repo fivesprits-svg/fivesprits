@@ -52,7 +52,7 @@ export function ComboOfferCard({
     <article className="group flex flex-col justify-between overflow-hidden rounded-[28px] border border-gray-200/90 bg-white p-3.5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md sm:p-4">
       <div>
         {/* Combo Hero Image */}
-        <Link href={`/offers/${offer.id}`} className="block">
+        <Link href={`/combo-offers/${offer.id}`} className="block">
           <div className="relative aspect-[20/10] w-full overflow-hidden rounded-[20px] bg-[#f5f3ef]">
             {!imageLoaded && <ImageSkeleton className="absolute inset-0" />}
             <Image
@@ -74,7 +74,7 @@ export function ComboOfferCard({
         </div>
 
         {/* Title */}
-        <Link href={`/offers/${offer.id}`} className="block">
+        <Link href={`/combo-offers/${offer.id}`} className="block">
           <h2 className="font-geist mt-2.5 text-lg font-extrabold tracking-tight text-gray-950 transition-colors group-hover:text-[#a67854] sm:text-xl">
             {offer.title}
           </h2>

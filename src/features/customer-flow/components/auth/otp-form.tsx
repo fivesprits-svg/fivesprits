@@ -74,7 +74,7 @@ export function OtpForm() {
       }
 
       verifyOtp();
-      success("Mobile number verified. Welcome to Five Spirits!");
+      success("Mobile number verified. Welcome to The Five Spirits!");
       router.push("/digilocker");
     } catch (err: unknown) {
       const message =

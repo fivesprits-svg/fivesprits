@@ -18,12 +18,12 @@ export function DesktopOfferDetailsSection({ offer }: { offer: ComboOffer }) {
 
   return (
     <div className="hidden md:block">
-      <PortalShell title="Offers" eyebrow="Limited time" backHref="/offers">
+      <PortalShell title="Offers" eyebrow="Limited time" backHref="/combo-offers">
         <div className="mx-auto max-w-7xl">
           {/* Breadcrumb Navigation */}
           <Breadcrumb
             items={[
-              { label: "Offers", href: "/offers" },
+              { label: "combo-Offers", href: "/combo-offers" },
               { label: offer.title || "Offer Details" },
             ]}
           />
@@ -43,13 +43,13 @@ export function DesktopOfferDetailsSection({ offer }: { offer: ComboOffer }) {
             </div>
             <div className="flex rounded-full border border-gray-200 bg-white p-1 text-xs font-bold shadow-sm">
               <Link
-                href="/offers"
+                href="/combo-offers"
                 className="rounded-full bg-gray-900 px-5 py-2 text-white transition hover:bg-gray-800"
               >
                 Combo Offers
               </Link>
               <Link
-                href="/offers/gifts"
+                href="/gift-offers"
                 className="px-5 py-2 text-gray-600 transition hover:text-black"
               >
                 Gift Offers

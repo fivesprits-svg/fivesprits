@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 
 export const siteConfig = {
-  name: "Next.js Enterprise AI Starter",
-  description:
-    "Enterprise-grade Next.js starter with server-first rendering, SEO foundation, localization, and Strapi-ready blog architecture.",
+  name: "The Five Spirits",
+  description: "Browse The Five Spirits catalogue and send your product requirement.",
   url: (process.env.NEXT_PUBLIC_SITE_URL ?? "https://example.com").replace(/\/$/, ""),
   ogImage: "https://example.com/og-image.jpg",
   twitterHandle: "@example",
