@@ -1,23 +1,54 @@
 export type CartItemType = "product" | "combo" | "gift" | "request";
 export type CartLine = {
   productId: string;
+  productDetails?: Record<string, unknown>;
   quantity: number;
   itemType?: CartItemType;
   selectedProductIds?: string[];
 };
-export type CustomerSession = {
-  name: string;
+export type UserDetails = {
+  _id?: string;
+  id?: string;
+  customId?: string;
+  sessionExpiredTime?: string;
+  username?: string;
+  mobileNumber?: string;
+  name?: string;
   firstName?: string;
   lastName?: string;
-  mobile: string;
-  verified: boolean;
+  mobile?: string;
+  email?: string;
+  roleName?: string;
+  role?: string;
+  permitNumber?: string;
+  dateOfBirth?: string;
+  age?: number;
+  address?: string;
+  pincode?: string;
+  googleMapsLocation?: string;
+  digilockerStatus?: string;
+  digilockerVerifiedAt?: string | null;
+  digilockerVerificationDate?: string | null;
+  profileImageUrl?: string | null;
+  permitDocumentUrl?: string | null;
+  profileFileId?: string | null;
+  permitDocumentFileId?: string | null;
+  userType?: string;
+  active?: boolean;
+  deletedAt?: string | null;
+  isPinSet?: boolean;
+  hasPin?: boolean;
+  loginRequestId?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  __v?: number;
+
+  verified?: boolean;
   cameFromLoginHere?: boolean;
   aadhaarNumber?: string;
   aadhaarVerified?: boolean;
   digilockerOtpVerified?: boolean;
   verificationComplete?: boolean;
-  dateOfBirth?: string;
-  age?: number;
   ageVerified?: boolean;
   profileComplete?: boolean;
   formDrafts?: {
@@ -28,4 +59,5 @@ export type CustomerSession = {
     aadhaar?: string;
     ageVerification?: { confirmed: boolean };
   };
+  [key: string]: unknown;
 };

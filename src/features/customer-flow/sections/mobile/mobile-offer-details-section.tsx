@@ -5,10 +5,11 @@ import { useState } from "react";
 import { MobileBottomNav } from "@/features/customer-flow/components/navigation/mobile-bottom-nav";
 import { MobileHeader } from "@/features/customer-flow/components/navigation/mobile-header";
 import { QuantityStepper } from "@/features/customer-flow/components/quantity-stepper";
-import type { ComboOffer } from "@/features/customer-flow/data/offers";
+import type { ComboOffer } from "@/features/customer-flow/types";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import { formatMrp } from "@/features/customer-flow/utils/currency";
 import { ImageSkeleton, ButtonSpinner } from "@/features/customer-flow/components/ui/skeleton";
+import { ImagePlaceholder } from "@/features/customer-flow/components/ui/image-placeholder";
 
 export function MobileOfferDetailsSection({ offer }: { offer: ComboOffer }) {
   const [quantity, setQuantity] = useState(1);
@@ -19,8 +20,20 @@ export function MobileOfferDetailsSection({ offer }: { offer: ComboOffer }) {
       <MobileHeader title="Offer Details" backHref="/combo-offers" />
       <main className="mx-auto w-full max-w-[390px] px-6 pt-3">
         <div className="relative aspect-[16/10] overflow-hidden rounded-[20px] bg-[#f5f3ef]">
-          <ImageSkeleton className="absolute inset-0" />
-          <Image src={offer.image} alt={offer.title} fill sizes="342px" className="object-cover" />
+          {offer.image ? (
+            <>
+              <ImageSkeleton className="absolute inset-0" />
+              <Image
+                src={offer.image}
+                alt={offer.title}
+                fill
+                sizes="342px"
+                className="object-cover"
+              />
+            </>
+          ) : (
+            <ImagePlaceholder type="combo" />
+          )}
         </div>
         <div className="mt-4">
           <span className="font-outfit inline-block rounded-full bg-[#c2966e] px-3.5 py-1 text-[11px] font-extrabold tracking-wider text-white uppercase shadow-xs">
@@ -63,9 +76,23 @@ export function MobileOfferDetailsSection({ offer }: { offer: ComboOffer }) {
           <button
             type="button"
             disabled={adding}
-            onClick={() => {
-              setAdding(false);
-              addComboToCart(offer.id, quantity);
+            onClick={async () => {
+              try {
+                setAdding(true);
+                await addComboToCart(offer.id, quantity, {
+                  id: offer.id,
+                  comboName: offer.title,
+                  badge: offer.badge,
+                  mrp: offer.mrp,
+                  originalPrice: offer.mrp,
+                  salePrice: offer.salePrice,
+                  offerPrice: offer.salePrice,
+                  image: offer.image,
+                  offerImageUrl: offer.image,
+                });
+              } finally {
+                setAdding(false);
+              }
             }}
             className="font-outfit h-12 flex-1 rounded-full bg-black text-sm font-bold text-white transition hover:bg-gray-800 active:scale-[0.99] disabled:opacity-70"
           >

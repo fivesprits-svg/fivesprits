@@ -1,7 +1,6 @@
 "use client";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { categories as defaultCategories } from "@/features/customer-flow/data/catalogue";
 import { MobileBottomNav } from "@/features/customer-flow/components/navigation/mobile-bottom-nav";
 import { EmptyState } from "@/features/customer-flow/components/ui/empty-state";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
@@ -9,7 +8,7 @@ import type { Category } from "@/features/customer-flow/types";
 import { ImageSkeleton } from "@/features/customer-flow/components/ui/skeleton";
 
 export function MobileCategoriesSection({
-  categoriesList = defaultCategories,
+  categoriesList = [],
 }: {
   categoriesList?: Category[];
 } = {}) {

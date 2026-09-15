@@ -1,7 +1,7 @@
 import type { CustomerFlowAction, CustomerFlowState } from "@/features/customer-flow/types";
 
 export const initialCustomerFlowState: CustomerFlowState = {
-  session: null,
+  userDetails: null,
   selectedCategoryId: null,
   selectedBrandId: null,
   cart: [],
@@ -13,50 +13,81 @@ export function customerFlowReducer(
   action: CustomerFlowAction,
 ): CustomerFlowState {
   switch (action.type) {
+    case "userDetails/set": {
+      const incoming = action.userDetails;
+      const prev = state.userDetails ?? {};
+      const resolvedName =
+        incoming.name ||
+        incoming.username ||
+        (incoming.firstName || incoming.lastName
+          ? `${incoming.firstName || ""} ${incoming.lastName || ""}`.trim()
+          : undefined) ||
+        prev.name ||
+        "";
+      const resolvedMobile = incoming.mobile || incoming.mobileNumber || prev.mobile || "";
+
+      return {
+        ...state,
+        userDetails: {
+          ...prev,
+          ...incoming,
+          name: resolvedName,
+          mobile: resolvedMobile,
+          verified: incoming.verified ?? prev?.verified ?? true,
+          ...(prev?.formDrafts || incoming.formDrafts
+            ? { formDrafts: incoming.formDrafts || prev?.formDrafts }
+            : {}),
+        },
+      };
+    }
     case "session/login":
       return {
         ...state,
-        session: {
+        userDetails: {
+          ...(state.userDetails || {}),
           name: action.name,
           mobile: action.mobile,
           verified: false,
-          ...(state.session?.formDrafts ? { formDrafts: state.session.formDrafts } : {}),
+          ...(state.userDetails?.formDrafts ? { formDrafts: state.userDetails.formDrafts } : {}),
         },
       };
     case "session/login-here":
       return {
         ...state,
-        session: {
-          name: "",
+        userDetails: {
+          ...(state.userDetails || {}),
+          name: state.userDetails?.name || "",
           mobile: action.mobile,
-          verified: false,
+          verified: true,
           cameFromLoginHere: true,
-          ...(state.session?.formDrafts ? { formDrafts: state.session.formDrafts } : {}),
+          ...(state.userDetails?.formDrafts ? { formDrafts: state.userDetails.formDrafts } : {}),
         },
       };
     case "session/verify":
-      return state.session ? { ...state, session: { ...state.session, verified: true } } : state;
+      return state.userDetails
+        ? { ...state, userDetails: { ...state.userDetails, verified: true } }
+        : state;
     case "session/verify-aadhaar":
-      return state.session
+      return state.userDetails
         ? {
             ...state,
-            session: {
-              ...state.session,
+            userDetails: {
+              ...state.userDetails,
               aadhaarNumber: action.aadhaarNumber,
               aadhaarVerified: true,
             },
           }
         : state;
     case "session/verify-digilocker-otp":
-      return state.session
-        ? { ...state, session: { ...state.session, digilockerOtpVerified: true } }
+      return state.userDetails
+        ? { ...state, userDetails: { ...state.userDetails, digilockerOtpVerified: true } }
         : state;
     case "session/verification-complete":
-      return state.session
+      return state.userDetails
         ? {
             ...state,
-            session: {
-              ...state.session,
+            userDetails: {
+              ...state.userDetails,
               verificationComplete: true,
               dateOfBirth: action.dateOfBirth,
               age: action.age,
@@ -64,10 +95,12 @@ export function customerFlowReducer(
           }
         : state;
     case "session/verify-age":
-      return state.session ? { ...state, session: { ...state.session, ageVerified: true } } : state;
+      return state.userDetails
+        ? { ...state, userDetails: { ...state.userDetails, ageVerified: true } }
+        : state;
     case "session/profile-complete":
-      return state.session
-        ? { ...state, session: { ...state.session, profileComplete: true } }
+      return state.userDetails
+        ? { ...state, userDetails: { ...state.userDetails, profileComplete: true } }
         : state;
     case "selection/category":
       return { ...state, selectedCategoryId: action.categoryId, selectedBrandId: null };
@@ -98,6 +131,7 @@ export function customerFlowReducer(
                     ...line,
                     quantity: line.quantity + Math.max(1, action.quantity),
                     selectedProductIds: action.selectedProductIds ?? line.selectedProductIds,
+                    productDetails: action.productDetails ?? line.productDetails,
                   }
                 : line,
             )
@@ -110,6 +144,7 @@ export function customerFlowReducer(
                 ...(action.selectedProductIds
                   ? { selectedProductIds: action.selectedProductIds }
                   : {}),
+                ...(action.productDetails ? { productDetails: action.productDetails } : {}),
               },
             ],
       };
@@ -125,6 +160,10 @@ export function customerFlowReducer(
       };
     case "cart/remove":
       return { ...state, cart: state.cart.filter((line) => line.productId !== action.productId) };
+    case "cart/set":
+      return { ...state, cart: action.cart };
+    case "cart/clear":
+      return { ...state, cart: [] };
     case "requirement/submit":
       return { ...state, cart: [], showConfirmation: true };
     case "confirmation/dismiss":
@@ -134,11 +173,11 @@ export function customerFlowReducer(
     case "form-draft/login":
       return {
         ...state,
-        session: state.session
+        userDetails: state.userDetails
           ? {
-              ...state.session,
+              ...state.userDetails,
               formDrafts: {
-                ...state.session.formDrafts,
+                ...state.userDetails.formDrafts,
                 login: { name: action.name, mobile: action.mobile },
               },
             }
@@ -152,11 +191,11 @@ export function customerFlowReducer(
     case "form-draft/login-here":
       return {
         ...state,
-        session: state.session
+        userDetails: state.userDetails
           ? {
-              ...state.session,
+              ...state.userDetails,
               formDrafts: {
-                ...state.session.formDrafts,
+                ...state.userDetails.formDrafts,
                 loginHere: {
                   phoneValue: action.phoneValue,
                   countryCode: action.countryCode,
@@ -180,43 +219,43 @@ export function customerFlowReducer(
             },
       };
     case "form-draft/otp":
-      return state.session
+      return state.userDetails
         ? {
             ...state,
-            session: {
-              ...state.session,
-              formDrafts: { ...state.session.formDrafts, otp: action.otp },
+            userDetails: {
+              ...state.userDetails,
+              formDrafts: { ...state.userDetails.formDrafts, otp: action.otp },
             },
           }
         : state;
     case "form-draft/digilocker-otp":
-      return state.session
+      return state.userDetails
         ? {
             ...state,
-            session: {
-              ...state.session,
-              formDrafts: { ...state.session.formDrafts, digilockerOtp: action.otp },
+            userDetails: {
+              ...state.userDetails,
+              formDrafts: { ...state.userDetails.formDrafts, digilockerOtp: action.otp },
             },
           }
         : state;
     case "form-draft/aadhaar":
-      return state.session
+      return state.userDetails
         ? {
             ...state,
-            session: {
-              ...state.session,
-              formDrafts: { ...state.session.formDrafts, aadhaar: action.aadhaar },
+            userDetails: {
+              ...state.userDetails,
+              formDrafts: { ...state.userDetails.formDrafts, aadhaar: action.aadhaar },
             },
           }
         : state;
     case "form-draft/age-verification":
-      return state.session
+      return state.userDetails
         ? {
             ...state,
-            session: {
-              ...state.session,
+            userDetails: {
+              ...state.userDetails,
               formDrafts: {
-                ...state.session.formDrafts,
+                ...state.userDetails.formDrafts,
                 ageVerification: { confirmed: action.confirmed },
               },
             },

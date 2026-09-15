@@ -1,14 +1,11 @@
-import type { ComboOffer, GiftProduct } from "@/features/customer-flow/data/offers";
-import { giftProducts as allGiftProducts } from "@/features/customer-flow/data/offers";
-import type { Brand, CartLine, Product } from "@/features/customer-flow/types";
-
-type GiftOffer = {
-  id: string;
-  title: string;
-  benefit?: string;
-  gift: string;
-  image: string;
-};
+import type {
+  Brand,
+  CartLine,
+  Product,
+  ComboOffer,
+  GiftProduct,
+  GiftOffer,
+} from "@/features/customer-flow/types";
 
 export type CartRow = {
   id: string;
@@ -63,6 +60,110 @@ export type StructuredCart = {
   requestedSalePrice: number;
 };
 
+export type ComboDetails = {
+  comboName?: string;
+  originalPrice?: number;
+  offerPrice?: number;
+  offerImageUrl?: string;
+  products?: Array<{
+    productId?: string;
+    productName?: string;
+    productImageUrl?: string;
+    quantity?: number;
+  }>;
+};
+
+export type GiftDetails = {
+  giftName?: string;
+  giftItemName?: string;
+  offerImageUrl?: string;
+  products?: Array<{
+    productId?: string;
+    productName?: string;
+    size?: string;
+    mrpAmount?: number;
+    saleAmount?: number;
+    productImageUrl?: string;
+  }>;
+};
+
+function resolveProduct(line: CartLine, products: Product[]): Product | undefined {
+  const details = (line.productDetails ?? {}) as Record<string, unknown>;
+  const isCombo = line.itemType === "combo";
+  const isGift = line.itemType === "gift";
+
+  if (Object.keys(details).length > 0) {
+    if (isCombo) {
+      return {
+        id: line.productId,
+        brandId: "",
+        name: String(details.comboName ?? "Combo Offer"),
+        pack: "Bundle",
+        mrp: Number(details.originalPrice ?? details.mrpAmount ?? 0),
+        image: String(details.offerImageUrl ?? ""),
+      };
+    }
+
+    if (isGift) {
+      return {
+        id: line.productId,
+        brandId: "",
+        name: String(details.giftName ?? "Gift Offer"),
+        pack: "Gift",
+        mrp: Number(details.giftItemValue ?? 0),
+        image: String(details.offerImageUrl ?? ""),
+      };
+    }
+
+    const rawSize = details.size ?? details.pack;
+    const pack = rawSize
+      ? /^\d+$/.test(String(rawSize).trim())
+        ? `${rawSize}ml`
+        : String(rawSize)
+      : "750ml";
+    const mrp = Number(
+      details.mrpAmount ?? details.saleAmount ?? details.mrp ?? details.price ?? 0,
+    );
+    const image = String(details.productImageUrl || details.image || details.imageUrl || "");
+    return {
+      id: String(details._id || details.id || line.productId),
+      brandId: String(details.brandId || ""),
+      name: String(details.name || "Product"),
+      pack,
+      mrp,
+      image,
+    };
+  }
+  return (
+    products.find((item) => item.id === line.productId) ??
+    (line.productId
+      ? {
+          id: line.productId,
+          brandId: "",
+          name: "Product",
+          pack: "750ml",
+          mrp: 0,
+          image: "",
+        }
+      : undefined)
+  );
+}
+
+function resolveBrand(line: CartLine, product: Product, brands: Brand[]): Brand | undefined {
+  const details = line.productDetails as Record<string, unknown> | undefined;
+  const existingBrand = brands.find((item) => item.id === product.brandId);
+  if (existingBrand) return existingBrand;
+  if (details?.brandName || details?.brandId) {
+    return {
+      id: String(details.brandId || product.brandId || ""),
+      categoryId: String(details.categoryId || ""),
+      name: String(details.brandName || "Brand"),
+      image: "",
+    };
+  }
+  return undefined;
+}
+
 export function buildCartRows(
   lines: CartLine[],
   products: Product[],
@@ -73,39 +174,70 @@ export function buildCartRows(
   return lines.flatMap<CartRow>((line) => {
     const type = line.itemType ?? "product";
     if (type === "combo") {
-      const offer = comboOffers.find((item) => item.id === line.productId);
-      return offer
-        ? [
-            {
-              id: offer.id,
-              type,
-              name: offer.title,
-              detail: offer.items.join(" · "),
-              price: offer.salePrice,
-              image: offer.image,
-              quantity: line.quantity,
-            },
-          ]
-        : [];
+      const offerDetails = line.productDetails as ComboDetails | undefined;
+      const offer: ComboOffer | undefined = offerDetails?.comboName
+        ? {
+            id: line.productId,
+            title: offerDetails.comboName,
+            items: offerDetails.products?.map((p) => p.productName || "").filter(Boolean) ?? [],
+            mrp: Number(offerDetails.originalPrice ?? 0),
+            salePrice: Number(offerDetails.offerPrice ?? 0),
+            image: offerDetails.offerImageUrl ?? "",
+            badge: "Bundle",
+          }
+        : comboOffers.find((item) => item.id === line.productId);
+
+      if (offer) {
+        return [
+          {
+            id: offer.id,
+            type,
+            name: offer.title,
+            detail: offer.items.join(" · "),
+            price: offer.salePrice,
+            image:
+              offerDetails?.offerImageUrl ||
+              offerDetails?.products?.[0]?.productImageUrl ||
+              offer.image,
+            quantity: line.quantity,
+          },
+        ];
+      }
+      return [];
     }
     if (type === "gift") {
-      if (!giftOffer || giftOffer.id !== line.productId) return [];
-      const selectedCount = line.selectedProductIds?.length ?? 0;
-      return [
-        {
-          id: giftOffer.id,
-          type,
-          name: giftOffer.title,
-          detail: `${selectedCount} selected ${selectedCount === 1 ? "item" : "items"} · ${giftOffer.gift} unlocked`,
-          price: 0,
-          image: giftOffer.image,
-          quantity: line.quantity,
-        },
-      ];
+      const offerDetails = line.productDetails as GiftDetails | undefined;
+      const offer: GiftOffer | undefined = offerDetails?.giftName
+        ? {
+            id: line.productId,
+            title: offerDetails.giftName,
+            gift: offerDetails.giftItemName ?? "Gift",
+            image: offerDetails.offerImageUrl ?? "",
+          }
+        : giftOffer;
+
+      if (offer && (offerDetails || (giftOffer && giftOffer.id === line.productId))) {
+        const selectedCount = line.selectedProductIds?.length ?? 0;
+        return [
+          {
+            id: line.productId,
+            type,
+            name: offer.title,
+            detail: `${selectedCount} selected ${selectedCount === 1 ? "item" : "items"} · ${offer.gift} unlocked`,
+            price: 0,
+            image:
+              offerDetails?.offerImageUrl ||
+              offerDetails?.products?.[0]?.productImageUrl ||
+              offer.image,
+            quantity: line.quantity,
+          },
+        ];
+      }
+      return [];
     }
-    const product = products.find((item) => item.id === line.productId);
+    const product = resolveProduct(line, products);
     if (!product) return [];
-    const brand = brands.find((item) => item.id === product.brandId);
+    const brand = resolveBrand(line, product, brands);
     return [
       {
         id: product.id,
@@ -122,8 +254,8 @@ export function buildCartRows(
 
 export function buildStructuredCart(
   lines: CartLine[],
-  products: Product[],
-  brands: Brand[],
+  products: Product[] = [],
+  brands: Brand[] = [],
   comboOffers: ComboOffer[] = [],
   giftOffer?: GiftOffer,
 ): StructuredCart {
@@ -143,7 +275,19 @@ export function buildStructuredCart(
     const type = line.itemType ?? "product";
 
     if (type === "combo") {
-      const offer = comboOffers.find((item) => item.id === line.productId);
+      const offerDetails = line.productDetails as ComboDetails | undefined;
+      const offer: ComboOffer | undefined = offerDetails?.comboName
+        ? {
+            id: line.productId,
+            title: offerDetails.comboName,
+            items: offerDetails.products?.map((p) => p.productName || "").filter(Boolean) ?? [],
+            mrp: Number(offerDetails.originalPrice ?? 0),
+            salePrice: Number(offerDetails.offerPrice ?? 0),
+            image: offerDetails.offerImageUrl ?? "",
+            badge: "Bundle",
+          }
+        : comboOffers.find((item) => item.id === line.productId);
+
       if (offer) {
         comboItems.push({
           id: offer.id,
@@ -158,7 +302,17 @@ export function buildStructuredCart(
     }
 
     if (type === "gift") {
-      if (giftOffer && giftOffer.id === line.productId) {
+      const offerDetails = line.productDetails as GiftDetails | undefined;
+      const offer: GiftOffer | undefined = offerDetails?.giftName
+        ? {
+            id: line.productId,
+            title: offerDetails.giftName,
+            gift: offerDetails.giftItemName ?? "Gift",
+            image: offerDetails.offerImageUrl ?? "",
+          }
+        : giftOffer;
+
+      if (offer && (offerDetails || (giftOffer && giftOffer.id === line.productId))) {
         const counts: Record<string, number> = {};
         line.selectedProductIds?.forEach((id) => {
           counts[id] = (counts[id] ?? 0) + 1;
@@ -166,30 +320,45 @@ export function buildStructuredCart(
 
         const selectedProducts: SelectedGiftProduct[] = Object.entries(counts).map(
           ([productId, count]) => {
-            const giftProd = allGiftProducts.find((p) => p.id === productId) ??
-              products.find((p) => p.id === productId) ?? {
-                id: productId,
-                name: "Premium Selection",
-                pack: "750ml",
-                mrp: 5150,
-                salePrice: 3890,
-                image: "/customer-flow/products/reserve-whisky.png",
-              };
-            return { product: giftProd, count };
+            const rawProd =
+              offerDetails?.products?.find((p) => p.productId === productId || p.productName) ??
+              products.find((p) => p.id === productId);
+
+            const anyProd = rawProd as Record<string, unknown> | undefined;
+            const resolved: GiftProduct = anyProd
+              ? {
+                  id: productId,
+                  name: String(anyProd.productName || anyProd.name || "Eligible Product"),
+                  pack: String(anyProd.size || anyProd.pack || "750ml"),
+                  mrp: Number(anyProd.mrpAmount ?? anyProd.mrp ?? 0),
+                  salePrice: Number(anyProd.saleAmount ?? anyProd.salePrice ?? anyProd.mrp ?? 0),
+                  image: String(anyProd.productImageUrl || anyProd.image || ""),
+                }
+              : {
+                  id: productId,
+                  name: "Selected Product",
+                  pack: "",
+                  mrp: 0,
+                  salePrice: 0,
+                  image: "",
+                };
+
+            return { product: resolved, count };
           },
         );
 
         let giftMrp = 0;
         let giftSale = 0;
         selectedProducts.forEach(({ product, count }) => {
-          giftMrp += product.mrp * count;
+          giftMrp += Number(product.mrp) * count;
           giftSale +=
-            (("salePrice" in product ? product.salePrice : product.mrp) ?? product.mrp) * count;
+            Number(("salePrice" in product ? product.salePrice : product.mrp) ?? product.mrp) *
+            count;
         });
 
         giftItems.push({
-          id: giftOffer.id,
-          offer: giftOffer,
+          id: line.productId,
+          offer,
           selectedProducts,
           totalMrp: giftMrp,
           totalSalePrice: giftSale,
@@ -204,9 +373,9 @@ export function buildStructuredCart(
     }
 
     // Regular product
-    const product = products.find((item) => item.id === line.productId);
+    const product = resolveProduct(line, products);
     if (product) {
-      const brand = brands.find((item) => item.id === product.brandId);
+      const brand = resolveBrand(line, product, brands);
       const isRequested = line.itemType === "request";
 
       regularItems.push({

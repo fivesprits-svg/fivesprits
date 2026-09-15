@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { categories as defaultCategories } from "@/features/customer-flow/data/catalogue";
 import { DesktopHeader } from "@/features/customer-flow/components/layout/desktop-header";
 import { EmptyState } from "@/features/customer-flow/components/ui/empty-state";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
@@ -11,7 +10,7 @@ import type { Category } from "@/features/customer-flow/types";
 import { ImageSkeleton } from "@/features/customer-flow/components/ui/skeleton";
 
 export function DesktopCategoriesSection({
-  categoriesList = defaultCategories,
+  categoriesList = [],
 }: {
   categoriesList?: Category[];
 } = {}) {
@@ -106,7 +105,7 @@ export function DesktopCategoriesSection({
                     <div className="pointer-events-none absolute inset-0 rounded-full bg-[radial-gradient(ellipse_at_center,_rgba(166,120,84,0.18),transparent_70%)] blur-3xl" />
 
                     {/* CARD 1: LEFT CARD (Barrel Room Cellar - Large) */}
-                    <div className="absolute top-10 left-0 z-10 w-[220px] -rotate-6 overflow-hidden rounded-3xl border-2 border-white/95 bg-white p-2 shadow-2xl transition-all duration-500 ease-out group-hover/cards:-translate-x-6 group-hover/cards:-translate-y-3 group-hover/cards:-rotate-10 group-hover/cards:shadow-[0_25px_50px_rgba(0,0,0,0.25)] sm:top-14 sm:-left-2 sm:w-[270px] lg:-left-4 lg:w-[290px]">
+                    <div className="absolute top-10 left-0 z-[1] w-[220px] -rotate-6 overflow-hidden rounded-3xl border-2 border-white/95 bg-white p-2 shadow-2xl transition-all duration-500 ease-out group-hover/cards:-translate-x-6 group-hover/cards:-translate-y-3 group-hover/cards:-rotate-10 group-hover/cards:shadow-[0_25px_50px_rgba(0,0,0,0.25)] sm:top-14 sm:-left-2 sm:w-[270px] lg:-left-4 lg:w-[290px]">
                       <div className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl bg-gray-900">
                         <ImageSkeleton className="absolute inset-0" />
                         <Image
@@ -120,7 +119,7 @@ export function DesktopCategoriesSection({
                     </div>
 
                     {/* CARD 2: CENTER CARD (Aurum Reserve Bottle - Large Focus) */}
-                    <div className="relative z-30 w-[235px] -translate-y-4 rotate-0 overflow-hidden rounded-3xl border-2 border-white bg-white p-2.5 shadow-[0_20px_50px_rgba(0,0,0,0.2)] transition-all duration-500 ease-out group-hover/cards:-translate-y-8 group-hover/cards:scale-105 group-hover/cards:shadow-[0_30px_60px_rgba(0,0,0,0.3)] sm:w-[290px] lg:w-[315px]">
+                    <div className="relative z-[3] w-[235px] -translate-y-4 rotate-0 overflow-hidden rounded-3xl border-2 border-white bg-white p-2.5 shadow-[0_20px_50px_rgba(0,0,0,0.2)] transition-all duration-500 ease-out group-hover/cards:-translate-y-8 group-hover/cards:scale-105 group-hover/cards:shadow-[0_30px_60px_rgba(0,0,0,0.3)] sm:w-[290px] lg:w-[315px]">
                       <div className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl bg-gray-900">
                         <ImageSkeleton className="absolute inset-0" />
                         <Image
@@ -135,7 +134,7 @@ export function DesktopCategoriesSection({
                     </div>
 
                     {/* CARD 3: RIGHT CARD (Spirit Club Tasting - Large) */}
-                    <div className="absolute top-10 right-0 z-20 w-[220px] rotate-6 overflow-hidden rounded-3xl border-2 border-white/95 bg-white p-2 shadow-2xl transition-all duration-500 ease-out group-hover/cards:translate-x-6 group-hover/cards:-translate-y-3 group-hover/cards:rotate-10 group-hover/cards:shadow-[0_25px_50px_rgba(0,0,0,0.25)] sm:top-14 sm:-right-2 sm:w-[270px] lg:-right-4 lg:w-[290px]">
+                    <div className="absolute top-10 right-0 z-[2] w-[220px] rotate-6 overflow-hidden rounded-3xl border-2 border-white/95 bg-white p-2 shadow-2xl transition-all duration-500 ease-out group-hover/cards:translate-x-6 group-hover/cards:-translate-y-3 group-hover/cards:rotate-10 group-hover/cards:shadow-[0_25px_50px_rgba(0,0,0,0.25)] sm:top-14 sm:-right-2 sm:w-[270px] lg:-right-4 lg:w-[290px]">
                       <div className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl bg-gray-900">
                         <ImageSkeleton className="absolute inset-0" />
                         <Image

@@ -7,12 +7,10 @@ import { PortalShell } from "@/features/customer-flow/components/portal-shell";
 import { Breadcrumb } from "@/features/customer-flow/components/navigation/breadcrumb";
 import { QuantityStepper } from "@/features/customer-flow/components/quantity-stepper";
 import { MaxLimitDialog } from "@/features/customer-flow/components/offers/max-limit-dialog";
-import {
-  giftOffer as defaultGiftOffer,
-  giftProducts as defaultGiftProducts,
-  type GiftProduct,
-} from "@/features/customer-flow/data/offers";
+import type { GiftProduct } from "@/features/customer-flow/types";
 import { type GiftOfferDetail } from "@/features/customer-flow/services/offers-api";
+import { ImagePlaceholder } from "@/features/customer-flow/components/ui/image-placeholder";
+import { EmptyState } from "@/features/customer-flow/components/ui/empty-state";
 import { formatMrp } from "@/features/customer-flow/utils/currency";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import {
@@ -22,19 +20,25 @@ import {
 
 export function DesktopGiftSelectionSection({
   offer: propOffer,
-  productsList: propProducts,
+  productsList = [],
 }: {
-  offer?: GiftOfferDetail;
+  offer?: GiftOfferDetail | null;
   productsList?: GiftProduct[];
 } = {}) {
   const { state, addGiftToCart } = useCustomerFlow();
-  const offer = propOffer ?? defaultGiftOffer;
-  const productsList = propProducts && propProducts.length > 0 ? propProducts : defaultGiftProducts;
+  const offer = propOffer ?? {
+    id: "",
+    title: "Gift Offer",
+    gift: "Free Gift",
+    benefit: "Exclusive Gift",
+    description: "",
+    terms: "",
+    requiredQuantity: 6,
+    image: "",
+  };
   const [showMaxLimitDialog, setShowMaxLimitDialog] = useState(false);
 
-  const savedSelection = state.cart.find(
-    (line) => line.productId === offer.id || line.productId === defaultGiftOffer.id,
-  )?.selectedProductIds;
+  const savedSelection = state.cart.find((line) => line.productId === offer.id)?.selectedProductIds;
   const [quantities, setQuantities] = useState<Record<string, number>>(() =>
     selectionToQuantities(savedSelection),
   );
@@ -84,65 +88,77 @@ export function DesktopGiftSelectionSection({
           </div>
 
           {/* Compact Product Cards Grid */}
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-            {productsList.map((product) => {
-              const quantity = quantities[product.id] ?? 0;
-              return (
-                <article
-                  key={product.id}
-                  className="group flex cursor-pointer flex-col justify-between overflow-hidden rounded-[22px] border border-gray-200/90 bg-white p-3 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md sm:p-3.5"
-                >
-                  <div>
-                    <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[16px] bg-[#f5f3ef]">
-                      <Image
-                        src={product.image}
-                        alt={product.name}
-                        fill
-                        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                        className="object-contain p-3 transition-transform duration-300 group-hover:scale-105 sm:p-4"
-                      />
-                    </div>
-                    <h2 className="font-geist mt-2.5 truncate text-sm font-bold text-gray-950">
-                      {product.name}
-                    </h2>
-                    <p className="font-geist text-[11px] text-gray-500">{product.pack}</p>
-                  </div>
-
-                  <div className="mt-3 border-t border-gray-100 pt-2.5">
-                    <div className="flex items-center justify-between gap-2">
-                      <div className="flex items-baseline gap-1.5">
-                        <span className="font-geist text-[11px] text-gray-400 line-through">
-                          {formatMrp(product.mrp)}
-                        </span>
-                        <span className="font-geist text-sm font-black text-[#c2966e] sm:text-base">
-                          {formatMrp(product.salePrice)}
-                        </span>
+          {productsList.length === 0 ? (
+            <EmptyState
+              icon="sparkles"
+              title="No Eligible Products Found"
+              description="There are currently no eligible products listed for this offer."
+              actionLabel="Back to Offers"
+              actionHref="/gift-offers"
+            />
+          ) : (
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+              {productsList.map((product) => {
+                const quantity = quantities[product.id] ?? 0;
+                return (
+                  <article
+                    key={product.id}
+                    className="group flex cursor-pointer flex-col justify-between overflow-hidden rounded-[22px] border border-gray-200/90 bg-white p-3 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md sm:p-3.5"
+                  >
+                    <div>
+                      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[16px] bg-[#f5f3ef]">
+                        {product.image ? (
+                          <Image
+                            src={product.image}
+                            alt={product.name}
+                            fill
+                            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                            className="object-contain p-3 transition-transform duration-300 group-hover:scale-105 sm:p-4"
+                          />
+                        ) : (
+                          <ImagePlaceholder compact type="product" />
+                        )}
                       </div>
-
-                      {quantity > 0 ? (
-                        <QuantityStepper
-                          compact
-                          value={quantity}
-                          onChange={(value) => handleUpdateQuantity(product.id, value)}
-                          onRemove={() =>
-                            setQuantities((current) => ({ ...current, [product.id]: 0 }))
-                          }
-                        />
-                      ) : (
-                        <button
-                          type="button"
-                          onClick={() => handleUpdateQuantity(product.id, 1)}
-                          className="font-outfit flex h-8 cursor-pointer items-center justify-center rounded-full bg-black px-5 text-xs font-bold text-white transition hover:bg-gray-800 active:scale-[0.99] sm:h-9"
-                        >
-                          Add
-                        </button>
-                      )}
+                      <h2 className="font-geist mt-2.5 truncate text-sm font-bold text-gray-950">
+                        {product.name}
+                      </h2>
+                      <p className="font-geist text-[11px] text-gray-500">{product.pack}</p>
                     </div>
-                  </div>
-                </article>
-              );
-            })}
-          </div>
+
+                    <div className="mt-3 border-t border-gray-100 pt-2.5">
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="flex items-baseline gap-1.5">
+                          <span className="font-geist text-[11px] text-gray-400 line-through">
+                            {formatMrp(product.mrp)}
+                          </span>
+                          <span className="font-geist text-sm font-black text-[#c2966e] sm:text-base">
+                            {formatMrp(product.salePrice)}
+                          </span>
+                        </div>
+
+                        {quantity > 0 ? (
+                          <QuantityStepper
+                            compact
+                            value={quantity}
+                            onChange={(value) => handleUpdateQuantity(product.id, value)}
+                            onRemove={() => handleUpdateQuantity(product.id, 0)}
+                          />
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => handleUpdateQuantity(product.id, 1)}
+                            className="font-outfit flex h-8 items-center justify-center rounded-full bg-black px-4 text-xs font-bold text-white transition hover:bg-gray-800"
+                          >
+                            Add
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          )}
 
           {/* Sticky Bottom Progress & Action Bar */}
           <div className="sticky bottom-6 mt-8 flex items-center justify-between rounded-[24px] border border-gray-200/90 bg-white p-4 shadow-xl sm:p-5">
@@ -162,7 +178,13 @@ export function DesktopGiftSelectionSection({
                 if (selected < 6) {
                   e.preventDefault();
                 } else {
-                  addGiftToCart(offer.id, quantitiesToSelection(quantities));
+                  addGiftToCart(offer.id, quantitiesToSelection(quantities), {
+                    id: offer.id,
+                    giftName: offer.title,
+                    giftItemName: offer.gift,
+                    image: offer.image,
+                    offerImageUrl: offer.image,
+                  });
                 }
               }}
               aria-disabled={selected < 6}

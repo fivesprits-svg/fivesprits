@@ -15,7 +15,8 @@ export interface CartItemResponse {
   itemType?: string;
   selectedProductIds?: string[];
   mrpAmount?: number;
-  salesAmount?: number;
+  saleAmount?: number;
+  productDetails?: Record<string, unknown>;
 }
 
 export async function addToCartApi(items: CartItemPayload[]): Promise<CartItemResponse[]> {

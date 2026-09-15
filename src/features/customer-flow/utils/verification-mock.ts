@@ -1,4 +1,4 @@
-import type { CustomerSession } from "@/features/customer-flow/types/state";
+import type { UserDetails } from "@/features/customer-flow/types/state";
 
 /**
  * Mock verification service.
@@ -22,7 +22,7 @@ export function mockVerifyAadhaar(aadhaarNumber: string): { dateOfBirth: string;
   return { dateOfBirth: "2005-06-20", age: year - 2005 };
 }
 
-export function shouldVerificationFail(session: CustomerSession | null): boolean {
-  if (!session?.age) return false;
-  return session.age < 25;
+export function shouldVerificationFail(userDetails: UserDetails | null): boolean {
+  if (!userDetails?.age) return false;
+  return userDetails.age < 25;
 }

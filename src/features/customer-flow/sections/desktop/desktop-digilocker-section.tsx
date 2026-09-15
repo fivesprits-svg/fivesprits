@@ -16,7 +16,7 @@ export function DesktopDigilockerSection() {
             Welcome
           </h1>
           <p className="font-outfit mt-1 text-sm font-semibold tracking-wide text-[#C9A07E]">
-            {formatDisplayMobile(state.session?.mobile)}
+            {formatDisplayMobile(state.userDetails?.mobile)}
           </p>
         </div>
         <div className="my-6 flex justify-center">

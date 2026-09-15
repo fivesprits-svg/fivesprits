@@ -4,15 +4,15 @@ import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { MobileBottomNav } from "@/features/customer-flow/components/navigation/mobile-bottom-nav";
 import { EmptyState } from "@/features/customer-flow/components/ui/empty-state";
-import { getBrandsByCategory, getCategory } from "@/features/customer-flow/data/catalogue";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import type { Brand, Category } from "@/features/customer-flow/types";
 import { MobileHeader } from "../../components/navigation/mobile-header";
 import { ImageSkeleton } from "@/features/customer-flow/components/ui/skeleton";
+import { ImagePlaceholder } from "@/features/customer-flow/components/ui/image-placeholder";
 
 export function MobileBrandsSection({
-  category: propCategory,
-  brands: propBrands,
+  category: propCategory = null,
+  brands: propBrands = [],
 }: {
   category?: Category | null;
   brands?: Brand[];
@@ -20,10 +20,10 @@ export function MobileBrandsSection({
   const router = useRouter();
   const searchParams = useSearchParams();
   const { selectBrand } = useCustomerFlow();
-  const categoryId = searchParams.get("categoryId") ?? "beer";
+  const categoryId = searchParams.get("categoryId") ?? "";
 
-  const category = propCategory ?? getCategory(categoryId) ?? null;
-  const brands = propBrands && propBrands.length > 0 ? propBrands : getBrandsByCategory(categoryId);
+  const category = propCategory ?? null;
+  const brands = propBrands ?? [];
 
   return (
     <div className="min-h-dvh w-full max-w-[390px] overflow-hidden bg-white pb-28 text-[#101010] md:hidden">
@@ -79,14 +79,20 @@ export function MobileBrandsSection({
                 className="group flex cursor-pointer flex-col items-center text-center"
               >
                 <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[22px] transition-transform duration-200 group-hover:scale-105 active:scale-95">
-                  <ImageSkeleton className="absolute inset-0" />
-                  <Image
-                    src={brand.image}
-                    alt={brand.name}
-                    fill
-                    sizes="160px"
-                    className="object-contain transition-transform duration-200 group-hover:scale-105"
-                  />
+                  {brand.image ? (
+                    <>
+                      <ImageSkeleton className="absolute inset-0" />
+                      <Image
+                        src={brand.image}
+                        alt={brand.name}
+                        fill
+                        sizes="160px"
+                        className="object-contain transition-transform duration-200 group-hover:scale-105"
+                      />
+                    </>
+                  ) : (
+                    <ImagePlaceholder type="brand" />
+                  )}
                 </div>
                 <span className="font-geist mt-2.5 w-full truncate text-center text-sm font-bold text-black">
                   {brand.name}

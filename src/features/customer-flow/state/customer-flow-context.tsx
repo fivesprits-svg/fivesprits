@@ -1,16 +1,24 @@
 "use client";
 
-import { createContext, useContext, useEffect, useMemo, useReducer, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useReducer,
+  useState,
+} from "react";
 import {
   customerFlowReducer,
   initialCustomerFlowState,
 } from "@/features/customer-flow/state/customer-flow-reducer";
 import {
   addToCartApi,
+  clearCartApi,
   getCartApi,
   removeCartItemApi,
   updateCartItemApi,
-  clearCartApi,
   type CartItemPayload,
 } from "@/features/customer-flow/services/cart-api";
 import {
@@ -18,50 +26,22 @@ import {
   getOrderHistoryApi,
   type SubmitOrderPayload,
 } from "@/features/customer-flow/services/orders-api";
-import { products as defaultProducts } from "@/features/customer-flow/data/catalogue";
-import {
-  comboOffers as defaultComboOffers,
-  giftOffer as defaultGiftOffer,
-  giftProducts as defaultGiftProducts,
-} from "@/features/customer-flow/data/offers";
+import { fetchCustomerProfileApi } from "@/features/customer-flow/services/user-api";
+import type { UserDetails } from "@/features/customer-flow/types/state";
 
 const STORAGE_KEY = "five-spirits-customer-flow-v1";
-
-function lookupProductPrice(productId: string): { mrp: number; sale: number } {
-  const product = defaultProducts.find((p) => p.id === productId);
-  if (product) return { mrp: product.mrp, sale: product.mrp };
-  return { mrp: 0, sale: 0 };
-}
-
-function lookupComboPrice(offerId: string): { mrp: number; sale: number } {
-  const offer = defaultComboOffers.find((o) => o.id === offerId);
-  if (offer) return { mrp: offer.mrp, sale: offer.salePrice };
-  return { mrp: 0, sale: 0 };
-}
-
-function lookupGiftPrice(): { mrp: number; sale: number } {
-  const totalMrp = defaultGiftProducts.reduce((sum, p) => sum + p.mrp, 0);
-  const totalSale = defaultGiftProducts.reduce((sum, p) => sum + p.salePrice, 0);
-  return {
-    mrp: totalMrp || defaultGiftOffer.requiredQuantity * 5150,
-    sale: totalSale || defaultGiftOffer.requiredQuantity * 3890,
-  };
-}
 
 function buildCartItemPayload(
   productId: string,
   quantity: number,
   itemType: string,
   selectedProductIds?: string[],
+  customPrice?: { mrp?: number; sale?: number },
 ): CartItemPayload {
-  let price = { mrp: 0, sale: 0 };
-  if (itemType === "combo") {
-    price = lookupComboPrice(productId);
-  } else if (itemType === "gift") {
-    price = lookupGiftPrice();
-  } else {
-    price = lookupProductPrice(productId);
-  }
+  const price = {
+    mrp: customPrice?.mrp ?? 0,
+    sale: customPrice?.sale ?? customPrice?.mrp ?? 0,
+  };
   return {
     productId,
     quantity,
@@ -84,40 +64,30 @@ function useCustomerFlowValue() {
       const stored = window.localStorage.getItem(STORAGE_KEY);
       if (stored) {
         const value = JSON.parse(stored) as typeof initialCustomerFlowState;
-        if (value.session)
+        const user = value.userDetails;
+        if (user) {
           dispatch({
-            type: "session/login",
-            name: value.session.name,
-            mobile: value.session.mobile,
+            type: "userDetails/set",
+            userDetails: user,
           });
-        if (value.session?.cameFromLoginHere && value.session.mobile)
-          dispatch({
-            type: "session/login-here",
-            mobile: value.session.mobile,
-            password: "",
-          });
-        if (value.session?.verified) dispatch({ type: "session/verify" });
-        if (value.session?.aadhaarVerified && value.session.aadhaarNumber)
-          dispatch({ type: "session/verify-aadhaar", aadhaarNumber: value.session.aadhaarNumber });
-        if (value.session?.digilockerOtpVerified)
-          dispatch({ type: "session/verify-digilocker-otp" });
-        if (
-          value.session?.verificationComplete &&
-          value.session.dateOfBirth &&
-          value.session.age != null
-        )
-          dispatch({
-            type: "session/verification-complete",
-            dateOfBirth: value.session.dateOfBirth,
-            age: value.session.age,
-          });
-        if (value.session?.ageVerified) dispatch({ type: "session/verify-age" });
-        if (value.session?.profileComplete) dispatch({ type: "session/profile-complete" });
+        }
         if (value.selectedCategoryId)
           dispatch({ type: "selection/category", categoryId: value.selectedCategoryId });
         if (value.selectedBrandId)
           dispatch({ type: "selection/brand", brandId: value.selectedBrandId });
-        value.cart?.forEach((line) => dispatch({ type: "cart/add", ...line }));
+      } else {
+        const storedUser = window.localStorage.getItem("customer_user");
+        if (storedUser) {
+          try {
+            const parsedUser = JSON.parse(storedUser);
+            if (parsedUser) {
+              dispatch({
+                type: "userDetails/set",
+                userDetails: parsedUser,
+              });
+            }
+          } catch {}
+        }
       }
     } catch {
       window.localStorage.removeItem(STORAGE_KEY);
@@ -125,18 +95,32 @@ function useCustomerFlowValue() {
       setHydrated(true);
     }
 
+    // Fetch latest user details from /api/v1/users/me
+    fetchCustomerProfileApi()
+      .then((user) => {
+        if (user) {
+          dispatch({
+            type: "userDetails/set",
+            userDetails: user as Partial<UserDetails>,
+          });
+          if (typeof window !== "undefined") {
+            window.localStorage.setItem("customer_user", JSON.stringify(user));
+          }
+        }
+      })
+      .catch(() => {});
+
     getCartApi()
       .then((items) => {
         if (items && items.length > 0) {
-          items.forEach((item) => {
-            dispatch({
-              type: "cart/add",
-              productId: item.productId,
-              quantity: item.quantity,
-              itemType: (item.itemType as "product" | "combo" | "gift") ?? "product",
-              ...(item.selectedProductIds ? { selectedProductIds: item.selectedProductIds } : {}),
-            });
-          });
+          const cartItems = items.map((item) => ({
+            productId: item.productId,
+            quantity: item.quantity,
+            itemType: (item.itemType as "product" | "combo" | "gift") ?? "product",
+            ...(item.selectedProductIds ? { selectedProductIds: item.selectedProductIds } : {}),
+            productDetails: item.productDetails,
+          }));
+          dispatch({ type: "cart/set", cart: cartItems });
         }
       })
       .catch(() => {});
@@ -146,108 +130,302 @@ function useCustomerFlowValue() {
     if (hydrated) window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   }, [hydrated, state]);
 
+  const setUserDetails = useCallback((details: Partial<UserDetails>) => {
+    dispatch({ type: "userDetails/set", userDetails: details });
+  }, []);
+
+  const login = useCallback((name: string, mobile: string) => {
+    dispatch({ type: "session/login", name, mobile });
+  }, []);
+
+  const loginHere = useCallback(
+    (mobile: string, password: string, userData?: Partial<UserDetails>) => {
+      dispatch({ type: "session/login-here", mobile, password });
+      if (userData) {
+        dispatch({
+          type: "userDetails/set",
+          userDetails: { ...userData, cameFromLoginHere: true },
+        });
+      }
+    },
+    [],
+  );
+
+  const verifyOtp = useCallback((userData?: Partial<UserDetails>) => {
+    dispatch({ type: "session/verify" });
+    if (userData) {
+      dispatch({ type: "userDetails/set", userDetails: userData });
+    }
+  }, []);
+
+  const verifyAadhaar = useCallback((aadhaarNumber: string) => {
+    dispatch({ type: "session/verify-aadhaar", aadhaarNumber });
+  }, []);
+
+  const verifyDigilockerOtp = useCallback(() => {
+    dispatch({ type: "session/verify-digilocker-otp" });
+  }, []);
+
+  const completeVerification = useCallback((dateOfBirth: string, age: number) => {
+    dispatch({ type: "session/verification-complete", dateOfBirth, age });
+  }, []);
+
+  const verifyAge = useCallback(() => {
+    dispatch({ type: "session/verify-age" });
+  }, []);
+
+  const completeProfile = useCallback(() => {
+    dispatch({ type: "session/profile-complete" });
+  }, []);
+
+  const selectCategory = useCallback((categoryId: string) => {
+    dispatch({ type: "selection/category", categoryId });
+  }, []);
+
+  const selectBrand = useCallback((brandId: string) => {
+    dispatch({ type: "selection/brand", brandId });
+  }, []);
+
+  const addToCart = useCallback(
+    async (productId: string, quantity: number, productDetails?: Record<string, unknown>) => {
+      const customPrice = productDetails
+        ? {
+            mrp: Number(productDetails.mrp ?? productDetails.mrpAmount ?? 0),
+            sale: Number(
+              productDetails.salePrice ??
+                productDetails.saleAmount ??
+                productDetails.mrp ??
+                productDetails.mrpAmount ??
+                0,
+            ),
+          }
+        : undefined;
+      const payload = buildCartItemPayload(productId, quantity, "product", undefined, customPrice);
+      dispatch({ type: "cart/add", productId, quantity, productDetails });
+      try {
+        const items = await addToCartApi([payload]);
+        if (items && items.length > 0) {
+          const cartItems = items.map((item) => ({
+            productId: item.productId,
+            quantity: item.quantity,
+            itemType: (item.itemType as "product" | "combo" | "gift") ?? "product",
+            ...(item.selectedProductIds ? { selectedProductIds: item.selectedProductIds } : {}),
+            productDetails: item.productDetails ?? productDetails,
+          }));
+          dispatch({ type: "cart/set", cart: cartItems });
+        }
+      } catch {}
+    },
+    [],
+  );
+
+  const addComboToCart = useCallback(
+    async (offerId: string, quantity: number, productDetails?: Record<string, unknown>) => {
+      const customPrice = productDetails
+        ? {
+            mrp: Number(productDetails.mrp ?? productDetails.originalPrice ?? 0),
+            sale: Number(
+              productDetails.salePrice ?? productDetails.offerPrice ?? productDetails.mrp ?? 0,
+            ),
+          }
+        : undefined;
+      const payload = buildCartItemPayload(offerId, quantity, "combo", undefined, customPrice);
+      dispatch({
+        type: "cart/add",
+        productId: offerId,
+        itemType: "combo",
+        quantity,
+        productDetails,
+      });
+      try {
+        const items = await addToCartApi([payload]);
+        if (items && items.length > 0) {
+          const cartItems = items.map((item) => ({
+            productId: item.productId,
+            quantity: item.quantity,
+            itemType: (item.itemType as "product" | "combo" | "gift") ?? "product",
+            ...(item.selectedProductIds ? { selectedProductIds: item.selectedProductIds } : {}),
+            productDetails: item.productDetails ?? productDetails,
+          }));
+          dispatch({ type: "cart/set", cart: cartItems });
+        }
+      } catch {}
+    },
+    [],
+  );
+
+  const addGiftToCart = useCallback(
+    async (
+      offerId: string,
+      selectedProductIds: string[],
+      productDetails?: Record<string, unknown>,
+    ) => {
+      const payload = buildCartItemPayload(offerId, 1, "gift", selectedProductIds);
+      dispatch({
+        type: "cart/gift",
+        productId: offerId,
+        selectedProductIds,
+      });
+      try {
+        const items = await addToCartApi([payload]);
+        if (items && items.length > 0) {
+          const cartItems = items.map((item) => ({
+            productId: item.productId,
+            quantity: item.quantity,
+            itemType: (item.itemType as "product" | "combo" | "gift") ?? "product",
+            ...(item.selectedProductIds ? { selectedProductIds: item.selectedProductIds } : {}),
+            productDetails: item.productDetails ?? productDetails,
+          }));
+          dispatch({ type: "cart/set", cart: cartItems });
+        }
+      } catch {}
+    },
+    [],
+  );
+
+  const syncCart = useCallback(async () => {
+    try {
+      const items = await getCartApi();
+      if (items && items.length > 0) {
+        const cartItems = items.map((item) => ({
+          productId: item.productId,
+          quantity: item.quantity,
+          itemType: (item.itemType as "product" | "combo" | "gift") ?? "product",
+          ...(item.selectedProductIds ? { selectedProductIds: item.selectedProductIds } : {}),
+          productDetails: item.productDetails,
+        }));
+        dispatch({ type: "cart/set", cart: cartItems });
+      }
+    } catch {}
+  }, []);
+
+  const setCartQuantity = useCallback(async (productId: string, quantity: number) => {
+    updateCartItemApi(productId, { quantity }).catch(() => {});
+    dispatch({ type: "cart/quantity", productId, quantity });
+  }, []);
+
+  const removeFromCart = useCallback(async (productId: string) => {
+    removeCartItemApi(productId).catch(() => {});
+    dispatch({ type: "cart/remove", productId });
+  }, []);
+
+  const submitRequirement = useCallback(async (payload?: SubmitOrderPayload) => {
+    if (payload) {
+      await submitOrderApi(payload);
+    }
+    await clearCartApi();
+    await getOrderHistoryApi();
+    dispatch({ type: "requirement/submit" });
+  }, []);
+
+  const dismissConfirmation = useCallback(() => {
+    dispatch({ type: "confirmation/dismiss" });
+  }, []);
+
+  const logout = useCallback(() => {
+    clearCartApi().catch(() => {});
+    dispatch({ type: "session/logout" });
+    window.localStorage.removeItem(STORAGE_KEY);
+    window.localStorage.removeItem("customer_access_token");
+    window.localStorage.removeItem("access_token");
+    window.localStorage.removeItem("customer_user");
+  }, []);
+
+  const updateFormDraft = useCallback(
+    (draft: {
+      type: "login" | "login-here" | "otp" | "digilocker-otp" | "aadhaar" | "age-verification";
+      data: Record<string, unknown>;
+    }) => {
+      switch (draft.type) {
+        case "login":
+          dispatch({
+            type: "form-draft/login",
+            name: draft.data.name as string,
+            mobile: draft.data.mobile as string,
+          });
+          break;
+        case "login-here":
+          dispatch({
+            type: "form-draft/login-here",
+            phoneValue: draft.data.phoneValue as string,
+            countryCode: draft.data.countryCode as string,
+            dialCode: draft.data.dialCode as string,
+            password: draft.data.password as string,
+          });
+          break;
+        case "otp":
+          dispatch({ type: "form-draft/otp", otp: draft.data.otp as string });
+          break;
+        case "digilocker-otp":
+          dispatch({ type: "form-draft/digilocker-otp", otp: draft.data.otp as string });
+          break;
+        case "aadhaar":
+          dispatch({ type: "form-draft/aadhaar", aadhaar: draft.data.aadhaar as string });
+          break;
+        case "age-verification":
+          dispatch({
+            type: "form-draft/age-verification",
+            confirmed: draft.data.confirmed as boolean,
+          });
+          break;
+      }
+    },
+    [],
+  );
+
   return useMemo(
     () => ({
       state,
       hydrated,
+      userDetails: state.userDetails,
       cartCount: state.cart.reduce((total, line) => total + line.quantity, 0),
-      login: (name: string, mobile: string) => dispatch({ type: "session/login", name, mobile }),
-      loginHere: (mobile: string, password: string) =>
-        dispatch({ type: "session/login-here", mobile, password }),
-      verifyOtp: () => dispatch({ type: "session/verify" }),
-      verifyAadhaar: (aadhaarNumber: string) =>
-        dispatch({ type: "session/verify-aadhaar", aadhaarNumber }),
-      verifyDigilockerOtp: () => dispatch({ type: "session/verify-digilocker-otp" }),
-      completeVerification: (dateOfBirth: string, age: number) =>
-        dispatch({ type: "session/verification-complete", dateOfBirth, age }),
-      verifyAge: () => dispatch({ type: "session/verify-age" }),
-      completeProfile: () => dispatch({ type: "session/profile-complete" }),
-      selectCategory: (categoryId: string) => dispatch({ type: "selection/category", categoryId }),
-      selectBrand: (brandId: string) => dispatch({ type: "selection/brand", brandId }),
-      addToCart: async (productId: string, quantity: number) => {
-        const payload = buildCartItemPayload(productId, quantity, "product");
-        addToCartApi([payload]).catch(() => {});
-        dispatch({ type: "cart/add", productId, quantity });
-      },
-      addComboToCart: async (offerId: string, quantity: number) => {
-        const payload = buildCartItemPayload(offerId, quantity, "combo");
-        addToCartApi([payload]).catch(() => {});
-        dispatch({ type: "cart/add", productId: offerId, itemType: "combo", quantity });
-      },
-      addGiftToCart: async (offerId: string, selectedProductIds: string[]) => {
-        const payload = buildCartItemPayload(offerId, 1, "gift", selectedProductIds);
-        addToCartApi([payload]).catch(() => {});
-        dispatch({
-          type: "cart/gift",
-          productId: offerId,
-          selectedProductIds,
-        });
-      },
-      setCartQuantity: async (productId: string, quantity: number) => {
-        updateCartItemApi(productId, { quantity }).catch(() => {});
-        dispatch({ type: "cart/quantity", productId, quantity });
-      },
-      removeFromCart: async (productId: string) => {
-        removeCartItemApi(productId).catch(() => {});
-        dispatch({ type: "cart/remove", productId });
-      },
-      submitRequirement: async (payload?: SubmitOrderPayload) => {
-        if (payload) {
-          await submitOrderApi(payload);
-        }
-        await clearCartApi();
-        await getOrderHistoryApi();
-        dispatch({ type: "requirement/submit" });
-      },
-      dismissConfirmation: () => dispatch({ type: "confirmation/dismiss" }),
-      logout: () => {
-        clearCartApi().catch(() => {});
-        dispatch({ type: "session/logout" });
-        window.localStorage.removeItem(STORAGE_KEY);
-        window.localStorage.removeItem("customer_access_token");
-        window.localStorage.removeItem("access_token");
-        window.localStorage.removeItem("customer_user");
-      },
-      updateFormDraft: (draft: {
-        type: "login" | "login-here" | "otp" | "digilocker-otp" | "aadhaar" | "age-verification";
-        data: Record<string, unknown>;
-      }) => {
-        switch (draft.type) {
-          case "login":
-            dispatch({
-              type: "form-draft/login",
-              name: draft.data.name as string,
-              mobile: draft.data.mobile as string,
-            });
-            break;
-          case "login-here":
-            dispatch({
-              type: "form-draft/login-here",
-              phoneValue: draft.data.phoneValue as string,
-              countryCode: draft.data.countryCode as string,
-              dialCode: draft.data.dialCode as string,
-              password: draft.data.password as string,
-            });
-            break;
-          case "otp":
-            dispatch({ type: "form-draft/otp", otp: draft.data.otp as string });
-            break;
-          case "digilocker-otp":
-            dispatch({ type: "form-draft/digilocker-otp", otp: draft.data.otp as string });
-            break;
-          case "aadhaar":
-            dispatch({ type: "form-draft/aadhaar", aadhaar: draft.data.aadhaar as string });
-            break;
-          case "age-verification":
-            dispatch({
-              type: "form-draft/age-verification",
-              confirmed: draft.data.confirmed as boolean,
-            });
-            break;
-        }
-      },
+      setUserDetails,
+      login,
+      loginHere,
+      verifyOtp,
+      verifyAadhaar,
+      verifyDigilockerOtp,
+      completeVerification,
+      verifyAge,
+      completeProfile,
+      selectCategory,
+      selectBrand,
+      addToCart,
+      addComboToCart,
+      addGiftToCart,
+      syncCart,
+      setCartQuantity,
+      removeFromCart,
+      submitRequirement,
+      dismissConfirmation,
+      logout,
+      updateFormDraft,
     }),
-    [hydrated, state],
+    [
+      state,
+      hydrated,
+      setUserDetails,
+      login,
+      loginHere,
+      verifyOtp,
+      verifyAadhaar,
+      verifyDigilockerOtp,
+      completeVerification,
+      verifyAge,
+      completeProfile,
+      selectCategory,
+      selectBrand,
+      addToCart,
+      addComboToCart,
+      addGiftToCart,
+      syncCart,
+      setCartQuantity,
+      removeFromCart,
+      submitRequirement,
+      dismissConfirmation,
+      logout,
+      updateFormDraft,
+    ],
   );
 }
 

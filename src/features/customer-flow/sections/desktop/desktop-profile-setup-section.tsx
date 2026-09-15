@@ -7,7 +7,7 @@ import { DesktopAuthPageLayout } from "@/features/customer-flow/components/ui/au
 
 export function DesktopProfileSetupSection() {
   const { state } = useCustomerFlow();
-  const isLoginHereFlow = state.session?.cameFromLoginHere === true;
+  const isLoginHereFlow = state.userDetails?.cameFromLoginHere === true;
 
   return (
     <DesktopAuthPageLayout maxWidth={isLoginHereFlow ? "max-w-4xl" : "max-w-xl"}>

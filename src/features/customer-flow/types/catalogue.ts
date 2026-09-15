@@ -7,4 +7,5 @@ export type Product = {
   pack: string;
   mrp: number;
   image: string;
+  outOfStock?: boolean;
 };

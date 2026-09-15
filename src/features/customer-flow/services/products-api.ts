@@ -1,8 +1,4 @@
 import { apiFetch } from "./api-client";
-import {
-  products as defaultProducts,
-  getProductsByBrand,
-} from "@/features/customer-flow/data/catalogue";
 import type { Product } from "@/features/customer-flow/types";
 
 export interface BackendProduct {
@@ -20,6 +16,7 @@ export interface BackendProduct {
   productImageUrl?: string;
   image?: string;
   active?: boolean;
+  outOfStock?: boolean;
 }
 
 export async function fetchProductsApi(params?: {
@@ -30,8 +27,8 @@ export async function fetchProductsApi(params?: {
 }): Promise<Product[]> {
   try {
     const searchParams = new URLSearchParams({
-      limit: "100",
-      ...(params?.status ? { status: params.status } : { status: "ACTIVE" }),
+      limit: "5000",
+      ...(params?.status ? { status: params.status } : {}),
       ...(params?.brandId ? { brandId: params.brandId } : {}),
       ...(params?.categoryId ? { categoryId: params.categoryId } : {}),
       ...(params?.search ? { search: params.search } : {}),
@@ -40,46 +37,25 @@ export async function fetchProductsApi(params?: {
     const res = await apiFetch<{ items: BackendProduct[] }>(`/products?${searchParams.toString()}`);
     const items = res.data?.items;
 
-    if (items && Array.isArray(items) && items.length > 0) {
-      return items.map((item, index) => {
-        const fallback = defaultProducts[index % defaultProducts.length];
-        const price = Number(
-          item.saleAmount ?? item.mrpAmount ?? item.mrp ?? fallback?.mrp ?? 1000,
-        );
+    if (items && Array.isArray(items)) {
+      return items.map((item) => {
+        const price = Number(item.saleAmount ?? item.mrpAmount ?? item.mrp ?? 0);
         return {
           id: String(item._id),
           brandId: String(item.brandId),
           name: item.name,
           pack: item.size || item.pack || "750ml",
           mrp: price,
-          image:
-            item.productImageUrl ||
-            item.image ||
-            fallback?.image ||
-            "/customer-flow/products/amber-reserve-12.png",
+          image: item.productImageUrl || item.image || "",
+          outOfStock: Boolean(item.outOfStock),
         };
       });
     }
+    return [];
   } catch (err) {
-    console.warn("fetchProductsApi error, using fallback data:", err);
+    console.error("fetchProductsApi error:", err);
+    return [];
   }
-
-  // Fallback to static products
-  if (params?.brandId) {
-    const staticList = getProductsByBrand(params.brandId);
-    if (params.search) {
-      const q = params.search.toLowerCase();
-      return staticList.filter((p) => p.name.toLowerCase().includes(q));
-    }
-    return staticList;
-  }
-
-  if (params?.search) {
-    const q = params.search.toLowerCase();
-    return defaultProducts.filter((p) => p.name.toLowerCase().includes(q));
-  }
-
-  return defaultProducts;
 }
 
 export async function fetchProductByIdApi(id: string): Promise<Product | null> {
@@ -91,15 +67,14 @@ export async function fetchProductByIdApi(id: string): Promise<Product | null> {
         brandId: String(res.data.brandId),
         name: res.data.name,
         pack: res.data.size || res.data.pack || "750ml",
-        mrp: Number(res.data.saleAmount ?? res.data.mrpAmount ?? res.data.mrp ?? 1000),
-        image:
-          res.data.productImageUrl ||
-          res.data.image ||
-          "/customer-flow/products/amber-reserve-12.png",
+        mrp: Number(res.data.saleAmount ?? res.data.mrpAmount ?? res.data.mrp ?? 0),
+        image: res.data.productImageUrl || res.data.image || "",
+        outOfStock: Boolean(res.data.outOfStock),
       };
     }
+    return null;
   } catch (err) {
-    console.warn(`fetchProductByIdApi(${id}) error, checking fallback:`, err);
+    console.error(`fetchProductByIdApi(${id}) error:`, err);
+    return null;
   }
-  return defaultProducts.find((p) => p.id === id) || null;
 }

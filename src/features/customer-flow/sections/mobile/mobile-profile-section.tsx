@@ -36,8 +36,8 @@ export function MobileProfileSection() {
   } | null>(null);
 
   const [profileData, setProfileData] = useState({
-    name: state.session?.name || "",
-    mobile: formatDisplayMobile(state.session?.mobile),
+    name: state.userDetails?.name || "",
+    mobile: formatDisplayMobile(state.userDetails?.mobile),
     permitNumber: "",
     dateOfBirth: "",
     address: "",
@@ -58,7 +58,8 @@ export function MobileProfileSection() {
         setProfileData((prev) => ({
           ...prev,
           name: user.name || user.username || prev.name,
-          mobile: formatDisplayMobile(user.mobileNumber || state.session?.mobile) || prev.mobile,
+          mobile:
+            formatDisplayMobile(user.mobileNumber || state.userDetails?.mobile) || prev.mobile,
           permitNumber: user.permitNumber || prev.permitNumber,
           dateOfBirth: user.dateOfBirth || prev.dateOfBirth,
           address: user.address || prev.address,
@@ -84,7 +85,7 @@ export function MobileProfileSection() {
     return () => {
       isMounted = false;
     };
-  }, [state.session?.mobile]);
+  }, [state.userDetails?.mobile]);
 
   function handleEditField(field: string, currentValue: string) {
     setEditingField(field);

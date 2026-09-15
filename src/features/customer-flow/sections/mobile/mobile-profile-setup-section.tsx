@@ -7,7 +7,7 @@ import { AuthPageLayout } from "@/features/customer-flow/components/ui/auth-page
 
 export function MobileProfileSetupSection() {
   const { state } = useCustomerFlow();
-  const isLoginHereFlow = state.session?.cameFromLoginHere === true;
+  const isLoginHereFlow = state.userDetails?.cameFromLoginHere === true;
 
   return (
     <AuthPageLayout>

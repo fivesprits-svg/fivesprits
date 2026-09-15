@@ -35,10 +35,11 @@ export function DesktopProfileSection() {
   } | null>(null);
 
   const [profileData, setProfileData] = useState({
-    firstName: state.session?.firstName || "",
-    lastName: state.session?.lastName || "",
-    name: state.session?.name || "",
-    mobile: formatDisplayMobile(state.session?.mobile),
+    username: state.userDetails?.username || "",
+    firstName: state.userDetails?.firstName || "",
+    lastName: state.userDetails?.lastName || "",
+    name: state.userDetails?.name || "",
+    mobile: formatDisplayMobile(state.userDetails?.mobile),
     permitNumber: "",
     dateOfBirth: "",
     address: "",
@@ -61,7 +62,8 @@ export function DesktopProfileSection() {
           firstName: user.firstName || prev.firstName,
           lastName: user.lastName || prev.lastName,
           name: user.name || user.username || prev.name,
-          mobile: formatDisplayMobile(user.mobileNumber || state.session?.mobile) || prev.mobile,
+          mobile:
+            formatDisplayMobile(user.mobileNumber || state.userDetails?.mobile) || prev.mobile,
           permitNumber: user.permitNumber || prev.permitNumber,
           dateOfBirth: user.dateOfBirth || prev.dateOfBirth,
           address: user.address || prev.address,
@@ -87,7 +89,7 @@ export function DesktopProfileSection() {
     return () => {
       isMounted = false;
     };
-  }, [state.session?.mobile]);
+  }, [state.userDetails?.mobile]);
 
   function handleEditField(field: string, currentValue: string) {
     setEditingField(field);
@@ -358,7 +360,7 @@ export function DesktopProfileSection() {
                     </span>
                     <div className="flex h-11 items-center justify-between rounded-xl border border-gray-200 bg-gray-50/70 px-3.5 text-xs font-medium text-gray-700">
                       <span className="truncate">
-                        {profileData.firstName} {profileData.lastName}
+                        {profileData.firstName} {profileData.lastName} {profileData.username}
                       </span>
                       <Image
                         src="/customer-flow/icons/lock.svg"

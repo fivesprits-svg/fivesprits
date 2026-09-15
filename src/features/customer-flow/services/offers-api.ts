@@ -1,11 +1,5 @@
 import { apiFetch } from "./api-client";
-import {
-  comboOffers as defaultComboOffers,
-  giftOffer as defaultGiftOffer,
-  giftProducts as defaultGiftProducts,
-  type ComboOffer,
-  type GiftProduct,
-} from "@/features/customer-flow/data/offers";
+import type { ComboOffer, GiftProduct } from "@/features/customer-flow/types";
 
 export interface BackendComboOffer {
   _id: string;
@@ -64,7 +58,7 @@ export type GiftOfferDetail = {
 export async function fetchComboOffersApi(search?: string): Promise<ComboOffer[]> {
   try {
     const searchParams = new URLSearchParams({
-      limit: "100",
+      limit: "5000",
       status: "ACTIVE",
       ...(search ? { search } : {}),
     });
@@ -74,44 +68,36 @@ export async function fetchComboOffersApi(search?: string): Promise<ComboOffer[]
     );
     const items = res.data?.items;
 
-    if (items && Array.isArray(items) && items.length > 0) {
-      return items.map((item, index) => {
-        const fallback = defaultComboOffers[index % defaultComboOffers.length];
-        const mrp = Number(item.originalPrice ?? fallback?.mrp ?? 5000);
-        const salePrice = Number(item.offerPrice ?? fallback?.salePrice ?? 4000);
+    if (items && Array.isArray(items)) {
+      return items.map((item) => {
+        const mrp = Number(item.originalPrice ?? 0);
+        const salePrice = Number(item.offerPrice ?? 0);
         const discountPct =
-          item.discount ?? (mrp > salePrice ? Math.round(((mrp - salePrice) / mrp) * 100) : 15);
+          item.discount ??
+          (mrp > salePrice && mrp > 0 ? Math.round(((mrp - salePrice) / mrp) * 100) : 0);
         const productItems =
           item.products && item.products.length > 0
             ? item.products.map(
                 (p) => `${p.quantity || 1} × ${p.productName}${p.size ? ` (${p.size})` : ""}`,
               )
-            : fallback?.items || ["Exclusive Combo Selection"];
+            : [];
 
         return {
           id: String(item._id),
-          title: item.comboName || item.name || fallback?.title || "Exclusive Combo Offer",
+          title: item.comboName || item.name || "Exclusive Combo Offer",
           badge: `${discountPct}% discount on combo`,
           items: productItems,
           mrp,
           salePrice,
-          image:
-            item.offerImageUrl ||
-            item.image ||
-            fallback?.image ||
-            "/customer-flow/figma-images/422fad509d4091ef4daca825cec07b2ea792418f.png",
+          image: item.offerImageUrl || item.image || "",
         };
       });
     }
+    return [];
   } catch (err) {
-    console.warn("fetchComboOffersApi error, using fallback data:", err);
+    console.error("fetchComboOffersApi error:", err);
+    return [];
   }
-
-  if (search) {
-    const q = search.toLowerCase();
-    return defaultComboOffers.filter((o) => o.title.toLowerCase().includes(q));
-  }
-  return defaultComboOffers;
 }
 
 export async function fetchComboOfferByIdApi(id: string): Promise<ComboOffer | null> {
@@ -119,16 +105,17 @@ export async function fetchComboOfferByIdApi(id: string): Promise<ComboOffer | n
     const res = await apiFetch<BackendComboOffer>(`/combo-offers/${id}`);
     if (res.data) {
       const item = res.data;
-      const mrp = Number(item.originalPrice ?? 5000);
-      const salePrice = Number(item.offerPrice ?? 4000);
+      const mrp = Number(item.originalPrice ?? 0);
+      const salePrice = Number(item.offerPrice ?? 0);
       const discountPct =
-        item.discount ?? (mrp > salePrice ? Math.round(((mrp - salePrice) / mrp) * 100) : 15);
+        item.discount ??
+        (mrp > salePrice && mrp > 0 ? Math.round(((mrp - salePrice) / mrp) * 100) : 0);
       const productItems =
         item.products && item.products.length > 0
           ? item.products.map(
               (p) => `${p.quantity || 1} × ${p.productName}${p.size ? ` (${p.size})` : ""}`,
             )
-          : ["Exclusive Combo Selection"];
+          : [];
 
       return {
         id: String(item._id),
@@ -137,25 +124,23 @@ export async function fetchComboOfferByIdApi(id: string): Promise<ComboOffer | n
         items: productItems,
         mrp,
         salePrice,
-        image:
-          item.offerImageUrl ||
-          item.image ||
-          "/customer-flow/figma-images/422fad509d4091ef4daca825cec07b2ea792418f.png",
+        image: item.offerImageUrl || item.image || "",
       };
     }
+    return null;
   } catch (err) {
-    console.warn(`fetchComboOfferByIdApi(${id}) error, checking fallback:`, err);
+    console.error(`fetchComboOfferByIdApi(${id}) error:`, err);
+    return null;
   }
-  return defaultComboOffers.find((o) => o.id === id) || null;
 }
 
 export async function fetchGiftOffersApi(): Promise<{
-  giftOffer: GiftOfferDetail;
+  giftOffer: GiftOfferDetail | null;
   giftProducts: GiftProduct[];
 }> {
   try {
     const res = await apiFetch<{ items: BackendGiftOffer[] }>(
-      "/gift-offers?limit=10&status=ACTIVE",
+      "/gift-offers?limit=5000&status=ACTIVE",
     );
     const items = res.data?.items;
 
@@ -163,37 +148,33 @@ export async function fetchGiftOffersApi(): Promise<{
       const first = items[0];
       const parsedOffer: GiftOfferDetail = {
         id: String(first._id),
-        title: first.giftName || defaultGiftOffer.title,
-        benefit: first.offerLabel || `Get a ${first.giftItemName || "Complimentary Gift"}`,
-        description: first.giftDescription || first.description || defaultGiftOffer.description,
-        terms: first.terms || defaultGiftOffer.terms,
-        gift: first.giftItemName || first.giftName || defaultGiftOffer.gift,
+        title: first.giftName || "Gift Offer",
+        benefit:
+          first.offerLabel || (first.giftItemName ? `Get a ${first.giftItemName}` : "Gift Offer"),
+        description: first.giftDescription || first.description || "",
+        terms: first.terms || "",
+        gift: first.giftItemName || first.giftName || "Gift",
         requiredQuantity: first.minQuantity || 6,
-        image: first.offerImageUrl || defaultGiftOffer.image,
+        image: first.offerImageUrl || "",
       };
 
-      let parsedProducts: GiftProduct[] = [];
-      if (first.products && first.products.length > 0) {
-        parsedProducts = first.products.map((p, idx) => ({
-          id: p.productId || `gift-prod-${idx}`,
-          name: p.productName || "Eligible Product",
-          pack: p.size || "700ml",
-          mrp: Number(p.mrpAmount || 5150),
-          salePrice: Number(p.saleAmount || 3890),
-          image:
-            p.productImageUrl ||
-            defaultGiftProducts[idx % defaultGiftProducts.length]?.image ||
-            "/customer-flow/figma-images/6090d85d008480b7542f3321501e11f02b5d09a7.png",
-        }));
-      } else {
-        parsedProducts = defaultGiftProducts;
-      }
+      const parsedProducts: GiftProduct[] =
+        first.products && first.products.length > 0
+          ? first.products.map((p, idx) => ({
+              id: p.productId || `gift-prod-${idx}`,
+              name: p.productName || "Eligible Product",
+              pack: p.size || "700ml",
+              mrp: Number(p.mrpAmount || 0),
+              salePrice: Number(p.saleAmount || 0),
+              image: p.productImageUrl || "",
+            }))
+          : [];
 
       return { giftOffer: parsedOffer, giftProducts: parsedProducts };
     }
+    return { giftOffer: null, giftProducts: [] };
   } catch (err) {
-    console.warn("fetchGiftOffersApi error, using fallback data:", err);
+    console.error("fetchGiftOffersApi error:", err);
+    return { giftOffer: null, giftProducts: [] };
   }
-
-  return { giftOffer: defaultGiftOffer, giftProducts: defaultGiftProducts };
 }

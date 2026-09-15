@@ -1,11 +1,12 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
-import type { ComboOffer } from "@/features/customer-flow/data/offers";
+import type { ComboOffer } from "@/features/customer-flow/types";
 import { formatMrp } from "@/features/customer-flow/utils/currency";
 import { Skeleton, ImageSkeleton } from "@/features/customer-flow/components/ui/skeleton";
+import { ImagePlaceholder } from "@/features/customer-flow/components/ui/image-placeholder";
 
 type ComboOfferCardProps = {
   offer: ComboOffer;
@@ -54,15 +55,21 @@ export function ComboOfferCard({
         {/* Combo Hero Image */}
         <Link href={`/combo-offers/${offer.id}`} className="block">
           <div className="relative aspect-[20/10] w-full overflow-hidden rounded-[20px] bg-[#f5f3ef]">
-            {!imageLoaded && <ImageSkeleton className="absolute inset-0" />}
-            <Image
-              src={offer.image}
-              alt={offer.title}
-              fill
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-              className={`object-cover transition-all duration-300 group-hover:scale-105 ${imageLoaded ? "opacity-100" : "opacity-0"}`}
-              onLoad={() => setImageLoaded(true)}
-            />
+            {offer.image ? (
+              <>
+                {!imageLoaded && <ImageSkeleton className="absolute inset-0" />}
+                <Image
+                  src={offer.image}
+                  alt={offer.title}
+                  fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  className={`object-cover transition-all duration-300 group-hover:scale-105 ${imageLoaded ? "opacity-100" : "opacity-0"}`}
+                  onLoad={() => setImageLoaded(true)}
+                />
+              </>
+            ) : (
+              <ImagePlaceholder type="combo" />
+            )}
           </div>
         </Link>
 

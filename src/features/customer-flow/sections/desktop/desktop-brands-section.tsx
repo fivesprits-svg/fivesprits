@@ -6,13 +6,12 @@ import { PortalShell } from "@/features/customer-flow/components/portal-shell";
 import { CatalogueCard } from "@/features/customer-flow/components/catalogue-card";
 import { Breadcrumb } from "@/features/customer-flow/components/navigation/breadcrumb";
 import { EmptyState } from "@/features/customer-flow/components/ui/empty-state";
-import { getBrandsByCategory, getCategory } from "@/features/customer-flow/data/catalogue";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import type { Brand, Category } from "@/features/customer-flow/types";
 
 export function DesktopBrandsSection({
-  category: propCategory,
-  brands: propBrands,
+  category: propCategory = null,
+  brands: propBrands = [],
 }: {
   category?: Category | null;
   brands?: Brand[];
@@ -20,10 +19,10 @@ export function DesktopBrandsSection({
   const router = useRouter();
   const searchParams = useSearchParams();
   const { selectBrand } = useCustomerFlow();
-  const categoryId = searchParams.get("categoryId") ?? "whisky";
+  const categoryId = searchParams.get("categoryId") ?? "";
 
-  const category = propCategory ?? getCategory(categoryId) ?? null;
-  const brands = propBrands && propBrands.length > 0 ? propBrands : getBrandsByCategory(categoryId);
+  const category = propCategory ?? null;
+  const brands = propBrands ?? [];
 
   return (
     <div className="hidden md:block">

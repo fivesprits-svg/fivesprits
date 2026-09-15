@@ -16,7 +16,7 @@ export function MobileDigilockerSection() {
             Welcome
           </h1>
           <p className="font-geist mt-1 text-sm font-semibold tracking-wide text-[#C9A07E] md:mt-1.5 md:text-base">
-            {formatDisplayMobile(state.session?.mobile)}
+            {formatDisplayMobile(state.userDetails?.mobile)}
           </p>
         </div>
 

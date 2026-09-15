@@ -1,0 +1,97 @@
+"use client";
+
+import { formatMrp } from "@/features/customer-flow/utils/currency";
+import { ButtonSpinner } from "@/features/customer-flow/components/ui/skeleton";
+import type { StructuredCart } from "@/features/customer-flow/helpers/cart-view-model";
+
+interface CartSummarySidebarProps {
+  structuredCart: StructuredCart;
+  submitting: boolean;
+  onOpenConfirm: () => void;
+}
+
+export function CartSummarySidebar({
+  structuredCart,
+  submitting,
+  onOpenConfirm,
+}: CartSummarySidebarProps) {
+  const {
+    totalItemsCount,
+    totalOriginalMrp,
+    totalSalePrice,
+    availableItemsCount,
+    availableOriginalMrp,
+    availableSalePrice,
+    requestedItemsCount,
+    requestedOriginalMrp,
+    requestedSalePrice,
+  } = structuredCart;
+
+  return (
+    <aside className="sticky top-24 rounded-[28px] border border-[#E8E8E8] bg-[#F8F8F8] p-6 shadow-xs">
+      <div className="space-y-3">
+        {availableItemsCount > 0 && (
+          <div className="flex items-center justify-between">
+            <div className="flex items-baseline gap-2">
+              <span className="font-geist text-base font-semibold text-[#8C827A] line-through">
+                {formatMrp(availableOriginalMrp)}
+              </span>
+              <span className="font-geist text-base font-bold text-[#a67854]">
+                {formatMrp(availableSalePrice)}
+              </span>
+            </div>
+            <span className="font-geist text-base font-semibold text-[#8C827A]">
+              {availableItemsCount} Available {availableItemsCount === 1 ? "item" : "items"}
+            </span>
+          </div>
+        )}
+
+        {requestedItemsCount > 0 && (
+          <div className="flex items-center justify-between">
+            <div className="flex items-baseline gap-2">
+              <span className="font-geist text-base font-semibold text-[#8C827A] line-through">
+                {formatMrp(requestedOriginalMrp)}
+              </span>
+              <span className="font-geist text-base font-bold text-[#a67854]">
+                {formatMrp(requestedSalePrice)}
+              </span>
+            </div>
+            <span className="font-geist text-base font-bold text-[#a67854]">
+              {requestedItemsCount} Requested {requestedItemsCount === 1 ? "item" : "items"}
+            </span>
+          </div>
+        )}
+      </div>
+
+      <div className="my-4 h-px bg-[#E8E3DC]" />
+
+      <div className="flex items-center justify-between">
+        <div className="flex items-baseline gap-2">
+          <span className="font-geist text-xl font-bold text-[#8C827A] line-through">
+            {formatMrp(totalOriginalMrp)}
+          </span>
+          <span className="font-geist text-2xl font-black tracking-tight text-gray-950">
+            {formatMrp(totalSalePrice)}
+          </span>
+        </div>
+        <span className="font-geist text-2xl font-black text-gray-950">Total</span>
+      </div>
+
+      <button
+        type="button"
+        disabled={totalItemsCount === 0 || submitting}
+        onClick={onOpenConfirm}
+        className="font-outfit mt-6 flex h-12 w-full cursor-pointer items-center justify-center rounded-full bg-black text-sm font-bold tracking-wide text-white shadow-sm transition hover:bg-gray-800 disabled:opacity-40"
+      >
+        {submitting ? (
+          <span className="inline-flex items-center gap-2">
+            <ButtonSpinner />
+            Sending...
+          </span>
+        ) : (
+          "Send Requirement"
+        )}
+      </button>
+    </aside>
+  );
+}

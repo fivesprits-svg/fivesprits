@@ -24,10 +24,10 @@ export function DesktopHeader() {
     return pathname === href || pathname.startsWith(href + "/");
   }
 
-  const userName = state.session?.name || "Rajesh Kumar";
+  const userName = state.userDetails?.name || "Rajesh Kumar";
 
   return (
-    <header className="sticky top-0 z-30 hidden border-b border-black/10 bg-white md:block">
+    <header className="sticky top-0 z-50 hidden border-b border-black/10 bg-white md:block">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
         <Link href="/categories" className="flex items-center gap-3">
           <Image

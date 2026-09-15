@@ -59,9 +59,16 @@ export interface OrderHistoryEntry {
 }
 
 export async function getOrderHistoryApi(): Promise<OrderHistoryEntry[]> {
-  const res = await apiFetch<OrderHistoryEntry[] | { orders: OrderHistoryEntry[] }>("/orders/me", {
+  const res = await apiFetch<
+    OrderHistoryEntry[] | { data?: OrderHistoryEntry[]; orders?: OrderHistoryEntry[] }
+  >("/orders/me", {
     method: "GET",
   });
-  const data = res.data;
-  return Array.isArray(data) ? data : (data?.orders ?? []);
+  const raw = res.data;
+  if (Array.isArray(raw)) return raw;
+  if (raw && typeof raw === "object") {
+    if (Array.isArray(raw.data)) return raw.data;
+    if (Array.isArray(raw.orders)) return raw.orders;
+  }
+  return [];
 }

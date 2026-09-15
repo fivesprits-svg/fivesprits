@@ -4,30 +4,26 @@ import { MobileBottomNav } from "@/features/customer-flow/components/navigation/
 import { MobileHeader } from "@/features/customer-flow/components/navigation/mobile-header";
 import { CatalogueCard } from "@/features/customer-flow/components/catalogue-card";
 import { EmptyState } from "@/features/customer-flow/components/ui/empty-state";
-import { getBrand, getProductsByBrand } from "@/features/customer-flow/data/catalogue";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import { formatMrp } from "@/features/customer-flow/utils/currency";
 import type { Brand, Product } from "@/features/customer-flow/types";
 
 export function MobileProductsSection({
-  brand: propBrand,
-  products: propProducts,
+  brand: propBrand = null,
+  products: propProducts = [],
 }: {
   brand?: Brand | null;
   products?: Product[];
 } = {}) {
   const searchParams = useSearchParams();
   const { addToCart, removeFromCart, state } = useCustomerFlow();
-  const brandId = searchParams.get("brandId") ?? "amber-reserve";
-  const categoryId = searchParams.get("categoryId") ?? "whisky";
+  const categoryId = searchParams.get("categoryId") ?? "";
 
-  const brand = propBrand ?? getBrand(brandId) ?? null;
-  const products =
-    propProducts && propProducts.length > 0 ? propProducts : getProductsByBrand(brandId);
+  const brand = propBrand ?? null;
+  const products = propProducts ?? [];
   const isEmpty = products.length === 0;
 
   const cartLines = state.cart;
-  const requestedIds = new Set(cartLines.map((line) => line.productId).filter((id) => id != null));
 
   return (
     <div className="min-h-dvh bg-white pb-28 md:hidden">
@@ -49,7 +45,7 @@ export function MobileProductsSection({
           <div className="grid grid-cols-2 gap-3">
             {products.map((product) => {
               const quantity = 1;
-              const isRequested = requestedIds.has(product.id);
+              const isOutOfStock = Boolean(product.outOfStock);
               const item = cartLines.find((line) => line.productId === product.id);
               return (
                 <CatalogueCard
@@ -59,19 +55,40 @@ export function MobileProductsSection({
                   title={product.name}
                   subtitle={product.pack}
                   price={formatMrp(product.mrp)}
-                  originalPrice={isRequested ? formatMrp(product.mrp) : undefined}
-                  actionLabel={isRequested ? "Requested" : "Add"}
-                  actionVariant={isRequested ? "requested" : "add"}
+                  actionLabel={isOutOfStock ? "Requested" : "Add"}
+                  actionVariant={isOutOfStock ? "requested" : "add"}
+                  disabled={isOutOfStock}
+                  outOfStock={isOutOfStock}
                   onAction={() => {
-                    if (!isRequested) {
-                      addToCart(product.id, quantity);
+                    if (!item && !isOutOfStock) {
+                      addToCart(product.id, quantity, {
+                        id: product.id,
+                        _id: product.id,
+                        name: product.name,
+                        pack: product.pack,
+                        mrp: product.mrp,
+                        mrpAmount: product.mrp,
+                        image: product.image,
+                        productImageUrl: product.image,
+                        brandId: product.brandId,
+                      });
                     }
                   }}
-                  quantity={item?.quantity}
+                  quantity={isOutOfStock ? undefined : item?.quantity}
                   onQuantityChange={(value) => {
                     if (item) {
                       removeFromCart(product.id);
-                      addToCart(product.id, value);
+                      addToCart(product.id, value, {
+                        id: product.id,
+                        _id: product.id,
+                        name: product.name,
+                        pack: product.pack,
+                        mrp: product.mrp,
+                        mrpAmount: product.mrp,
+                        image: product.image,
+                        productImageUrl: product.image,
+                        brandId: product.brandId,
+                      });
                     }
                   }}
                   onRemove={() => {

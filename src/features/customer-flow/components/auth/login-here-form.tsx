@@ -11,7 +11,7 @@ export function LoginFormHere() {
   const router = useRouter();
   const { state, loginHere, updateFormDraft } = useCustomerFlow();
   const { success, error: showError } = useToast();
-  const draft = state.session?.formDrafts?.loginHere;
+  const draft = state.userDetails?.formDrafts?.loginHere;
   const [phoneValue, setPhoneValue] = useState(draft?.phoneValue ?? "");
   const [countryData, setCountryData] = useState<{
     countryCode: string;
@@ -43,58 +43,75 @@ export function LoginFormHere() {
     data: { countryCode: string; dialCode: string; name?: string; format?: string },
   ) {
     const nextCountry = { countryCode: data.countryCode, dialCode: data.dialCode };
-    setPhoneValue(value);
     setCountryData(nextCountry);
+    setPhoneValue(value);
     syncDraft(value, nextCountry, password);
     if (errors.mobile) setErrors((prev) => ({ ...prev, mobile: undefined }));
-    setApiError("");
+    if (apiError) setApiError("");
+  }
+
+  function handlePasswordChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const nextPass = e.target.value;
+    setPassword(nextPass);
+    syncDraft(phoneValue, countryData, nextPass);
+    if (errors.password) setErrors((prev) => ({ ...prev, password: undefined }));
+    if (apiError) setApiError("");
   }
 
   async function submit(event: React.FormEvent) {
     event.preventDefault();
-    setApiError("");
-    const next: { mobile?: string; password?: string } = {};
+    const newErrors: { mobile?: string; password?: string } = {};
+
     const cleanDigits = phoneValue.replace(/\D/g, "");
-    const fullPhone = `+${countryData.dialCode}${phoneValue}`;
-    const normalizedMobile = cleanDigits.length >= 10 ? cleanDigits.slice(-10) : cleanDigits;
+    if (!cleanDigits) {
+      newErrors.mobile = "Mobile number is required.";
+    }
 
-    if (!phoneValue.trim()) next.mobile = "Please enter your mobile number";
-    else if (cleanDigits.length < 7) next.mobile = "Enter a valid phone number";
-    if (!password.trim()) next.password = "Please enter your password";
-    setErrors(next);
+    if (!password) {
+      newErrors.password = "Password is required.";
+    }
 
-    if (!next.mobile && !next.password) {
-      setLoading(true);
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    setErrors({});
+    setApiError("");
+    setLoading(true);
+
+    const fullPhone = phoneValue.startsWith("+") ? phoneValue : `+${phoneValue}`;
+    const normalizedMobile = cleanDigits.length > 10 ? cleanDigits.slice(-10) : cleanDigits;
+
+    try {
+      let res;
       try {
-        let res;
-        try {
-          res = await customerLoginApi({
-            mobileNumber: normalizedMobile,
-            password,
-          });
-        } catch {
-          // Fallback with full digits if not found with 10 digits
-          res = await customerLoginApi({
-            mobileNumber: cleanDigits,
-            password,
-          });
-        }
-
-        if (typeof window !== "undefined" && res.data?.accessToken) {
-          window.localStorage.setItem("customer_access_token", res.data.accessToken);
-          window.localStorage.setItem("customer_user", JSON.stringify(res.data.user));
-        }
-
-        loginHere(fullPhone, password);
-        success("Logged in successfully.");
-        router.push("/digilocker");
-      } catch (err: unknown) {
-        const message = err instanceof Error ? err.message : "Invalid mobile number or password.";
-        setApiError(message);
-        showError(message);
-      } finally {
-        setLoading(false);
+        res = await customerLoginApi({
+          mobileNumber: normalizedMobile,
+          password,
+        });
+      } catch {
+        // Fallback with full digits if not found with 10 digits
+        res = await customerLoginApi({
+          mobileNumber: cleanDigits,
+          password,
+        });
       }
+
+      if (typeof window !== "undefined" && res.data?.accessToken) {
+        window.localStorage.setItem("customer_access_token", res.data.accessToken);
+        window.localStorage.setItem("customer_user", JSON.stringify(res.data.user));
+      }
+
+      loginHere(fullPhone, password, res.data?.user);
+      success("Logged in successfully.");
+      router.replace("/digilocker");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Invalid mobile number or password.";
+      setApiError(message);
+      showError(message);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -148,11 +165,7 @@ export function LoginFormHere() {
         <input
           type="password"
           value={password}
-          onChange={(event) => {
-            const next = event.target.value;
-            setPassword(next);
-            syncDraft(phoneValue, countryData, next);
-          }}
+          onChange={handlePasswordChange}
           placeholder="Enter password"
           aria-invalid={Boolean(errors.password)}
           className="customer-input"

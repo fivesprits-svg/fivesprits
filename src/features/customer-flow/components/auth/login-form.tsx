@@ -10,7 +10,7 @@ export function LoginForm() {
   const router = useRouter();
   const { state, login, updateFormDraft } = useCustomerFlow();
   const { success, error: showError } = useToast();
-  const loginDraft = state.session?.formDrafts?.login;
+  const loginDraft = state.userDetails?.formDrafts?.login;
   const [name, setName] = useState(loginDraft?.name ?? "");
   const [mobile, setMobile] = useState(loginDraft?.mobile ?? "");
   const [loading, setLoading] = useState(false);

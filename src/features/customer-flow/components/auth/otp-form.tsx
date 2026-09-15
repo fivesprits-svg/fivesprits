@@ -1,60 +1,26 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import { useToast } from "@/features/customer-flow/components/ui/toast";
 import { verifyOtpApi } from "@/features/customer-flow/services/auth-api";
 import { FlowNavButtons } from "@/features/customer-flow/components/auth/flow-nav-buttons";
-import {
-  MobileHomeIndicator,
-  // MobileStatusBar,
-} from "@/features/customer-flow/components/navigation/mobile-system-chrome";
 
 export function OtpForm() {
   const router = useRouter();
   const { state, verifyOtp, updateFormDraft } = useCustomerFlow();
   const { success, error: showError } = useToast();
-  const otpDraft = state.session?.formDrafts?.otp;
+  const otpDraft = state.userDetails?.formDrafts?.otp;
   const [otp, setOtp] = useState(otpDraft ?? "");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  if (error) {
-    return (
-      <div className="fixed inset-0 z-50 flex min-h-dvh flex-col bg-[#faf9f6] md:static md:mt-8 md:block md:min-h-0 md:bg-transparent">
-        {/* <MobileStatusBar /> */}
-        <div className="flex flex-1 flex-col items-center justify-center px-10 text-center md:block md:px-0 md:text-left">
-          <div className="customer-icon-circle bg-[#faf3eb] md:hidden">
-            <Image src="/customer-flow/icons/error.svg" alt="" width={24} height={24} />
-          </div>
-          <h2 className="mt-8 text-[28px] font-bold md:mt-0 md:text-lg">Verification Failed</h2>
-          <p
-            role="alert"
-            className="text-common-gray md:text-common-error mt-4 max-w-[280px] text-sm leading-6 md:max-w-none md:text-base"
-          >
-            {error}
-          </p>
-        </div>
-        <div className="px-6 pb-10 md:px-0 md:pb-0">
-          <button
-            type="button"
-            onClick={() => {
-              setError("");
-              setOtp("");
-            }}
-            className="customer-continue-button md:max-w-sm"
-          >
-            Try Again
-          </button>
-        </div>
-        <MobileHomeIndicator />
-      </div>
-    );
-  }
-
   async function submit(event: React.FormEvent) {
     event.preventDefault();
+    if (!otp || otp.trim().length === 0) {
+      setError("Verification code is required");
+      return;
+    }
     if (otp.length < 4) {
       setError("Please enter the complete 4-digit verification code.");
       return;
@@ -63,8 +29,8 @@ export function OtpForm() {
     setLoading(true);
     try {
       const res = await verifyOtpApi({
-        username: state.session?.name || "",
-        mobileNumber: state.session?.mobile || "",
+        username: state.userDetails?.name || "",
+        mobileNumber: state.userDetails?.mobile || "",
         otp,
       });
 
@@ -73,9 +39,9 @@ export function OtpForm() {
         window.localStorage.setItem("customer_user", JSON.stringify(res.data.user));
       }
 
-      verifyOtp();
+      verifyOtp(res.data?.user);
       success("Mobile number verified. Welcome to The Five Spirits!");
-      router.push("/digilocker");
+      router.replace("/digilocker");
     } catch (err: unknown) {
       const message =
         err instanceof Error
@@ -87,8 +53,9 @@ export function OtpForm() {
       setLoading(false);
     }
   }
+
   return (
-    <form onSubmit={submit} className="mt-10 md:mt-12">
+    <form onSubmit={submit} className="mt-8 md:mt-10" noValidate>
       <label htmlFor="otp" className="sr-only">
         Verification Code
       </label>
@@ -100,10 +67,11 @@ export function OtpForm() {
             const next = event.target.value.replace(/\D/g, "").slice(0, 4);
             setOtp(next);
             updateFormDraft({ type: "otp", data: { otp: next } });
-            setError("");
+            if (error) setError("");
           }}
           inputMode="numeric"
           autoFocus
+          aria-invalid={Boolean(error)}
           className="absolute inset-0 z-10 size-full cursor-text opacity-0"
         />
         {[0, 1, 2, 3].map((index) => {
@@ -114,8 +82,10 @@ export function OtpForm() {
             <span
               key={index}
               className={`customer-otp-box ${
-                isActive ? "customer-otp-box-active" : ""
-              } ${isFilled ? "customer-otp-box-filled" : ""}`}
+                error ? "border-red-400 bg-red-50/20" : ""
+              } ${isActive ? "customer-otp-box-active" : ""} ${
+                isFilled ? "customer-otp-box-filled" : ""
+              }`}
             >
               {isFilled ? (
                 otp[index]
@@ -128,8 +98,18 @@ export function OtpForm() {
           );
         })}
       </div>
+
+      {error && (
+        <span
+          role="alert"
+          className="text-common-error mt-2.5 block text-xs font-medium md:text-sm"
+        >
+          {error}
+        </span>
+      )}
+
       <p className="sr-only">Prototype code: 1234</p>
-      <div className="mt-10 md:mt-12">
+      <div className="mt-8 md:mt-10">
         <FlowNavButtons
           backHref="/"
           submitLabel="Verify & Proceed"

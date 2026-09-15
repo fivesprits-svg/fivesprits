@@ -54,7 +54,7 @@ export function ProfileSetupHereForm() {
             </span>
             <div className="relative">
               <input
-                defaultValue={state.session?.name || "Rajesh S. Kumar"}
+                defaultValue={state.userDetails?.name || "Rajesh S. Kumar"}
                 readOnly
                 className="customer-input cursor-not-allowed bg-gray-50/80 pr-10 text-sm font-medium text-gray-700"
               />
@@ -74,7 +74,7 @@ export function ProfileSetupHereForm() {
             </span>
             <div className="relative">
               <input
-                defaultValue={formatDisplayMobile(state.session?.mobile)}
+                defaultValue={formatDisplayMobile(state.userDetails?.mobile)}
                 readOnly
                 className="customer-input cursor-not-allowed bg-gray-50/80 pr-10 text-sm font-medium text-gray-700"
               />

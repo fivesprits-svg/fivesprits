@@ -9,7 +9,7 @@ import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-co
 export function AgeVerificationForm() {
   const router = useRouter();
   const { state, updateFormDraft } = useCustomerFlow();
-  const draft = state.session?.formDrafts?.ageVerification;
+  const draft = state.userDetails?.formDrafts?.ageVerification;
   const [confirmed, setConfirmed] = useState(draft?.confirmed ?? false);
   const [showTerms, setShowTerms] = useState(false);
   const [loading, setloading] = useState(false);

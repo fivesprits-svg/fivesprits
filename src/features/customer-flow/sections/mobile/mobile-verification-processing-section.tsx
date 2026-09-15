@@ -13,13 +13,13 @@ export function MobileVerificationProcessingSection() {
   useEffect(() => {
     if (!hydrated) return;
 
-    if (!state.session?.aadhaarNumber) {
+    if (!state.userDetails?.aadhaarNumber) {
       router.replace("/digilocker");
       return;
     }
 
     const timer = setTimeout(() => {
-      const result = mockVerifyAadhaar(state.session!.aadhaarNumber!);
+      const result = mockVerifyAadhaar(state.userDetails!.aadhaarNumber!);
       completeVerification(result.dateOfBirth, result.age);
 
       if (result.age < 25) {
@@ -30,7 +30,7 @@ export function MobileVerificationProcessingSection() {
     }, 3000);
 
     return () => clearTimeout(timer);
-  }, [hydrated, state.session, completeVerification, router]);
+  }, [hydrated, state.userDetails, completeVerification, router]);
 
   return (
     <AuthPageLayout>

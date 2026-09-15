@@ -8,7 +8,7 @@ import { FlowNavButtons } from "@/features/customer-flow/components/auth/flow-na
 export function ProfileSetupForm() {
   const router = useRouter();
   const { state, completeProfile } = useCustomerFlow();
-  const [name, setName] = useState(state.session?.name ?? "");
+  const [name, setName] = useState(state.userDetails?.name ?? "");
   const [loading, setLoading] = useState(false);
 
   function submit(event: React.FormEvent) {
@@ -40,7 +40,7 @@ export function ProfileSetupForm() {
           </span>
           <div className="relative">
             <input
-              defaultValue={formatDisplayMobile(state.session?.mobile)}
+              defaultValue={formatDisplayMobile(state.userDetails?.mobile)}
               className="customer-input text-sm"
             />
           </div>

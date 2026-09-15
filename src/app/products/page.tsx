@@ -11,13 +11,16 @@ export default async function ProductsPage({
   searchParams: Promise<{ brandId?: string; categoryId?: string }>;
 }) {
   const params = await searchParams;
-  const brandId = params.brandId || "amber-reserve";
-  const categoryId = params.categoryId || "whisky";
+  const brandId = params.brandId;
+  const categoryId = params.categoryId;
 
   const [category, brand, products] = await Promise.all([
-    fetchCategoryByIdApi(categoryId),
-    fetchBrandByIdApi(brandId),
-    fetchProductsApi({ brandId, categoryId }),
+    categoryId ? fetchCategoryByIdApi(categoryId) : Promise.resolve(null),
+    brandId ? fetchBrandByIdApi(brandId) : Promise.resolve(null),
+    fetchProductsApi({
+      ...(brandId ? { brandId } : {}),
+      ...(categoryId ? { categoryId } : {}),
+    }),
   ]);
 
   return (

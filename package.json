@@ -59,6 +59,7 @@
     ]
   },
   "dependencies": {
+    "lucide-react": "^1.46.0",
     "react-phone-input-2": "^2.15.1"
   }
 }

@@ -7,9 +7,8 @@ import { FlowNavButtons } from "@/features/customer-flow/components/auth/flow-na
 
 export function AadhaarForm() {
   const router = useRouter();
-  const { state, verifyAadhaar, updateFormDraft } = useCustomerFlow();
-  const backHref = state.session?.cameFromLoginHere ? "/login-here" : "/otp";
-  const draft = state.session?.formDrafts?.aadhaar;
+  const { state, verifyAadhaar, updateFormDraft, logout } = useCustomerFlow();
+  const draft = state.userDetails?.formDrafts?.aadhaar;
   const [aadhaar, setAadhaar] = useState(draft ?? "");
   const [errors, setErrors] = useState<ReturnType<typeof validateAadhaar>>({});
   const [loading, setLoading] = useState(false);
@@ -24,6 +23,11 @@ export function AadhaarForm() {
       router.push("/digilocker/otp");
     }
   }
+
+  const handleLogout = () => {
+    logout();
+    router.replace(state.userDetails?.cameFromLoginHere ? "/login-here" : "/");
+  };
 
   return (
     <form onSubmit={submit} className="space-y-4 md:space-y-5" noValidate>
@@ -52,11 +56,20 @@ export function AadhaarForm() {
         )}
       </label>
       <FlowNavButtons
-        backHref={backHref}
+        hideBack
         submitLabel="Proceed"
         loading={loading}
         loadingLabel="Processing..."
       />
+      <div className="mt-4 text-center">
+        <button
+          type="button"
+          onClick={handleLogout}
+          className="font-geist text-common-gray hover:text-common-black text-xs transition-colors md:text-sm"
+        >
+          Want to use a different number? <span className="font-semibold underline">Log out</span>
+        </button>
+      </div>
     </form>
   );
 }

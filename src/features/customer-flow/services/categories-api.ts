@@ -1,5 +1,4 @@
 import { apiFetch } from "./api-client";
-import { categories as defaultCategories } from "@/features/customer-flow/data/catalogue";
 import type { Category } from "@/features/customer-flow/types";
 
 export interface BackendCategory {
@@ -16,8 +15,8 @@ export async function fetchCategoriesApi(params?: {
 }): Promise<Category[]> {
   try {
     const searchParams = new URLSearchParams({
-      limit: "100",
-      ...(params?.status ? { status: params.status } : { status: "ACTIVE" }),
+      limit: "5000",
+      ...(params?.status ? { status: params.status } : {}),
       ...(params?.search ? { search: params.search } : {}),
     });
 
@@ -26,30 +25,18 @@ export async function fetchCategoriesApi(params?: {
     );
     const items = res.data?.items;
 
-    if (items && Array.isArray(items) && items.length > 0) {
-      return items.map((item, index) => {
-        const fallback = defaultCategories[index % defaultCategories.length];
-        return {
-          id: String(item._id),
-          name: item.categoryName,
-          image:
-            item.categoryImageUrl ||
-            item.image ||
-            fallback?.image ||
-            "/customer-flow/categories/whisky.png",
-        };
-      });
+    if (items && Array.isArray(items)) {
+      return items.map((item) => ({
+        id: String(item._id),
+        name: item.categoryName,
+        image: item.categoryImageUrl || item.image || "",
+      }));
     }
+    return [];
   } catch (err) {
-    console.warn("fetchCategoriesApi error, using fallback data:", err);
+    console.error("fetchCategoriesApi error:", err);
+    return [];
   }
-
-  // Fallback to static catalogue
-  if (params?.search) {
-    const q = params.search.toLowerCase();
-    return defaultCategories.filter((c) => c.name.toLowerCase().includes(q));
-  }
-  return defaultCategories;
 }
 
 export async function fetchCategoryByIdApi(id: string): Promise<Category | null> {
@@ -59,12 +46,12 @@ export async function fetchCategoryByIdApi(id: string): Promise<Category | null>
       return {
         id: String(res.data._id),
         name: res.data.categoryName,
-        image:
-          res.data.categoryImageUrl || res.data.image || "/customer-flow/categories/whisky.png",
+        image: res.data.categoryImageUrl || res.data.image || "",
       };
     }
+    return null;
   } catch (err) {
-    console.warn(`fetchCategoryByIdApi(${id}) error, checking fallback:`, err);
+    console.error(`fetchCategoryByIdApi(${id}) error:`, err);
+    return null;
   }
-  return defaultCategories.find((c) => c.id === id) || null;
 }

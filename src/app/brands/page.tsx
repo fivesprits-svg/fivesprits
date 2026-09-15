@@ -10,11 +10,11 @@ export default async function BrandsPage({
   searchParams: Promise<{ categoryId?: string }>;
 }) {
   const params = await searchParams;
-  const categoryId = params.categoryId || "whisky";
+  const categoryId = params.categoryId;
 
   const [category, brands] = await Promise.all([
-    fetchCategoryByIdApi(categoryId),
-    fetchBrandsApi({ categoryId }),
+    categoryId ? fetchCategoryByIdApi(categoryId) : Promise.resolve(null),
+    fetchBrandsApi(categoryId ? { categoryId } : undefined),
   ]);
 
   return (

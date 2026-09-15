@@ -5,11 +5,12 @@ import Link from "next/link";
 import { useState } from "react";
 import { PortalShell } from "@/features/customer-flow/components/portal-shell";
 import { Breadcrumb } from "@/features/customer-flow/components/navigation/breadcrumb";
-import { QuantityStepper } from "@/features/customer-flow/components/quantity-stepper";
-import type { ComboOffer } from "@/features/customer-flow/data/offers";
+import type { ComboOffer } from "@/features/customer-flow/types";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
+import { QuantityStepper } from "@/features/customer-flow/components/quantity-stepper";
 import { formatMrp } from "@/features/customer-flow/utils/currency";
 import { ImageSkeleton, ButtonSpinner } from "@/features/customer-flow/components/ui/skeleton";
+import { ImagePlaceholder } from "@/features/customer-flow/components/ui/image-placeholder";
 
 export function DesktopOfferDetailsSection({ offer }: { offer: ComboOffer }) {
   const [quantity, setQuantity] = useState(1);
@@ -59,15 +60,21 @@ export function DesktopOfferDetailsSection({ offer }: { offer: ComboOffer }) {
 
           <article className="mx-auto grid max-w-5xl overflow-hidden rounded-[28px] border border-gray-200/90 bg-white shadow-sm lg:grid-cols-[1fr_1.15fr]">
             {/* Reduced image height */}
-            <div className="relative h-[360px] w-full bg-[#f3f0eb] lg:h-full lg:min-h-[400px]">
-              <ImageSkeleton className="absolute inset-0" />
-              <Image
-                src={offer.image}
-                alt={offer.title}
-                fill
-                sizes="50vw"
-                className="object-cover"
-              />
+            <div className="relative h-[360px] w-full overflow-hidden bg-[#f3f0eb] lg:h-full lg:min-h-[400px]">
+              {offer.image ? (
+                <>
+                  <ImageSkeleton className="absolute inset-0" />
+                  <Image
+                    src={offer.image}
+                    alt={offer.title}
+                    fill
+                    sizes="50vw"
+                    className="object-cover"
+                  />
+                </>
+              ) : (
+                <ImagePlaceholder type="combo" />
+              )}
             </div>
 
             <div className="flex flex-col justify-center p-8 lg:p-10">
@@ -116,9 +123,23 @@ export function DesktopOfferDetailsSection({ offer }: { offer: ComboOffer }) {
                   <button
                     type="button"
                     disabled={adding}
-                    onClick={() => {
-                      setAdding(true);
-                      addComboToCart(offer.id, quantity);
+                    onClick={async () => {
+                      try {
+                        setAdding(true);
+                        await addComboToCart(offer.id, quantity, {
+                          id: offer.id,
+                          comboName: offer.title,
+                          badge: offer.badge,
+                          mrp: offer.mrp,
+                          originalPrice: offer.mrp,
+                          salePrice: offer.salePrice,
+                          offerPrice: offer.salePrice,
+                          image: offer.image,
+                          offerImageUrl: offer.image,
+                        });
+                      } finally {
+                        setAdding(false);
+                      }
                     }}
                     className="font-outfit h-11 rounded-full bg-black px-7 text-sm font-bold text-white transition hover:bg-gray-800 active:scale-[0.99] disabled:opacity-70 sm:h-12 sm:px-8 sm:text-base"
                   >

@@ -5,15 +5,14 @@ import { PortalShell } from "@/features/customer-flow/components/portal-shell";
 import { CatalogueCard } from "@/features/customer-flow/components/catalogue-card";
 import { Breadcrumb } from "@/features/customer-flow/components/navigation/breadcrumb";
 import { EmptyState } from "@/features/customer-flow/components/ui/empty-state";
-import { getBrand, getCategory, getProductsByBrand } from "@/features/customer-flow/data/catalogue";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import { formatMrp } from "@/features/customer-flow/utils/currency";
 import type { Brand, Category, Product } from "@/features/customer-flow/types";
 
 export function DesktopProductsSection({
-  category: propCategory,
-  brand: propBrand,
-  products: propProducts,
+  category: propCategory = null,
+  brand: propBrand = null,
+  products: propProducts = [],
 }: {
   category?: Category | null;
   brand?: Brand | null;
@@ -21,13 +20,11 @@ export function DesktopProductsSection({
 } = {}) {
   const searchParams = useSearchParams();
   const { addToCart, removeFromCart, state } = useCustomerFlow();
-  const brandId = searchParams.get("brandId") ?? "amber-reserve";
-  const categoryId = searchParams.get("categoryId") ?? "whisky";
+  const categoryId = searchParams.get("categoryId") ?? "";
 
-  const category = propCategory ?? getCategory(categoryId) ?? null;
-  const brand = propBrand ?? getBrand(brandId) ?? null;
-  const products =
-    propProducts && propProducts.length > 0 ? propProducts : getProductsByBrand(brandId);
+  const category = propCategory ?? null;
+  const brand = propBrand ?? null;
+  const products = propProducts ?? [];
   const isEmpty = products.length === 0;
 
   const cartLines = state.cart;
@@ -89,6 +86,7 @@ export function DesktopProductsSection({
                 {products.map((product) => {
                   const item = cartLines.find((line) => line.productId === product.id);
                   const isRequested = item != null;
+                  const isOutOfStock = Boolean(product.outOfStock);
                   return (
                     <CatalogueCard
                       key={product.id}
@@ -97,12 +95,24 @@ export function DesktopProductsSection({
                       title={product.name}
                       subtitle={product.pack}
                       price={formatMrp(product.mrp)}
-                      actionLabel="Add"
-                      actionVariant="add"
-                      quantity={item?.quantity}
+                      actionLabel={isOutOfStock ? "Requested" : "Add"}
+                      actionVariant={isOutOfStock ? "requested" : "add"}
+                      disabled={isOutOfStock}
+                      outOfStock={isOutOfStock}
+                      quantity={isOutOfStock ? undefined : item?.quantity}
                       onAction={() => {
-                        if (!isRequested) {
-                          addToCart(product.id, 1);
+                        if (!isRequested && !isOutOfStock) {
+                          addToCart(product.id, 1, {
+                            id: product.id,
+                            _id: product.id,
+                            name: product.name,
+                            pack: product.pack,
+                            mrp: product.mrp,
+                            mrpAmount: product.mrp,
+                            image: product.image,
+                            productImageUrl: product.image,
+                            brandId: product.brandId,
+                          });
                         }
                       }}
                       onQuantityChange={(value) => {
@@ -110,7 +120,17 @@ export function DesktopProductsSection({
                           return;
                         }
                         removeFromCart(product.id);
-                        addToCart(product.id, value);
+                        addToCart(product.id, value, {
+                          id: product.id,
+                          _id: product.id,
+                          name: product.name,
+                          pack: product.pack,
+                          mrp: product.mrp,
+                          mrpAmount: product.mrp,
+                          image: product.image,
+                          productImageUrl: product.image,
+                          brandId: product.brandId,
+                        });
                       }}
                       onRemove={() => {
                         removeFromCart(product.id);
