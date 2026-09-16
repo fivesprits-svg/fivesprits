@@ -31,6 +31,16 @@ import type { UserDetails } from "@/features/customer-flow/types/state";
 
 const STORAGE_KEY = "five-spirits-customer-flow-v1";
 
+function normalizeProductId(productId: unknown): string {
+  if (!productId) return "";
+  if (typeof productId === "string") return productId;
+  if (typeof productId === "object" && productId !== null) {
+    const obj = productId as Record<string, unknown>;
+    return String(obj._id || obj.id || obj.productId || "");
+  }
+  return String(productId);
+}
+
 function buildCartItemPayload(
   productId: string,
   quantity: number,
@@ -114,7 +124,7 @@ function useCustomerFlowValue() {
       .then((items) => {
         if (items && items.length > 0) {
           const cartItems = items.map((item) => ({
-            productId: item.productId,
+            productId: normalizeProductId(item.productId),
             quantity: item.quantity,
             itemType: (item.itemType as "product" | "combo" | "gift") ?? "product",
             ...(item.selectedProductIds ? { selectedProductIds: item.selectedProductIds } : {}),
@@ -206,7 +216,7 @@ function useCustomerFlowValue() {
         const items = await addToCartApi([payload]);
         if (items && items.length > 0) {
           const cartItems = items.map((item) => ({
-            productId: item.productId,
+            productId: normalizeProductId(item.productId),
             quantity: item.quantity,
             itemType: (item.itemType as "product" | "combo" | "gift") ?? "product",
             ...(item.selectedProductIds ? { selectedProductIds: item.selectedProductIds } : {}),
@@ -241,7 +251,7 @@ function useCustomerFlowValue() {
         const items = await addToCartApi([payload]);
         if (items && items.length > 0) {
           const cartItems = items.map((item) => ({
-            productId: item.productId,
+            productId: normalizeProductId(item.productId),
             quantity: item.quantity,
             itemType: (item.itemType as "product" | "combo" | "gift") ?? "product",
             ...(item.selectedProductIds ? { selectedProductIds: item.selectedProductIds } : {}),
@@ -270,7 +280,7 @@ function useCustomerFlowValue() {
         const items = await addToCartApi([payload]);
         if (items && items.length > 0) {
           const cartItems = items.map((item) => ({
-            productId: item.productId,
+            productId: normalizeProductId(item.productId),
             quantity: item.quantity,
             itemType: (item.itemType as "product" | "combo" | "gift") ?? "product",
             ...(item.selectedProductIds ? { selectedProductIds: item.selectedProductIds } : {}),
@@ -288,7 +298,7 @@ function useCustomerFlowValue() {
       const items = await getCartApi();
       if (items && items.length > 0) {
         const cartItems = items.map((item) => ({
-          productId: item.productId,
+          productId: normalizeProductId(item.productId),
           quantity: item.quantity,
           itemType: (item.itemType as "product" | "combo" | "gift") ?? "product",
           ...(item.selectedProductIds ? { selectedProductIds: item.selectedProductIds } : {}),
@@ -300,8 +310,13 @@ function useCustomerFlowValue() {
   }, []);
 
   const setCartQuantity = useCallback(async (productId: string, quantity: number) => {
-    updateCartItemApi(productId, { quantity }).catch(() => {});
-    dispatch({ type: "cart/quantity", productId, quantity });
+    if (quantity <= 0) {
+      removeCartItemApi(productId).catch(() => {});
+      dispatch({ type: "cart/remove", productId });
+    } else {
+      updateCartItemApi(productId, { quantity }).catch(() => {});
+      dispatch({ type: "cart/quantity", productId, quantity });
+    }
   }, []);
 
   const removeFromCart = useCallback(async (productId: string) => {

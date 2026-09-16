@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Eye, EyeOff } from "lucide-react";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
@@ -18,6 +19,7 @@ export function LoginFormHere() {
     dialCode: string;
   }>({ countryCode: "in", dialCode: "91" });
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState("");
   const [errors, setErrors] = useState<{ mobile?: string; password?: string }>({});
@@ -162,15 +164,30 @@ export function LoginFormHere() {
       </label>
       <label className="block">
         <span className="customer-input-label mb-2.5 block md:text-sm">Password</span>
-        <input
-          type="password"
-          value={password}
-          onChange={handlePasswordChange}
-          placeholder="Enter password"
-          aria-invalid={Boolean(errors.password)}
-          className="customer-input"
-          disabled={loading}
-        />
+        <div className="relative">
+          <input
+            type={showPassword ? "text" : "password"}
+            value={password}
+            onChange={handlePasswordChange}
+            placeholder="Enter password"
+            aria-invalid={Boolean(errors.password)}
+            className="customer-input pr-12"
+            disabled={loading}
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword((prev) => !prev)}
+            className="absolute top-1/2 right-3.5 -translate-y-1/2 cursor-pointer p-1 text-gray-500 transition hover:text-gray-800 focus:outline-none"
+            aria-label={showPassword ? "Hide password" : "Show password"}
+            tabIndex={-1}
+          >
+            {showPassword ? (
+              <EyeOff className="size-5 text-gray-500 hover:text-gray-700" />
+            ) : (
+              <Eye className="size-5 text-gray-500 hover:text-gray-700" />
+            )}
+          </button>
+        </div>
         {errors.password && (
           <span
             role="alert"

@@ -19,7 +19,7 @@ export function DesktopProductsSection({
   products?: Product[];
 } = {}) {
   const searchParams = useSearchParams();
-  const { addToCart, removeFromCart, state } = useCustomerFlow();
+  const { addToCart, setCartQuantity, removeFromCart, state } = useCustomerFlow();
   const categoryId = searchParams.get("categoryId") ?? "";
 
   const category = propCategory ?? null;
@@ -84,7 +84,11 @@ export function DesktopProductsSection({
               {/* Products Grid */}
               <div className="grid grid-cols-2 items-stretch gap-5 sm:grid-cols-3 lg:grid-cols-4">
                 {products.map((product) => {
-                  const item = cartLines.find((line) => line.productId === product.id);
+                  const item = cartLines.find(
+                    (line) =>
+                      line.productId === product.id ||
+                      line.productId === (product as unknown as { _id?: string })._id,
+                  );
                   const isRequested = item != null;
                   const isOutOfStock = Boolean(product.outOfStock);
                   return (
@@ -116,21 +120,11 @@ export function DesktopProductsSection({
                         }
                       }}
                       onQuantityChange={(value) => {
-                        if (!item) {
-                          return;
+                        if (value <= 0) {
+                          removeFromCart(product.id);
+                        } else {
+                          setCartQuantity(product.id, value);
                         }
-                        removeFromCart(product.id);
-                        addToCart(product.id, value, {
-                          id: product.id,
-                          _id: product.id,
-                          name: product.name,
-                          pack: product.pack,
-                          mrp: product.mrp,
-                          mrpAmount: product.mrp,
-                          image: product.image,
-                          productImageUrl: product.image,
-                          brandId: product.brandId,
-                        });
                       }}
                       onRemove={() => {
                         removeFromCart(product.id);

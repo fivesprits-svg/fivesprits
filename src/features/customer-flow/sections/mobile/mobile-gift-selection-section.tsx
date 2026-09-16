@@ -40,7 +40,10 @@ export function MobileGiftSelectionSection({
   const [showMaxLimitDialog, setShowMaxLimitDialog] = useState(false);
 
   const [saving, setSaving] = useState(false);
-  const savedSelection = state.cart.find((line) => line.productId === offer.id)?.selectedProductIds;
+  const savedSelection = state.cart.find(
+    (line) =>
+      line.productId === offer.id || line.productId === (offer as unknown as { _id?: string })._id,
+  )?.selectedProductIds;
   const [quantities, setQuantities] = useState<Record<string, number>>(() =>
     selectionToQuantities(savedSelection),
   );

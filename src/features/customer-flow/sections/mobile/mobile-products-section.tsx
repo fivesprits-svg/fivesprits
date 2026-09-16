@@ -16,7 +16,7 @@ export function MobileProductsSection({
   products?: Product[];
 } = {}) {
   const searchParams = useSearchParams();
-  const { addToCart, removeFromCart, state } = useCustomerFlow();
+  const { addToCart, setCartQuantity, removeFromCart, state } = useCustomerFlow();
   const categoryId = searchParams.get("categoryId") ?? "";
 
   const brand = propBrand ?? null;
@@ -44,9 +44,12 @@ export function MobileProductsSection({
         ) : (
           <div className="grid grid-cols-2 gap-3">
             {products.map((product) => {
-              const quantity = 1;
               const isOutOfStock = Boolean(product.outOfStock);
-              const item = cartLines.find((line) => line.productId === product.id);
+              const item = cartLines.find(
+                (line) =>
+                  line.productId === product.id ||
+                  line.productId === (product as unknown as { _id?: string })._id,
+              );
               return (
                 <CatalogueCard
                   key={product.id}
@@ -61,7 +64,7 @@ export function MobileProductsSection({
                   outOfStock={isOutOfStock}
                   onAction={() => {
                     if (!item && !isOutOfStock) {
-                      addToCart(product.id, quantity, {
+                      addToCart(product.id, 1, {
                         id: product.id,
                         _id: product.id,
                         name: product.name,
@@ -76,19 +79,10 @@ export function MobileProductsSection({
                   }}
                   quantity={isOutOfStock ? undefined : item?.quantity}
                   onQuantityChange={(value) => {
-                    if (item) {
+                    if (value <= 0) {
                       removeFromCart(product.id);
-                      addToCart(product.id, value, {
-                        id: product.id,
-                        _id: product.id,
-                        name: product.name,
-                        pack: product.pack,
-                        mrp: product.mrp,
-                        mrpAmount: product.mrp,
-                        image: product.image,
-                        productImageUrl: product.image,
-                        brandId: product.brandId,
-                      });
+                    } else {
+                      setCartQuantity(product.id, value);
                     }
                   }}
                   onRemove={() => {

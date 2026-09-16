@@ -14,7 +14,7 @@ export function MobileOffersSection({
 }: {
   offersList?: ComboOffer[];
 } = {}) {
-  const { addComboToCart, removeFromCart, state } = useCustomerFlow();
+  const { addComboToCart, setCartQuantity, removeFromCart, state } = useCustomerFlow();
 
   const cartLines = state.cart;
 
@@ -35,11 +35,16 @@ export function MobileOffersSection({
         ) : (
           <div className="mt-4 space-y-4">
             {offersList.map((offer) => {
-              const item = cartLines.find((line) => line.productId === offer.id);
+              const item = cartLines.find(
+                (line) =>
+                  line.productId === offer.id ||
+                  line.productId === (offer as unknown as { _id?: string })._id,
+              );
               return (
                 <ComboOfferCard
                   key={offer.id}
                   offer={offer}
+                  quantity={item?.quantity}
                   onAdd={() =>
                     addComboToCart(offer.id, 1, {
                       id: offer.id,
@@ -54,19 +59,10 @@ export function MobileOffersSection({
                     })
                   }
                   onQuantityChange={(value) => {
-                    if (item) {
+                    if (value <= 0) {
                       removeFromCart(offer.id);
-                      addComboToCart(offer.id, value, {
-                        id: offer.id,
-                        comboName: offer.title,
-                        badge: offer.badge,
-                        mrp: offer.mrp,
-                        originalPrice: offer.mrp,
-                        salePrice: offer.salePrice,
-                        offerPrice: offer.salePrice,
-                        image: offer.image,
-                        offerImageUrl: offer.image,
-                      });
+                    } else {
+                      setCartQuantity(offer.id, value);
                     }
                   }}
                   onRemove={() => removeFromCart(offer.id)}
