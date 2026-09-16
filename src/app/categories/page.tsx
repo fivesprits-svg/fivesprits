@@ -3,6 +3,8 @@ import { MobileCategoriesSection } from "@/features/customer-flow/sections/mobil
 import { AuthenticatedRoute } from "@/features/customer-flow/components/layout/authenticated-route";
 import { fetchCategoriesApi } from "@/features/customer-flow/services/categories-api";
 
+export const dynamic = "force-dynamic";
+
 export default async function CategoriesPage() {
   const categoriesList = await fetchCategoriesApi();
 

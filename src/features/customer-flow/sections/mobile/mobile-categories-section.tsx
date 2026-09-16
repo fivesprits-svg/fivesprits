@@ -1,20 +1,49 @@
 "use client";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { MobileBottomNav } from "@/features/customer-flow/components/navigation/mobile-bottom-nav";
 import { EmptyState } from "@/features/customer-flow/components/ui/empty-state";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import type { Category } from "@/features/customer-flow/types";
 import { ImageSkeleton } from "@/features/customer-flow/components/ui/skeleton";
+import { fetchCategoriesApi } from "@/features/customer-flow/services/categories-api";
 
 export function MobileCategoriesSection({
-  categoriesList = [],
+  categoriesList: initialCategories = [],
 }: {
   categoriesList?: Category[];
 } = {}) {
   const router = useRouter();
   const { selectCategory } = useCustomerFlow();
-  const isEmpty = categoriesList.length === 0;
+
+  const [clientCategories, setClientCategories] = useState<Category[]>([]);
+  const [isLoading, setIsLoading] = useState(initialCategories.length === 0);
+
+  useEffect(() => {
+    if (initialCategories.length > 0) return;
+
+    let isMounted = true;
+    fetchCategoriesApi()
+      .then((data) => {
+        if (!isMounted) return;
+        if (data && data.length > 0) {
+          setClientCategories(data);
+        }
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.error("fetchCategoriesApi mobile error:", err);
+        if (isMounted) setIsLoading(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [initialCategories.length]);
+
+  const categoriesList = initialCategories.length > 0 ? initialCategories : clientCategories;
+  const isEmpty = !isLoading && categoriesList.length === 0;
 
   return (
     <section className="mx-auto min-h-dvh w-full max-w-[390px] overflow-hidden bg-white pb-28 md:hidden">
@@ -45,7 +74,19 @@ export function MobileCategoriesSection({
         )}
       </header>
 
-      {isEmpty ? (
+      {isLoading && categoriesList.length === 0 ? (
+        <div className="space-y-6 px-6 py-4">
+          <div className="h-40 w-full animate-pulse rounded-2xl bg-gray-100" />
+          <div className="grid grid-cols-4 gap-2.5">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div key={i} className="flex flex-col items-center">
+                <div className="relative aspect-square w-full animate-pulse rounded-[18px] bg-gray-100" />
+                <div className="mt-2 h-3 w-12 animate-pulse rounded bg-gray-200" />
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : isEmpty ? (
         <EmptyState
           icon="/customer-flow/icons/category0.svg"
           title="No Products Yet"

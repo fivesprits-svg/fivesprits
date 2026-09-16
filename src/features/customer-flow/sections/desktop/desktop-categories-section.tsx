@@ -2,21 +2,50 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { DesktopHeader } from "@/features/customer-flow/components/layout/desktop-header";
 import { EmptyState } from "@/features/customer-flow/components/ui/empty-state";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import type { Category } from "@/features/customer-flow/types";
 import { ImageSkeleton } from "@/features/customer-flow/components/ui/skeleton";
+import { fetchCategoriesApi } from "@/features/customer-flow/services/categories-api";
 
 export function DesktopCategoriesSection({
-  categoriesList = [],
+  categoriesList: initialCategories = [],
 }: {
   categoriesList?: Category[];
 } = {}) {
   const router = useRouter();
   const { selectCategory } = useCustomerFlow();
-  const isEmpty = categoriesList.length === 0;
+
+  const [clientCategories, setClientCategories] = useState<Category[]>([]);
+  const [isLoading, setIsLoading] = useState(initialCategories.length === 0);
+
+  useEffect(() => {
+    if (initialCategories.length > 0) return;
+
+    let isMounted = true;
+    fetchCategoriesApi()
+      .then((data) => {
+        if (!isMounted) return;
+        if (data && data.length > 0) {
+          setClientCategories(data);
+        }
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.error("fetchCategoriesApi error:", err);
+        if (isMounted) setIsLoading(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [initialCategories.length]);
+
+  const categoriesList = initialCategories.length > 0 ? initialCategories : clientCategories;
+  const isEmpty = !isLoading && categoriesList.length === 0;
 
   return (
     <div className="hidden min-h-dvh bg-[#f8f9fa] text-gray-900 md:block">
@@ -24,7 +53,33 @@ export function DesktopCategoriesSection({
       <DesktopHeader />
 
       <main className="mx-auto max-w-7xl px-6 py-8">
-        {isEmpty ? (
+        {isLoading && categoriesList.length === 0 ? (
+          <div className="space-y-8 py-4">
+            <div className="grid grid-cols-12 items-center gap-8">
+              <div className="col-span-12 space-y-4 lg:col-span-6">
+                <div className="h-6 w-36 animate-pulse rounded-full bg-gray-200" />
+                <div className="h-12 w-3/4 animate-pulse rounded-xl bg-gray-200" />
+                <div className="h-20 w-full animate-pulse rounded-xl bg-gray-200" />
+              </div>
+              <div className="col-span-12 lg:col-span-6">
+                <div className="h-72 w-full animate-pulse rounded-2xl bg-gray-200" />
+              </div>
+            </div>
+            <div className="mt-12 grid grid-cols-2 gap-5 sm:grid-cols-4 lg:gap-6">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="flex flex-col items-center justify-between rounded-2xl border border-gray-200/80 bg-white p-3 shadow-sm"
+                >
+                  <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl bg-gray-100">
+                    <ImageSkeleton className="absolute inset-0" />
+                  </div>
+                  <div className="mt-3 h-4 w-20 animate-pulse rounded bg-gray-200" />
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : isEmpty ? (
           <EmptyState
             icon="box"
             title="No Products Yet"

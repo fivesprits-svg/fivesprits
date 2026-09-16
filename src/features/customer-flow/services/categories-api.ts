@@ -22,6 +22,7 @@ export async function fetchCategoriesApi(params?: {
 
     const res = await apiFetch<{ items: BackendCategory[] }>(
       `/categories?${searchParams.toString()}`,
+      { cache: "no-store" },
     );
     const items = res.data?.items;
 
