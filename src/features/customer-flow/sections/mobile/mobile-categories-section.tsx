@@ -1,4 +1,5 @@
 "use client";
+
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -9,40 +10,37 @@ import type { Category } from "@/features/customer-flow/types";
 import { ImageSkeleton } from "@/features/customer-flow/components/ui/skeleton";
 import { fetchCategoriesApi } from "@/features/customer-flow/services/categories-api";
 
-export function MobileCategoriesSection({
-  categoriesList: initialCategories = [],
-}: {
-  categoriesList?: Category[];
-} = {}) {
+export function MobileCategoriesSection() {
   const router = useRouter();
   const { selectCategory } = useCustomerFlow();
 
-  const [clientCategories, setClientCategories] = useState<Category[]>([]);
-  const [isLoading, setIsLoading] = useState(initialCategories.length === 0);
+  const [categoriesList, setCategoriesList] = useState<Category[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (initialCategories.length > 0) return;
-
     let isMounted = true;
+
     fetchCategoriesApi()
       .then((data) => {
         if (!isMounted) return;
-        if (data && data.length > 0) {
-          setClientCategories(data);
-        }
+
+        setCategoriesList(data ?? []);
         setIsLoading(false);
       })
       .catch((err) => {
         console.error("fetchCategoriesApi mobile error:", err);
-        if (isMounted) setIsLoading(false);
+
+        if (isMounted) {
+          setCategoriesList([]);
+          setIsLoading(false);
+        }
       });
 
     return () => {
       isMounted = false;
     };
-  }, [initialCategories.length]);
+  }, []);
 
-  const categoriesList = initialCategories.length > 0 ? initialCategories : clientCategories;
   const isEmpty = !isLoading && categoriesList.length === 0;
 
   return (
@@ -52,9 +50,11 @@ export function MobileCategoriesSection({
         <div className="relative size-8">
           <Image src="/logo.svg" alt="The Five Spirits" fill className="object-contain" priority />
         </div>
+
         <h1 className="font-unbounded text-lg font-black tracking-tight text-gray-950">
           {isEmpty ? "Categories" : "The Five Spirits"}
         </h1>
+
         {isEmpty ? (
           <div className="size-9" />
         ) : (
@@ -77,6 +77,7 @@ export function MobileCategoriesSection({
       {isLoading && categoriesList.length === 0 ? (
         <div className="space-y-6 px-6 py-4">
           <div className="h-40 w-full animate-pulse rounded-2xl bg-gray-100" />
+
           <div className="grid grid-cols-4 gap-2.5">
             {Array.from({ length: 8 }).map((_, i) => (
               <div key={i} className="flex flex-col items-center">
@@ -96,12 +97,13 @@ export function MobileCategoriesSection({
         />
       ) : (
         <>
-          {/* Hero Section with Visual Hero Image */}
+          {/* Hero Section */}
           <div className="relative flex items-center justify-between px-6 pb-6">
             <div className="relative z-10 max-w-[190px]">
               <p className="font-outfit text-xs font-bold tracking-widest text-[#7e7e86] uppercase">
                 WELCOME TO
               </p>
+
               <div className="mt-1">
                 <span className="font-outfit block text-[38px] leading-none font-black text-[#c9a07e]">
                   FIVE
@@ -110,6 +112,7 @@ export function MobileCategoriesSection({
                   SPIRIT
                 </span>
               </div>
+
               <p className="font-geist mt-4 text-[15px] leading-snug font-bold text-black">
                 Your favorite
                 <br />
@@ -117,9 +120,9 @@ export function MobileCategoriesSection({
               </p>
             </div>
 
-            {/* Right Visual Image */}
             <div className="relative h-[220px] w-[165px] shrink-0">
               <ImageSkeleton className="absolute inset-0 rounded-2xl" />
+
               <Image
                 src="/customer-flow/hero/hero-right-visual.webp"
                 alt="The Five Spirits Catalogue Hero"
@@ -134,6 +137,7 @@ export function MobileCategoriesSection({
           {/* Categories Grid */}
           <div className="px-6">
             <h2 className="font-outfit text-xl font-black text-black">Categories</h2>
+
             <div className="mt-4 grid grid-cols-4 gap-x-2.5 gap-y-4">
               {categoriesList.map((category) => (
                 <button
@@ -146,7 +150,6 @@ export function MobileCategoriesSection({
                   className="group flex cursor-pointer flex-col items-center"
                 >
                   <div className="relative aspect-square w-full overflow-hidden rounded-[18px] border border-gray-100/90 bg-[#FAF9F7] p-2 shadow-2xs transition-transform active:scale-95">
-                    {/* <SkeletonCircle className="absolute inset-2" /> */}
                     <Image
                       src={category.image}
                       alt={category.name}
@@ -155,6 +158,7 @@ export function MobileCategoriesSection({
                       className="object-contain p-1 transition-transform duration-200 group-hover:scale-105"
                     />
                   </div>
+
                   <span className="font-geist mt-2 w-full truncate text-center text-xs font-bold text-black">
                     {category.name}
                   </span>

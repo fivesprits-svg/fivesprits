@@ -2,50 +2,53 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+
 import { DesktopHeader } from "@/features/customer-flow/components/layout/desktop-header";
 import { EmptyState } from "@/features/customer-flow/components/ui/empty-state";
-import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
-import type { Category } from "@/features/customer-flow/types";
 import { ImageSkeleton } from "@/features/customer-flow/components/ui/skeleton";
 import { fetchCategoriesApi } from "@/features/customer-flow/services/categories-api";
+import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
+import type { Category } from "@/features/customer-flow/types";
 
-export function DesktopCategoriesSection({
-  categoriesList: initialCategories = [],
-}: {
-  categoriesList?: Category[];
-} = {}) {
+export function DesktopCategoriesSection() {
   const router = useRouter();
   const { selectCategory } = useCustomerFlow();
 
-  const [clientCategories, setClientCategories] = useState<Category[]>([]);
-  const [isLoading, setIsLoading] = useState(initialCategories.length === 0);
+  const [categoriesList, setCategoriesList] = useState<Category[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (initialCategories.length > 0) return;
-
     let isMounted = true;
+
     fetchCategoriesApi()
       .then((data) => {
         if (!isMounted) return;
-        if (data && data.length > 0) {
-          setClientCategories(data);
-        }
+
+        setCategoriesList(data ?? []);
         setIsLoading(false);
       })
       .catch((err) => {
         console.error("fetchCategoriesApi error:", err);
-        if (isMounted) setIsLoading(false);
+
+        if (isMounted) {
+          setCategoriesList([]);
+          setIsLoading(false);
+        }
       });
 
     return () => {
       isMounted = false;
     };
-  }, [initialCategories.length]);
+  }, []);
 
-  const categoriesList = initialCategories.length > 0 ? initialCategories : clientCategories;
   const isEmpty = !isLoading && categoriesList.length === 0;
+
+  const handleCategoryClick = (categoryId: string) => {
+    selectCategory(categoryId);
+    router.push(`/brands?categoryId=${categoryId}`);
+  };
 
   return (
     <div className="hidden min-h-dvh bg-[#f8f9fa] text-gray-900 md:block">
@@ -61,19 +64,22 @@ export function DesktopCategoriesSection({
                 <div className="h-12 w-3/4 animate-pulse rounded-xl bg-gray-200" />
                 <div className="h-20 w-full animate-pulse rounded-xl bg-gray-200" />
               </div>
+
               <div className="col-span-12 lg:col-span-6">
                 <div className="h-72 w-full animate-pulse rounded-2xl bg-gray-200" />
               </div>
             </div>
+
             <div className="mt-12 grid grid-cols-2 gap-5 sm:grid-cols-4 lg:gap-6">
-              {Array.from({ length: 8 }).map((_, i) => (
+              {Array.from({ length: 8 }).map((_, index) => (
                 <div
-                  key={i}
+                  key={index}
                   className="flex flex-col items-center justify-between rounded-2xl border border-gray-200/80 bg-white p-3 shadow-sm"
                 >
                   <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl bg-gray-100">
                     <ImageSkeleton className="absolute inset-0" />
                   </div>
+
                   <div className="mt-3 h-4 w-20 animate-pulse rounded bg-gray-200" />
                 </div>
               ))}
@@ -89,7 +95,7 @@ export function DesktopCategoriesSection({
           />
         ) : (
           <>
-            {/* 1. SEAMLESS MIXED EDITORIAL HERO */}
+            {/* Hero Section */}
             <section className="relative pt-4 pb-12">
               <div className="grid grid-cols-12 items-center gap-8 lg:gap-10">
                 {/* Left Column */}
@@ -118,24 +124,22 @@ export function DesktopCategoriesSection({
                     <p className="font-outfit text-[11px] font-bold tracking-wider text-gray-500 uppercase">
                       Quick Select Category:
                     </p>
+
                     <div className="flex flex-wrap gap-2">
-                      {categoriesList.map((cat) => (
+                      {categoriesList.map((category) => (
                         <button
-                          key={cat.id}
+                          key={category.id}
                           type="button"
-                          onClick={() => {
-                            selectCategory(cat.id);
-                            router.push(`/brands?categoryId=${cat.id}`);
-                          }}
+                          onClick={() => handleCategoryClick(category.id)}
                           className="font-geist inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-white px-3.5 py-1.5 text-xs font-medium text-gray-700 shadow-xs transition-all hover:border-[#a67854] hover:bg-[#a67854] hover:text-white"
                         >
-                          <span>{cat.name}</span>
+                          <span>{category.name}</span>
                         </button>
                       ))}
                     </div>
                   </div>
 
-                  {/* Dual Action Buttons */}
+                  {/* Action Buttons */}
                   <div className="flex flex-wrap items-center gap-4 pt-3">
                     <a
                       href="#categories"
@@ -143,6 +147,7 @@ export function DesktopCategoriesSection({
                     >
                       Explore Categories ↓
                     </a>
+
                     <Link
                       href="/combo-offers"
                       className="font-outfit group inline-flex h-12 items-center gap-2 rounded-full border border-gray-300 bg-white px-7 text-xs font-bold tracking-wider text-gray-800 uppercase shadow-xs transition hover:border-gray-400 hover:bg-gray-50"
@@ -153,16 +158,17 @@ export function DesktopCategoriesSection({
                   </div>
                 </div>
 
-                {/* Right Column - 3 Overlapping Raw Image Cards (Large Size) */}
+                {/* Right Column - Hero Image Cards */}
                 <div className="col-span-12 lg:col-span-6">
                   <div className="group/cards relative flex h-[440px] w-full items-center justify-center px-4 sm:h-[500px] lg:h-[540px]">
                     {/* Background Ambient Glow */}
                     <div className="pointer-events-none absolute inset-0 rounded-full bg-[radial-gradient(ellipse_at_center,_rgba(166,120,84,0.18),transparent_70%)] blur-3xl" />
 
-                    {/* CARD 1: LEFT CARD (Barrel Room Cellar - Large) */}
+                    {/* Card 1 */}
                     <div className="absolute top-10 left-0 z-[1] w-[220px] -rotate-6 overflow-hidden rounded-3xl border-2 border-white/95 bg-white p-2 shadow-2xl transition-all duration-500 ease-out group-hover/cards:-translate-x-6 group-hover/cards:-translate-y-3 group-hover/cards:-rotate-10 group-hover/cards:shadow-[0_25px_50px_rgba(0,0,0,0.25)] sm:top-14 sm:-left-2 sm:w-[270px] lg:-left-4 lg:w-[290px]">
                       <div className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl bg-gray-900">
                         <ImageSkeleton className="absolute inset-0" />
+
                         <Image
                           src="/customer-flow/hero/barrel-room.jpg"
                           alt="Barrel Room Cellar"
@@ -173,10 +179,11 @@ export function DesktopCategoriesSection({
                       </div>
                     </div>
 
-                    {/* CARD 2: CENTER CARD (Aurum Reserve Bottle - Large Focus) */}
+                    {/* Card 2 */}
                     <div className="relative z-[3] w-[235px] -translate-y-4 rotate-0 overflow-hidden rounded-3xl border-2 border-white bg-white p-2.5 shadow-[0_20px_50px_rgba(0,0,0,0.2)] transition-all duration-500 ease-out group-hover/cards:-translate-y-8 group-hover/cards:scale-105 group-hover/cards:shadow-[0_30px_60px_rgba(0,0,0,0.3)] sm:w-[290px] lg:w-[315px]">
                       <div className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl bg-gray-900">
                         <ImageSkeleton className="absolute inset-0" />
+
                         <Image
                           src="/customer-flow/hero/aurum-reserve.jpg"
                           alt="Aurum Reserve 18Y"
@@ -188,10 +195,11 @@ export function DesktopCategoriesSection({
                       </div>
                     </div>
 
-                    {/* CARD 3: RIGHT CARD (Spirit Club Tasting - Large) */}
+                    {/* Card 3 */}
                     <div className="absolute top-10 right-0 z-[2] w-[220px] rotate-6 overflow-hidden rounded-3xl border-2 border-white/95 bg-white p-2 shadow-2xl transition-all duration-500 ease-out group-hover/cards:translate-x-6 group-hover/cards:-translate-y-3 group-hover/cards:rotate-10 group-hover/cards:shadow-[0_25px_50px_rgba(0,0,0,0.25)] sm:top-14 sm:-right-2 sm:w-[270px] lg:-right-4 lg:w-[290px]">
                       <div className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl bg-gray-900">
                         <ImageSkeleton className="absolute inset-0" />
+
                         <Image
                           src="/customer-flow/hero/spirit-club.jpg"
                           alt="Spirit Club Cheers"
@@ -206,17 +214,19 @@ export function DesktopCategoriesSection({
               </div>
             </section>
 
-            {/* 2. THE CATEGORIES SECTION */}
+            {/* Categories Section */}
             <section id="categories" className="scroll-mt-24 pb-8">
               <div className="flex flex-col justify-between gap-4 border-b border-gray-200/80 pb-6 md:flex-row md:items-end">
                 <div>
                   <p className="font-outfit text-xs font-bold tracking-[0.25em] text-[#a67854] uppercase">
                     INSPIRED STYLE
                   </p>
+
                   <h2 className="font-unbounded mt-1 text-3xl font-black text-gray-900 lg:text-4xl">
                     THE{" "}
                     <span className="font-serif font-normal text-[#c9a07e] italic">CATEGORIES</span>
                   </h2>
+
                   <p className="font-geist mt-1.5 max-w-xl text-xs text-gray-600 lg:text-sm">
                     From crisp lagers to full-bodied red wines and complex peated scotches, discover
                     our library of spirits.
@@ -228,20 +238,18 @@ export function DesktopCategoriesSection({
                 </span>
               </div>
 
-              {/* Categories 4x2 Grid */}
+              {/* Categories Grid */}
               <div className="mt-8 grid grid-cols-2 gap-5 sm:grid-cols-4 lg:gap-6">
                 {categoriesList.map((category) => (
                   <button
                     key={category.id}
                     type="button"
-                    onClick={() => {
-                      selectCategory(category.id);
-                      router.push(`/brands?categoryId=${category.id}`);
-                    }}
+                    onClick={() => handleCategoryClick(category.id)}
                     className="group flex cursor-pointer flex-col items-center justify-between rounded-2xl border border-gray-200/80 bg-white p-3 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-[#a67854]/60 hover:shadow-md"
                   >
                     <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl bg-gray-50 p-2 transition-colors group-hover:bg-gray-100">
                       <ImageSkeleton className="absolute inset-0" />
+
                       <Image
                         src={category.image}
                         alt={category.name}
@@ -250,6 +258,7 @@ export function DesktopCategoriesSection({
                         className="object-contain p-2 transition-transform duration-300 group-hover:scale-105"
                       />
                     </div>
+
                     <span className="font-geist mt-3 text-xs font-bold tracking-widest text-gray-900 uppercase transition-colors group-hover:text-[#a67854]">
                       {category.name}
                     </span>
@@ -258,7 +267,7 @@ export function DesktopCategoriesSection({
               </div>
             </section>
 
-            {/* 3. THE ART OF AGING (BARREL ROOM) */}
+            {/* The Art of Aging */}
             <section className="my-14 overflow-hidden rounded-3xl border border-white/10 bg-[#141517] p-8 text-white shadow-2xl lg:p-12">
               <div className="grid grid-cols-12 items-center gap-8">
                 <div className="col-span-12 space-y-4 lg:col-span-6">
@@ -289,6 +298,7 @@ export function DesktopCategoriesSection({
                 <div className="col-span-12 lg:col-span-6">
                   <div className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl border border-white/10 shadow-lg">
                     <ImageSkeleton className="absolute inset-0" />
+
                     <Image
                       src="/customer-flow/hero/barrel-room.jpg"
                       alt="Distillery Barrel Room"
@@ -303,7 +313,7 @@ export function DesktopCategoriesSection({
           </>
         )}
 
-        {/* 5. FOOTER */}
+        {/* Footer */}
         <footer className="mt-20 border-t border-gray-200 pt-12 pb-6">
           <div className="grid grid-cols-12 gap-8 pb-10">
             <div className="col-span-12 md:col-span-5">
@@ -315,12 +325,14 @@ export function DesktopCategoriesSection({
                   height={53}
                   className="h-10 w-auto object-contain"
                 />
+
                 <span className="font-unbounded text-xl font-black tracking-tight text-black">
                   The Five Spirits
                 </span>
               </div>
+
               <p className="font-geist mt-3 max-w-sm text-xs leading-relaxed text-gray-500">
-                Discovers the world&apos;s finest selection of spirits and beverages. Curated with
+                Discover the world&apos;s finest selection of spirits and beverages. Curated with
                 passion for enthusiasts who appreciate quality and sophistication in every pour.
               </p>
             </div>
@@ -329,17 +341,20 @@ export function DesktopCategoriesSection({
               <p className="font-outfit text-xs font-bold tracking-wider text-gray-900 uppercase">
                 Explore
               </p>
+
               <ul className="font-geist mt-3 space-y-2 text-xs text-gray-500">
                 <li>
                   <Link href="/categories" className="hover:text-black">
                     Catalogue
                   </Link>
                 </li>
+
                 <li>
                   <Link href="/categories" className="hover:text-black">
                     Categories
                   </Link>
                 </li>
+
                 <li>
                   <Link href="/combo-offers" className="hover:text-black">
                     Exclusive Offers
@@ -352,17 +367,20 @@ export function DesktopCategoriesSection({
               <p className="font-outfit text-xs font-bold tracking-wider text-gray-900 uppercase">
                 Support
               </p>
+
               <ul className="font-geist mt-3 space-y-2 text-xs text-gray-500">
                 <li>
                   <Link href="/profile" className="hover:text-black">
                     Account Verification
                   </Link>
                 </li>
+
                 <li>
                   <Link href="/cart" className="hover:text-black">
                     Requirement FAQs
                   </Link>
                 </li>
+
                 <li>
                   <Link href="/profile" className="hover:text-black">
                     Permit Support
@@ -375,13 +393,16 @@ export function DesktopCategoriesSection({
               <p className="font-outfit text-xs font-bold tracking-wider text-gray-900 uppercase">
                 Compliance & Legal
               </p>
+
               <ul className="font-geist mt-3 space-y-2 text-xs text-gray-500">
                 <li>
                   <span>State Excise Policy</span>
                 </li>
+
                 <li>
                   <span>Age Verification (25+)</span>
                 </li>
+
                 <li>
                   <span>Terms of Service</span>
                 </li>

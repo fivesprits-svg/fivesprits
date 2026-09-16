@@ -19,14 +19,14 @@ export function DesktopDigilockerSection() {
             {formatDisplayMobile(state.userDetails?.mobile)}
           </p>
         </div>
-        <div className="my-6 flex justify-center">
+        <div className="my-4 flex justify-center">
           <div className="grid place-items-center rounded-full bg-[#faf6f0] p-6">
             <div className="grid place-items-center rounded-full bg-[#f3e9db] p-4">
               <IconCircle
                 iconSrc="/customer-flow/icons/shield-badge.svg"
                 iconAlt="Shield"
-                iconWidth={60}
-                iconHeight={60}
+                iconWidth={40}
+                iconHeight={40}
                 variant="large"
               />
             </div>
@@ -34,7 +34,7 @@ export function DesktopDigilockerSection() {
         </div>
 
         <div className="text-center">
-          <h2 className="font-unbounded text-common-black text-3xl font-black">
+          <h2 className="font-unbounded text-common-black text-2xl font-black">
             Verify Your Identity
           </h2>
           <p className="customer-section-description mt-2">

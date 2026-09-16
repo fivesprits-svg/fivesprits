@@ -1,5 +1,5 @@
 import { apiFetch } from "./api-client";
-import type { ComboOffer, GiftProduct } from "@/features/customer-flow/types";
+import type { ComboOffer, GiftProduct as BaseGiftProduct } from "@/features/customer-flow/types";
 
 export interface BackendComboOffer {
   _id: string;
@@ -52,6 +52,15 @@ export type GiftOfferDetail = {
   terms?: string;
   gift: string;
   requiredQuantity: number;
+  image: string;
+};
+
+export type GiftProduct = {
+  id: string;
+  name: string;
+  pack: string;
+  mrp: number;
+  salePrice: number;
   image: string;
 };
 
@@ -136,7 +145,7 @@ export async function fetchComboOfferByIdApi(id: string): Promise<ComboOffer | n
 
 export async function fetchGiftOffersApi(): Promise<{
   giftOffer: GiftOfferDetail | null;
-  giftProducts: GiftProduct[];
+  giftProducts: BaseGiftProduct[];
 }> {
   try {
     const res = await apiFetch<{ items: BackendGiftOffer[] }>(
@@ -158,7 +167,7 @@ export async function fetchGiftOffersApi(): Promise<{
         image: first.offerImageUrl || "",
       };
 
-      const parsedProducts: GiftProduct[] =
+      const parsedProducts: BaseGiftProduct[] =
         first.products && first.products.length > 0
           ? first.products.map((p, idx) => ({
               id: p.productId || `gift-prod-${idx}`,

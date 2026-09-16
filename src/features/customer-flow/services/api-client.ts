@@ -9,6 +9,7 @@ export const getAuthToken = (): string | null => {
   return (
     window.localStorage.getItem("customer_access_token") ||
     window.localStorage.getItem("access_token") ||
+    window.localStorage.getItem("token") ||
     null
   );
 };
@@ -82,15 +83,22 @@ export async function apiFetch<T>(
   const cacheKey = `${method}:${url}:${token || ""}`;
 
   // Deduplicate concurrent GET requests
-  if (method === "GET") {
-    const existing = inFlightRequests.get(cacheKey);
-    if (existing) {
-      return existing as Promise<{ success?: boolean; status?: number; message?: string; data: T }>;
-    }
-  }
+  // if (method === "GET") {
+  //   const existing = inFlightRequests.get(cacheKey);
+  //   if (existing) {
+  //     return existing as Promise<{ success?: boolean; status?: number; message?: string; data: T }>;
+  //   }
+  // }
 
   const fetchPromise = (async () => {
     try {
+      console.log("REQUEST:", {
+        url,
+        method: options?.method || "GET",
+        headers,
+        body: options?.body,
+      });
+
       const res = await fetch(url, {
         ...options,
         headers,
