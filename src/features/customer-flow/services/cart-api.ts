@@ -16,6 +16,7 @@ export interface CartItemResponse {
   selectedProductIds?: string[];
   mrpAmount?: number;
   saleAmount?: number;
+  salePrice?: number;
   productDetails?: Record<string, unknown>;
 }
 

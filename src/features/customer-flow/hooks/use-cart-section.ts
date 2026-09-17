@@ -135,6 +135,7 @@ export function useCartSection() {
     state.userDetails?.mobileNumber ||
     state.userDetails?._id,
   );
+  console.log(state.cart);
 
   const handleLogout = useCallback(async () => {
     if (logoutLoading) return;

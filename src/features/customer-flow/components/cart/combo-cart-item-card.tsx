@@ -80,11 +80,13 @@ export function ComboCartItemCard({
 
           <div className="mt-3 flex items-center justify-between border-t border-gray-100 pt-2.5">
             <div className="flex items-baseline gap-1.5">
-              <span className="font-geist text-xs text-gray-400 line-through">
-                {formatMrp(offer.mrp)}
-              </span>
+              {offer.mrp !== offer.salePrice && (
+                <span className="font-geist text-xs text-gray-400 line-through">
+                  {formatMrp(offer.mrp)}
+                </span>
+              )}
               <span className="font-geist text-base font-black text-[#c2966e]">
-                {formatMrp(offer.salePrice)}
+                {formatMrp(offer.salePrice || offer.mrp)}
               </span>
             </div>
 
@@ -169,11 +171,13 @@ export function ComboCartItemCard({
 
           <div className="mt-4 flex items-center justify-between border-t border-gray-100 pt-3">
             <div className="flex items-baseline gap-2.5">
-              <span className="font-geist text-sm text-gray-400 line-through">
-                {formatMrp(offer.mrp)}
-              </span>
+              {offer.mrp !== offer.salePrice && (
+                <span className="font-geist text-sm text-gray-400 line-through">
+                  {formatMrp(offer.mrp)}
+                </span>
+              )}
               <span className="font-geist text-lg font-black text-[#c2966e]">
-                {formatMrp(offer.salePrice)}
+                {formatMrp(offer.salePrice || offer.mrp)}
               </span>
             </div>
 

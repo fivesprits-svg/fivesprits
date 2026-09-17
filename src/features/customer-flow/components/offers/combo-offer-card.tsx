@@ -115,12 +115,14 @@ export function ComboOfferCard({
         <div className="flex items-center justify-between gap-3">
           {/* Price Section */}
           <div className="flex items-baseline gap-2.5">
-            <span className="font-geist text-base font-medium text-gray-400 line-through sm:text-lg">
-              {formatMrp(offer.mrp)}
-            </span>
+            {offer.mrp !== offer.salePrice && (
+              <span className="font-geist text-base font-medium text-gray-400 line-through sm:text-lg">
+                {formatMrp(offer.mrp)}
+              </span>
+            )}
 
             <span className="font-geist text-2xl font-black text-[#c2966e] sm:text-3xl">
-              {formatMrp(offer.salePrice)}
+              {formatMrp(offer.salePrice || offer.mrp)}
             </span>
           </div>
         </div>

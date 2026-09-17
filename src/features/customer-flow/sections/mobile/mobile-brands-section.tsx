@@ -45,7 +45,7 @@ export function MobileBrandsSection({
           <div className="relative -mt-10 h-[170px] w-[135px] shrink-0">
             <ImageSkeleton className="absolute inset-0 rounded-2xl" />
             <Image
-              src="/customer-flow/hero/hero-right-column.webp"
+              src="/customer-flow/hero/hero-right-column.png"
               alt="Brand Collection Hero"
               fill
               priority

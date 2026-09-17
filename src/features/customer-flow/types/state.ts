@@ -5,6 +5,9 @@ export type CartLine = {
   quantity: number;
   itemType?: CartItemType;
   selectedProductIds?: string[];
+  salePrice?: number;
+  saleAmount?: number;
+  mrp?: number;
 };
 export type UserDetails = {
   _id?: string;

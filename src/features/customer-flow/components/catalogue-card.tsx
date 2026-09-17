@@ -7,6 +7,7 @@ import {
   ImageSkeleton,
 } from "@/features/customer-flow/components/ui/skeleton";
 import { ImagePlaceholder } from "@/features/customer-flow/components/ui/image-placeholder";
+import { formatMrp } from "@/features/customer-flow/utils/currency";
 
 type CatalogueCardProps = {
   image: string;
@@ -14,6 +15,8 @@ type CatalogueCardProps = {
   subtitle?: string;
   price?: string;
   originalPrice?: string;
+  mrp?: number | string;
+  salePrice?: number | string;
   badge?: string;
   onClick?: () => void;
   variant?: "category" | "brand" | "product";
@@ -34,6 +37,8 @@ export function CatalogueCard({
   subtitle,
   price,
   originalPrice,
+  mrp,
+  salePrice,
   badge,
   onClick,
   variant = "category",
@@ -170,19 +175,39 @@ export function CatalogueCard({
             </p>
           )}
 
-          <div className="mt-1 flex items-baseline gap-1.5 sm:gap-2">
-            {originalPrice && (
-              <span className="font-geist text-[11px] text-gray-400 line-through sm:text-xs">
-                {originalPrice}
-              </span>
-            )}
+          {(() => {
+            const resolvedMrp =
+              mrp != null
+                ? typeof mrp === "number"
+                  ? formatMrp(mrp)
+                  : String(mrp)
+                : originalPrice;
+            const resolvedSalePrice =
+              salePrice != null
+                ? typeof salePrice === "number"
+                  ? formatMrp(salePrice)
+                  : String(salePrice)
+                : price;
+            const isDifferent = Boolean(
+              resolvedMrp && resolvedSalePrice && resolvedMrp.trim() !== resolvedSalePrice.trim(),
+            );
 
-            {price && (
-              <span className="font-geist text-xs font-bold text-gray-900 sm:text-sm lg:text-base">
-                {price}
-              </span>
-            )}
-          </div>
+            return (
+              <div className="mt-1 flex items-baseline gap-1.5 sm:gap-2">
+                {isDifferent && (
+                  <span className="font-geist text-[11px] text-gray-400 line-through sm:text-xs">
+                    {resolvedMrp}
+                  </span>
+                )}
+
+                {(resolvedSalePrice || resolvedMrp) && (
+                  <span className="font-geist text-xs font-bold text-gray-900 sm:text-sm lg:text-base">
+                    {resolvedSalePrice || resolvedMrp}
+                  </span>
+                )}
+              </div>
+            );
+          })()}
         </div>
       </div>
 

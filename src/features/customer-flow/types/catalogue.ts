@@ -8,4 +8,5 @@ export type Product = {
   mrp: number;
   image: string;
   outOfStock?: boolean;
+  saleAmount: number;
 };

@@ -51,14 +51,24 @@ export function RegularCartItemCard({
             <p className="font-geist text-[10px] text-gray-500">
               {product.pack} {brand ? `• ${brand.name}` : ""}
             </p>
-            <div className="mt-1 flex items-baseline gap-1.5">
-              <span className="font-geist text-[10px] text-gray-400 line-through">
-                {formatMrp(Math.round(product.mrp * 1.15))}
-              </span>
-              <span className="font-geist text-xs font-black text-gray-950">
-                {formatMrp(product.mrp)}
-              </span>
-            </div>
+            {(() => {
+              const mrp = Number(product.mrp ?? 0);
+              const salePrice = Number(product.saleAmount ?? mrp);
+              const isDifferent = mrp > 0 && salePrice > 0 && mrp !== salePrice;
+
+              return (
+                <div className="mt-1 flex items-baseline gap-1.5">
+                  {isDifferent && (
+                    <span className="font-geist text-[10px] text-gray-400 line-through">
+                      {formatMrp(mrp)}
+                    </span>
+                  )}
+                  <span className="font-geist text-xs font-black text-gray-950">
+                    {formatMrp(salePrice || mrp)}
+                  </span>
+                </div>
+              );
+            })()}
           </div>
         </div>
 
@@ -131,14 +141,24 @@ export function RegularCartItemCard({
           <p className="font-geist text-xs text-gray-500">
             {product.pack} {brand ? `• ${brand.name}` : ""}
           </p>
-          <div className="mt-1.5 flex items-baseline gap-2">
-            <span className="font-geist text-xs text-gray-400 line-through">
-              {formatMrp(Math.round(product.mrp * 1.15))}
-            </span>
-            <span className="font-geist text-base font-black text-gray-950">
-              {formatMrp(product.mrp)}
-            </span>
-          </div>
+          {(() => {
+            const mrp = Number(product.mrp ?? 0);
+            const salePrice = Number(product.saleAmount ?? mrp);
+            const isDifferent = mrp > 0 && salePrice > 0 && mrp !== salePrice;
+
+            return (
+              <div className="mt-1.5 flex items-baseline gap-2">
+                {isDifferent && (
+                  <span className="font-geist text-xs text-gray-400 line-through">
+                    {formatMrp(mrp)}
+                  </span>
+                )}
+                <span className="font-geist text-base font-black text-gray-950">
+                  {formatMrp(salePrice || mrp)}
+                </span>
+              </div>
+            );
+          })()}
         </div>
       </div>
 

@@ -5,7 +5,6 @@ import { MobileHeader } from "@/features/customer-flow/components/navigation/mob
 import { CatalogueCard } from "@/features/customer-flow/components/catalogue-card";
 import { EmptyState } from "@/features/customer-flow/components/ui/empty-state";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
-import { formatMrp } from "@/features/customer-flow/utils/currency";
 import type { Brand, Product } from "@/features/customer-flow/types";
 
 export function MobileProductsSection({
@@ -57,7 +56,8 @@ export function MobileProductsSection({
                   image={product.image}
                   title={product.name}
                   subtitle={product.pack}
-                  price={formatMrp(product.mrp)}
+                  mrp={product.mrp}
+                  salePrice={product.saleAmount ?? product.mrp}
                   actionLabel={isOutOfStock ? "Requested" : "Add"}
                   actionVariant={isOutOfStock ? "requested" : "add"}
                   disabled={isOutOfStock}
@@ -71,6 +71,8 @@ export function MobileProductsSection({
                         pack: product.pack,
                         mrp: product.mrp,
                         mrpAmount: product.mrp,
+                        salePrice: product.saleAmount ?? product.mrp,
+                        saleAmount: product.saleAmount ?? product.mrp,
                         image: product.image,
                         productImageUrl: product.image,
                         brandId: product.brandId,

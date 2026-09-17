@@ -100,6 +100,7 @@ function resolveProduct(line: CartLine, products: Product[]): Product | undefine
         name: String(details.comboName ?? "Combo Offer"),
         pack: "Bundle",
         mrp: Number(details.originalPrice ?? details.mrpAmount ?? 0),
+        saleAmount: Number(details.offerPrice ?? details.saleAmount ?? 0),
         image: String(details.offerImageUrl ?? ""),
       };
     }
@@ -111,6 +112,7 @@ function resolveProduct(line: CartLine, products: Product[]): Product | undefine
         name: String(details.giftName ?? "Gift Offer"),
         pack: "Gift",
         mrp: Number(details.giftItemValue ?? 0),
+        saleAmount: Number(details.offerPrice ?? details.saleAmount ?? 0),
         image: String(details.offerImageUrl ?? ""),
       };
     }
@@ -124,6 +126,7 @@ function resolveProduct(line: CartLine, products: Product[]): Product | undefine
     const mrp = Number(
       details.mrpAmount ?? details.saleAmount ?? details.mrp ?? details.price ?? 0,
     );
+    const saleAmount = Number(details.salePrice ?? details.saleAmount ?? details.offerPrice ?? mrp);
     const image = String(details.productImageUrl || details.image || details.imageUrl || "");
     return {
       id: String(details._id || details.id || line.productId),
@@ -131,6 +134,7 @@ function resolveProduct(line: CartLine, products: Product[]): Product | undefine
       name: String(details.name || "Product"),
       pack,
       mrp,
+      saleAmount,
       image,
     };
   }
@@ -143,6 +147,7 @@ function resolveProduct(line: CartLine, products: Product[]): Product | undefine
           name: "Product",
           pack: "750ml",
           mrp: 0,
+          saleAmount: 0,
           image: "",
         }
       : undefined)
@@ -392,7 +397,7 @@ export function buildStructuredCart(
         requestedItemsCount += line.quantity;
       } else {
         availableOriginalMrp += product.mrp * line.quantity;
-        availableSalePrice += product.mrp * line.quantity;
+        availableSalePrice += product.saleAmount * line.quantity;
         availableItemsCount += line.quantity;
       }
     }

@@ -6,7 +6,6 @@ import { CatalogueCard } from "@/features/customer-flow/components/catalogue-car
 import { Breadcrumb } from "@/features/customer-flow/components/navigation/breadcrumb";
 import { EmptyState } from "@/features/customer-flow/components/ui/empty-state";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
-import { formatMrp } from "@/features/customer-flow/utils/currency";
 import type { Brand, Category, Product } from "@/features/customer-flow/types";
 
 export function DesktopProductsSection({
@@ -98,7 +97,8 @@ export function DesktopProductsSection({
                       image={product.image}
                       title={product.name}
                       subtitle={product.pack}
-                      price={formatMrp(product.mrp)}
+                      mrp={product.mrp}
+                      salePrice={product.saleAmount ?? product.mrp}
                       actionLabel={isOutOfStock ? "Requested" : "Add"}
                       actionVariant={isOutOfStock ? "requested" : "add"}
                       disabled={isOutOfStock}
@@ -113,6 +113,8 @@ export function DesktopProductsSection({
                             pack: product.pack,
                             mrp: product.mrp,
                             mrpAmount: product.mrp,
+                            salePrice: product.saleAmount ?? product.mrp,
+                            saleAmount: product.saleAmount ?? product.mrp,
                             image: product.image,
                             productImageUrl: product.image,
                             brandId: product.brandId,

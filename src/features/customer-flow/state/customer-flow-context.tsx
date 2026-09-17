@@ -20,6 +20,7 @@ import {
   removeCartItemApi,
   updateCartItemApi,
   type CartItemPayload,
+  type CartItemResponse,
 } from "@/features/customer-flow/services/cart-api";
 import {
   submitOrderApi,
@@ -27,7 +28,7 @@ import {
   type SubmitOrderPayload,
 } from "@/features/customer-flow/services/orders-api";
 import { fetchCustomerProfileApi } from "@/features/customer-flow/services/user-api";
-import type { UserDetails } from "@/features/customer-flow/types/state";
+import type { CartLine, UserDetails } from "@/features/customer-flow/types/state";
 
 const STORAGE_KEY = "five-spirits-customer-flow-v1";
 
@@ -62,6 +63,48 @@ function buildCartItemPayload(
   };
 }
 
+function formatCartItem(
+  item: CartLine | CartItemResponse,
+  fallbackDetails?: Record<string, unknown>,
+) {
+  const rawDetails = (item.productDetails ?? fallbackDetails ?? {}) as Record<string, unknown>;
+  const itemSale = "saleAmount" in item ? item.saleAmount : undefined;
+  const itemMrp = "mrpAmount" in item ? item.mrpAmount : "mrp" in item ? item.mrp : undefined;
+  const salePrice = Number(
+    rawDetails.salePrice ??
+      rawDetails.saleAmount ??
+      item.salePrice ??
+      itemSale ??
+      rawDetails.offerPrice ??
+      rawDetails.mrp ??
+      rawDetails.mrpAmount ??
+      itemMrp ??
+      0,
+  );
+  const mrp = Number(
+    rawDetails.mrp ?? rawDetails.mrpAmount ?? rawDetails.originalPrice ?? itemMrp ?? salePrice,
+  );
+
+  const productDetails = {
+    ...rawDetails,
+    mrp: mrp || salePrice,
+    mrpAmount: mrp || salePrice,
+    salePrice,
+    saleAmount: salePrice,
+  };
+
+  return {
+    productId: normalizeProductId(item.productId),
+    quantity: item.quantity,
+    itemType: (item.itemType as "product" | "combo" | "gift") ?? "product",
+    ...(item.selectedProductIds ? { selectedProductIds: item.selectedProductIds } : {}),
+    salePrice,
+    saleAmount: salePrice,
+    mrp: mrp || salePrice,
+    productDetails,
+  };
+}
+
 type CustomerFlowContextValue = ReturnType<typeof useCustomerFlowValue>;
 const CustomerFlowContext = createContext<CustomerFlowContextValue | null>(null);
 
@@ -85,6 +128,12 @@ function useCustomerFlowValue() {
           dispatch({ type: "selection/category", categoryId: value.selectedCategoryId });
         if (value.selectedBrandId)
           dispatch({ type: "selection/brand", brandId: value.selectedBrandId });
+        if (Array.isArray(value.cart) && value.cart.length > 0) {
+          dispatch({
+            type: "cart/set",
+            cart: value.cart.map((line) => formatCartItem(line)),
+          });
+        }
       } else {
         const storedUser = window.localStorage.getItem("customer_user");
         if (storedUser) {
@@ -123,13 +172,7 @@ function useCustomerFlowValue() {
     getCartApi()
       .then((items) => {
         if (items && items.length > 0) {
-          const cartItems = items.map((item) => ({
-            productId: normalizeProductId(item.productId),
-            quantity: item.quantity,
-            itemType: (item.itemType as "product" | "combo" | "gift") ?? "product",
-            ...(item.selectedProductIds ? { selectedProductIds: item.selectedProductIds } : {}),
-            productDetails: item.productDetails,
-          }));
+          const cartItems = items.map((item) => formatCartItem(item));
           dispatch({ type: "cart/set", cart: cartItems });
         }
       })
@@ -198,30 +241,31 @@ function useCustomerFlowValue() {
 
   const addToCart = useCallback(
     async (productId: string, quantity: number, productDetails?: Record<string, unknown>) => {
-      const customPrice = productDetails
+      const mrp = productDetails ? Number(productDetails.mrp ?? productDetails.mrpAmount ?? 0) : 0;
+      const sale = productDetails
+        ? Number(
+            productDetails.salePrice ??
+              productDetails.saleAmount ??
+              productDetails.offerPrice ??
+              mrp,
+          )
+        : 0;
+      const enrichedDetails = productDetails
         ? {
-            mrp: Number(productDetails.mrp ?? productDetails.mrpAmount ?? 0),
-            sale: Number(
-              productDetails.salePrice ??
-                productDetails.saleAmount ??
-                productDetails.mrp ??
-                productDetails.mrpAmount ??
-                0,
-            ),
+            ...productDetails,
+            mrp: mrp || sale,
+            mrpAmount: mrp || sale,
+            salePrice: sale,
+            saleAmount: sale,
           }
         : undefined;
+      const customPrice = productDetails ? { mrp, sale } : undefined;
       const payload = buildCartItemPayload(productId, quantity, "product", undefined, customPrice);
-      dispatch({ type: "cart/add", productId, quantity, productDetails });
+      dispatch({ type: "cart/add", productId, quantity, productDetails: enrichedDetails });
       try {
         const items = await addToCartApi([payload]);
         if (items && items.length > 0) {
-          const cartItems = items.map((item) => ({
-            productId: normalizeProductId(item.productId),
-            quantity: item.quantity,
-            itemType: (item.itemType as "product" | "combo" | "gift") ?? "product",
-            ...(item.selectedProductIds ? { selectedProductIds: item.selectedProductIds } : {}),
-            productDetails: item.productDetails ?? productDetails,
-          }));
+          const cartItems = items.map((item) => formatCartItem(item, enrichedDetails));
           dispatch({ type: "cart/set", cart: cartItems });
         }
       } catch {}
@@ -231,32 +275,39 @@ function useCustomerFlowValue() {
 
   const addComboToCart = useCallback(
     async (offerId: string, quantity: number, productDetails?: Record<string, unknown>) => {
-      const customPrice = productDetails
+      const mrp = productDetails
+        ? Number(productDetails.mrp ?? productDetails.originalPrice ?? 0)
+        : 0;
+      const sale = productDetails
+        ? Number(
+            productDetails.salePrice ??
+              productDetails.offerPrice ??
+              productDetails.saleAmount ??
+              mrp,
+          )
+        : 0;
+      const enrichedDetails = productDetails
         ? {
-            mrp: Number(productDetails.mrp ?? productDetails.originalPrice ?? 0),
-            sale: Number(
-              productDetails.salePrice ?? productDetails.offerPrice ?? productDetails.mrp ?? 0,
-            ),
+            ...productDetails,
+            mrp: mrp || sale,
+            originalPrice: mrp || sale,
+            salePrice: sale,
+            saleAmount: sale,
           }
         : undefined;
+      const customPrice = productDetails ? { mrp, sale } : undefined;
       const payload = buildCartItemPayload(offerId, quantity, "combo", undefined, customPrice);
       dispatch({
         type: "cart/add",
         productId: offerId,
         itemType: "combo",
         quantity,
-        productDetails,
+        productDetails: enrichedDetails,
       });
       try {
         const items = await addToCartApi([payload]);
         if (items && items.length > 0) {
-          const cartItems = items.map((item) => ({
-            productId: normalizeProductId(item.productId),
-            quantity: item.quantity,
-            itemType: (item.itemType as "product" | "combo" | "gift") ?? "product",
-            ...(item.selectedProductIds ? { selectedProductIds: item.selectedProductIds } : {}),
-            productDetails: item.productDetails ?? productDetails,
-          }));
+          const cartItems = items.map((item) => formatCartItem(item, enrichedDetails));
           dispatch({ type: "cart/set", cart: cartItems });
         }
       } catch {}
@@ -279,13 +330,7 @@ function useCustomerFlowValue() {
       try {
         const items = await addToCartApi([payload]);
         if (items && items.length > 0) {
-          const cartItems = items.map((item) => ({
-            productId: normalizeProductId(item.productId),
-            quantity: item.quantity,
-            itemType: (item.itemType as "product" | "combo" | "gift") ?? "product",
-            ...(item.selectedProductIds ? { selectedProductIds: item.selectedProductIds } : {}),
-            productDetails: item.productDetails ?? productDetails,
-          }));
+          const cartItems = items.map((item) => formatCartItem(item, productDetails));
           dispatch({ type: "cart/set", cart: cartItems });
         }
       } catch {}
@@ -297,13 +342,7 @@ function useCustomerFlowValue() {
     try {
       const items = await getCartApi();
       if (items && items.length > 0) {
-        const cartItems = items.map((item) => ({
-          productId: normalizeProductId(item.productId),
-          quantity: item.quantity,
-          itemType: (item.itemType as "product" | "combo" | "gift") ?? "product",
-          ...(item.selectedProductIds ? { selectedProductIds: item.selectedProductIds } : {}),
-          productDetails: item.productDetails,
-        }));
+        const cartItems = items.map((item) => formatCartItem(item));
         dispatch({ type: "cart/set", cart: cartItems });
       }
     } catch {}

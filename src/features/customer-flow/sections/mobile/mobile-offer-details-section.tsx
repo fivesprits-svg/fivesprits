@@ -64,11 +64,13 @@ export function MobileOfferDetailsSection({ offer }: { offer: ComboOffer }) {
           ))}
         </div>
         <div className="mt-5 flex items-baseline gap-2.5">
-          <span className="font-geist text-base font-medium text-gray-400 line-through">
-            {formatMrp(offer.mrp)}
-          </span>
+          {offer.mrp !== offer.salePrice && (
+            <span className="font-geist text-base font-medium text-gray-400 line-through">
+              {formatMrp(offer.mrp)}
+            </span>
+          )}
           <span className="font-geist text-2xl font-black text-[#c2966e]">
-            {formatMrp(offer.salePrice)}
+            {formatMrp(offer.salePrice || offer.mrp)}
           </span>
         </div>
         <div className="mt-4 flex items-center gap-3">

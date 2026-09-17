@@ -109,11 +109,13 @@ export function MobileGiftSelectionSection({
                   </div>
                   <div className="mt-2 border-t border-gray-100 pt-2">
                     <div className="flex items-baseline gap-1">
-                      <span className="font-geist text-[10px] text-gray-400 line-through">
-                        {formatMrp(product.mrp)}
-                      </span>
+                      {product.mrp !== product.salePrice && (
+                        <span className="font-geist text-[10px] text-gray-400 line-through">
+                          {formatMrp(product.mrp)}
+                        </span>
+                      )}
                       <span className="font-geist text-xs font-black text-[#c2966e]">
-                        {formatMrp(product.salePrice)}
+                        {formatMrp(product.salePrice || product.mrp)}
                       </span>
                     </div>
                     <div className="mt-2">

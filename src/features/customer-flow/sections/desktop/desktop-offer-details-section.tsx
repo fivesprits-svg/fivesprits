@@ -110,11 +110,13 @@ export function DesktopOfferDetailsSection({ offer }: { offer: ComboOffer }) {
               {/* Price on left, Stepper & Add button on right */}
               <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-gray-100 pt-5">
                 <div>
-                  <p className="font-geist text-xs font-medium text-gray-400 line-through sm:text-sm">
-                    {formatMrp(offer.mrp)}
-                  </p>
+                  {offer.mrp !== offer.salePrice && (
+                    <p className="font-geist text-xs font-medium text-gray-400 line-through sm:text-sm">
+                      {formatMrp(offer.mrp)}
+                    </p>
+                  )}
                   <p className="font-geist text-2xl font-black text-[#c2966e] lg:text-3xl">
-                    {formatMrp(offer.salePrice)}
+                    {formatMrp(offer.salePrice || offer.mrp)}
                   </p>
                 </div>
 

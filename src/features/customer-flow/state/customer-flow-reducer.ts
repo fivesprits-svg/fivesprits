@@ -8,6 +8,26 @@ export const initialCustomerFlowState: CustomerFlowState = {
   showConfirmation: false,
 };
 
+function normalizeDetails(details?: Record<string, unknown>) {
+  if (!details) return undefined;
+  const salePrice = Number(
+    details.salePrice ??
+      details.saleAmount ??
+      details.offerPrice ??
+      details.mrp ??
+      details.mrpAmount ??
+      0,
+  );
+  const mrp = Number(details.mrp ?? details.mrpAmount ?? details.originalPrice ?? salePrice);
+  return {
+    ...details,
+    mrp: mrp || salePrice,
+    mrpAmount: mrp || salePrice,
+    salePrice: details.salePrice !== undefined ? Number(details.salePrice) : salePrice,
+    saleAmount: details.saleAmount !== undefined ? Number(details.saleAmount) : salePrice,
+  };
+}
+
 export function customerFlowReducer(
   state: CustomerFlowState,
   action: CustomerFlowAction,
@@ -122,6 +142,7 @@ export function customerFlowReducer(
     }
     case "cart/add": {
       const current = state.cart.find((line) => line.productId === action.productId);
+      const details = normalizeDetails(action.productDetails);
       return {
         ...state,
         cart: current
@@ -131,7 +152,7 @@ export function customerFlowReducer(
                     ...line,
                     quantity: line.quantity + Math.max(1, action.quantity),
                     selectedProductIds: action.selectedProductIds ?? line.selectedProductIds,
-                    productDetails: action.productDetails ?? line.productDetails,
+                    productDetails: details ?? normalizeDetails(line.productDetails),
                   }
                 : line,
             )
@@ -144,7 +165,7 @@ export function customerFlowReducer(
                 ...(action.selectedProductIds
                   ? { selectedProductIds: action.selectedProductIds }
                   : {}),
-                ...(action.productDetails ? { productDetails: action.productDetails } : {}),
+                ...(details ? { productDetails: details } : {}),
               },
             ],
       };
@@ -161,7 +182,13 @@ export function customerFlowReducer(
     case "cart/remove":
       return { ...state, cart: state.cart.filter((line) => line.productId !== action.productId) };
     case "cart/set":
-      return { ...state, cart: action.cart };
+      return {
+        ...state,
+        cart: action.cart.map((line) => ({
+          ...line,
+          ...(line.productDetails ? { productDetails: normalizeDetails(line.productDetails) } : {}),
+        })),
+      };
     case "cart/clear":
       return { ...state, cart: [] };
     case "requirement/submit":

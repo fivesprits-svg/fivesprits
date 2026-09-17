@@ -131,11 +131,13 @@ export function DesktopGiftSelectionSection({
                     <div className="mt-3 border-t border-gray-100 pt-2.5">
                       <div className="flex items-center justify-between gap-2">
                         <div className="flex items-baseline gap-1.5">
-                          <span className="font-geist text-[11px] text-gray-400 line-through">
-                            {formatMrp(product.mrp)}
-                          </span>
+                          {product.mrp !== product.salePrice && (
+                            <span className="font-geist text-[11px] text-gray-400 line-through">
+                              {formatMrp(product.mrp)}
+                            </span>
+                          )}
                           <span className="font-geist text-sm font-black text-[#c2966e] sm:text-base">
-                            {formatMrp(product.salePrice)}
+                            {formatMrp(product.salePrice || product.mrp)}
                           </span>
                         </div>
 

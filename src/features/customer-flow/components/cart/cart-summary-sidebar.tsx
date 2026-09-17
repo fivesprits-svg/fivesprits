@@ -26,6 +26,7 @@ export function CartSummarySidebar({
     requestedOriginalMrp,
     requestedSalePrice,
   } = structuredCart;
+  console.log("structuredCart::", structuredCart);
 
   return (
     <aside className="sticky top-24 rounded-[28px] border border-[#E8E8E8] bg-[#F8F8F8] p-6 shadow-xs">
@@ -33,11 +34,13 @@ export function CartSummarySidebar({
         {availableItemsCount > 0 && (
           <div className="flex items-center justify-between">
             <div className="flex items-baseline gap-2">
-              <span className="font-geist text-base font-semibold text-[#8C827A] line-through">
-                {formatMrp(availableOriginalMrp)}
-              </span>
+              {availableOriginalMrp !== availableSalePrice && (
+                <span className="font-geist text-base font-semibold text-[#8C827A] line-through">
+                  {formatMrp(availableOriginalMrp)}
+                </span>
+              )}
               <span className="font-geist text-base font-bold text-[#a67854]">
-                {formatMrp(availableSalePrice)}
+                {formatMrp(availableSalePrice || availableOriginalMrp)}
               </span>
             </div>
             <span className="font-geist text-base font-semibold text-[#8C827A]">
@@ -49,11 +52,13 @@ export function CartSummarySidebar({
         {requestedItemsCount > 0 && (
           <div className="flex items-center justify-between">
             <div className="flex items-baseline gap-2">
-              <span className="font-geist text-base font-semibold text-[#8C827A] line-through">
-                {formatMrp(requestedOriginalMrp)}
-              </span>
+              {requestedOriginalMrp !== requestedSalePrice && (
+                <span className="font-geist text-base font-semibold text-[#8C827A] line-through">
+                  {formatMrp(requestedOriginalMrp)}
+                </span>
+              )}
               <span className="font-geist text-base font-bold text-[#a67854]">
-                {formatMrp(requestedSalePrice)}
+                {formatMrp(requestedSalePrice || requestedOriginalMrp)}
               </span>
             </div>
             <span className="font-geist text-base font-bold text-[#a67854]">
@@ -67,11 +72,13 @@ export function CartSummarySidebar({
 
       <div className="flex items-center justify-between">
         <div className="flex items-baseline gap-2">
-          <span className="font-geist text-xl font-bold text-[#8C827A] line-through">
-            {formatMrp(totalOriginalMrp)}
-          </span>
+          {totalOriginalMrp !== totalSalePrice && (
+            <span className="font-geist text-xl font-bold text-[#8C827A] line-through">
+              {formatMrp(totalOriginalMrp)}
+            </span>
+          )}
           <span className="font-geist text-2xl font-black tracking-tight text-gray-950">
-            {formatMrp(totalSalePrice)}
+            {formatMrp(totalSalePrice || totalOriginalMrp)}
           </span>
         </div>
         <span className="font-geist text-2xl font-black text-gray-950">Total</span>

@@ -94,14 +94,29 @@ export function GiftCartItemCard({ gift, onRemove, variant = "desktop" }: GiftCa
                     {product.name}
                   </h4>
                   <p className="font-geist text-[10px] text-gray-500">{product.pack}</p>
-                  <div className="flex items-baseline gap-1.5">
-                    <span className="font-geist text-[10px] text-gray-400 line-through">
-                      {formatMrp(product.mrp)}
-                    </span>
-                    <span className="font-geist text-xs font-black text-[#c2966e]">
-                      {formatMrp("salePrice" in product ? product.salePrice : product.mrp)}
-                    </span>
-                  </div>
+                  {(() => {
+                    const itemMrp = Number(product.mrp ?? 0);
+                    const itemSale = Number(
+                      "salePrice" in product
+                        ? product.salePrice
+                        : "saleAmount" in product
+                          ? product.saleAmount
+                          : itemMrp,
+                    );
+                    const isDifferent = itemMrp > 0 && itemSale > 0 && itemMrp !== itemSale;
+                    return (
+                      <div className="flex items-baseline gap-1.5">
+                        {isDifferent && (
+                          <span className="font-geist text-[10px] text-gray-400 line-through">
+                            {formatMrp(itemMrp)}
+                          </span>
+                        )}
+                        <span className="font-geist text-xs font-black text-[#c2966e]">
+                          {formatMrp(itemSale || itemMrp)}
+                        </span>
+                      </div>
+                    );
+                  })()}
                 </div>
               </div>
               <span className="rounded-lg bg-gray-50 px-2 py-1 text-xs font-bold text-gray-700">
@@ -123,14 +138,22 @@ export function GiftCartItemCard({ gift, onRemove, variant = "desktop" }: GiftCa
 
         {/* Price Row */}
         <div className="mt-3 flex items-center justify-between pt-2">
-          <div className="flex items-baseline gap-2">
-            <span className="font-geist text-xs text-gray-400 line-through">
-              {formatMrp(gift.totalMrp)}
-            </span>
-            <span className="font-geist text-lg font-black text-[#c2966e]">
-              {formatMrp(gift.totalSalePrice)}
-            </span>
-          </div>
+          {(() => {
+            const isDifferent =
+              gift.totalMrp > 0 && gift.totalSalePrice > 0 && gift.totalMrp !== gift.totalSalePrice;
+            return (
+              <div className="flex items-baseline gap-2">
+                {isDifferent && (
+                  <span className="font-geist text-xs text-gray-400 line-through">
+                    {formatMrp(gift.totalMrp)}
+                  </span>
+                )}
+                <span className="font-geist text-lg font-black text-[#c2966e]">
+                  {formatMrp(gift.totalSalePrice || gift.totalMrp)}
+                </span>
+              </div>
+            );
+          })()}
           <button
             type="button"
             onClick={() => onRemove(gift.id)}
@@ -180,9 +203,29 @@ export function GiftCartItemCard({ gift, onRemove, variant = "desktop" }: GiftCa
                       {product.name}
                     </h4>
                     <p className="font-geist text-[10px] text-gray-500">{product.pack}</p>
-                    <span className="font-geist text-xs font-black text-[#c2966e]">
-                      {formatMrp("salePrice" in product ? product.salePrice : product.mrp)}
-                    </span>
+                    {(() => {
+                      const itemMrp = Number(product.mrp ?? 0);
+                      const itemSale = Number(
+                        "salePrice" in product
+                          ? product.salePrice
+                          : "saleAmount" in product
+                            ? product.saleAmount
+                            : itemMrp,
+                      );
+                      const isDifferent = itemMrp > 0 && itemSale > 0 && itemMrp !== itemSale;
+                      return (
+                        <div className="flex items-baseline gap-1.5">
+                          {isDifferent && (
+                            <span className="font-geist text-[10px] text-gray-400 line-through">
+                              {formatMrp(itemMrp)}
+                            </span>
+                          )}
+                          <span className="font-geist text-xs font-black text-[#c2966e]">
+                            {formatMrp(itemSale || itemMrp)}
+                          </span>
+                        </div>
+                      );
+                    })()}
                   </div>
                 </div>
                 <span className="rounded-lg bg-gray-50 px-2 py-1 text-xs font-bold text-gray-700">
@@ -203,14 +246,24 @@ export function GiftCartItemCard({ gift, onRemove, variant = "desktop" }: GiftCa
             </div>
 
             <div className="flex items-center gap-4">
-              <div className="flex items-baseline gap-2">
-                <span className="font-geist text-xs text-gray-400 line-through">
-                  {formatMrp(gift.totalMrp)}
-                </span>
-                <span className="font-geist text-lg font-black text-[#c2966e]">
-                  {formatMrp(gift.totalSalePrice)}
-                </span>
-              </div>
+              {(() => {
+                const isDifferent =
+                  gift.totalMrp > 0 &&
+                  gift.totalSalePrice > 0 &&
+                  gift.totalMrp !== gift.totalSalePrice;
+                return (
+                  <div className="flex items-baseline gap-2">
+                    {isDifferent && (
+                      <span className="font-geist text-xs text-gray-400 line-through">
+                        {formatMrp(gift.totalMrp)}
+                      </span>
+                    )}
+                    <span className="font-geist text-lg font-black text-[#c2966e]">
+                      {formatMrp(gift.totalSalePrice || gift.totalMrp)}
+                    </span>
+                  </div>
+                );
+              })()}
               <button
                 type="button"
                 onClick={() => onRemove(gift.id)}

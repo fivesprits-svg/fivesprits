@@ -39,13 +39,15 @@ export async function fetchProductsApi(params?: {
 
     if (items && Array.isArray(items)) {
       return items.map((item) => {
-        const price = Number(item.saleAmount ?? item.mrpAmount ?? item.mrp ?? 0);
+        const mrp = Number(item.mrpAmount ?? item.mrp ?? 0);
+        const saleAmount = Number(item.saleAmount);
         return {
           id: String(item._id),
           brandId: String(item.brandId),
           name: item.name,
           pack: item.size || item.pack || "750ml",
-          mrp: price,
+          mrp: mrp || saleAmount,
+          saleAmount: saleAmount || mrp,
           image: item.productImageUrl || item.image || "",
           outOfStock: Boolean(item.outOfStock),
         };
@@ -62,12 +64,15 @@ export async function fetchProductByIdApi(id: string): Promise<Product | null> {
   try {
     const res = await apiFetch<BackendProduct>(`/products/${id}`);
     if (res.data) {
+      const mrp = Number(res.data.mrpAmount ?? res.data.mrp ?? 0);
+      const saleAmount = Number(res.data.saleAmount ?? res.data.mrpAmount ?? res.data.mrp ?? 0);
       return {
         id: String(res.data._id),
         brandId: String(res.data.brandId),
         name: res.data.name,
         pack: res.data.size || res.data.pack || "750ml",
-        mrp: Number(res.data.saleAmount ?? res.data.mrpAmount ?? res.data.mrp ?? 0),
+        mrp: mrp || saleAmount,
+        saleAmount: saleAmount || mrp,
         image: res.data.productImageUrl || res.data.image || "",
         outOfStock: Boolean(res.data.outOfStock),
       };
