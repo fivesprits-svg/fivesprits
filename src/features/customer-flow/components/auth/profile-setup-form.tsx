@@ -42,6 +42,7 @@ export function ProfileSetupForm() {
             <input
               defaultValue={formatDisplayMobile(state.userDetails?.mobile)}
               className="customer-input text-sm"
+              disabled
             />
           </div>
         </label>

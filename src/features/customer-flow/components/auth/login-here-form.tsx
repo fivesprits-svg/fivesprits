@@ -103,6 +103,7 @@ export function LoginFormHere() {
       if (typeof window !== "undefined" && res.data?.accessToken) {
         window.localStorage.setItem("customer_access_token", res.data.accessToken);
         window.localStorage.setItem("customer_user", JSON.stringify(res.data.user));
+        document.cookie = `customer_access_token=${res.data.accessToken}; path=/; max-age=86400; SameSite=Lax`;
       }
 
       loginHere(fullPhone, password, res.data?.user);
