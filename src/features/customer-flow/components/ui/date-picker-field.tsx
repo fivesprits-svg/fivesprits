@@ -9,6 +9,7 @@ interface DatePickerFieldProps {
   onChange: (value: string) => void;
   max?: string;
   min?: string;
+  disabled?: boolean;
 }
 
 function formatDateDisplay(isoDate: string): string {
@@ -24,7 +25,14 @@ function formatDateDisplay(isoDate: string): string {
   });
 }
 
-export function DatePickerField({ label, value, onChange, max, min }: DatePickerFieldProps) {
+export function DatePickerField({
+  label,
+  value,
+  onChange,
+  max,
+  min,
+  disabled,
+}: DatePickerFieldProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -37,10 +45,15 @@ export function DatePickerField({ label, value, onChange, max, min }: DatePicker
 
       <button
         type="button"
+        disabled={disabled}
         onClick={() => {
-          inputRef.current?.showPicker();
+          if (!disabled) {
+            inputRef.current?.showPicker();
+          }
         }}
-        className="profile-field-value w-full cursor-pointer text-left"
+        className={`profile-field-value w-full text-left ${
+          disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer"
+        }`}
       >
         <span className={`flex-1 truncate ${!value ? "text-gray-400" : ""}`}>
           {value ? formatDateDisplay(value) : "Select date"}

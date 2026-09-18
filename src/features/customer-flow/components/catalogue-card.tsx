@@ -218,7 +218,7 @@ export function CatalogueCard({
           <button
             type="button"
             disabled
-            className="font-outfit pointer-events-none flex h-9 w-full cursor-not-allowed items-center justify-center rounded-xl bg-emerald-600 text-[11px] font-bold tracking-wider text-white uppercase opacity-95 shadow-xs sm:h-10 sm:text-xs"
+            className="font-outfit pointer-events-none flex h-9 w-full cursor-not-allowed items-center justify-center rounded-full bg-[#2E7D32] text-[11px] font-bold tracking-wider text-white capitalize opacity-95 shadow-xs sm:h-10 sm:text-xs"
           >
             {actionLabel || "Requested"}
           </button>
@@ -226,7 +226,7 @@ export function CatalogueCard({
           <button
             type="button"
             onClick={onAction}
-            className={`font-outfit flex h-9 w-full cursor-pointer items-center justify-center rounded-xl text-[11px] font-bold tracking-wider uppercase transition-all duration-150 sm:h-10 sm:text-xs ${
+            className={`font-outfit flex h-9 w-full cursor-pointer items-center justify-center rounded-full text-[11px] font-bold tracking-wider capitalize transition-all duration-150 sm:h-10 sm:text-xs ${
               actionVariant === "request"
                 ? "bg-[#a67854] text-white hover:bg-[#8f6442]"
                 : "bg-gray-900 text-white hover:bg-[#a67854]"
@@ -272,7 +272,7 @@ export function CatalogueCard({
                 <button
                   type="button"
                   onClick={onRemove}
-                  className="grid size-9 shrink-0 place-items-center rounded-2xl bg-[#FAF6F0] transition hover:bg-[#f3ede3] active:scale-95 sm:size-10"
+                  className="grid size-9 shrink-0 place-items-center rounded-2xl bg-[#F9F9FB] transition hover:bg-[#f3ede3] active:scale-95 sm:size-10"
                   aria-label="Remove product"
                 >
                   <Image

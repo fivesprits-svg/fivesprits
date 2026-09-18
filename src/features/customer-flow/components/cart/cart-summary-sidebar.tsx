@@ -6,14 +6,16 @@ import type { StructuredCart } from "@/features/customer-flow/helpers/cart-view-
 
 interface CartSummarySidebarProps {
   structuredCart: StructuredCart;
-  submitting: boolean;
-  onOpenConfirm: () => void;
+  submitting?: boolean;
+  onOpenConfirm?: () => void;
+  showButton?: boolean;
 }
 
 export function CartSummarySidebar({
   structuredCart,
-  submitting,
+  submitting = false,
   onOpenConfirm,
+  showButton = true,
 }: CartSummarySidebarProps) {
   const {
     totalItemsCount,
@@ -26,15 +28,14 @@ export function CartSummarySidebar({
     requestedOriginalMrp,
     requestedSalePrice,
   } = structuredCart;
-  console.log("structuredCart::", structuredCart);
 
   return (
-    <aside className="sticky top-24 rounded-[28px] border border-[#E8E8E8] bg-[#F8F8F8] p-6 shadow-xs">
+    <aside className="rounded-[28px] border border-[#E8E8E8] bg-[#F8F8F8] p-5 shadow-xs md:sticky md:top-24 md:p-6">
       <div className="space-y-3">
         {availableItemsCount > 0 && (
           <div className="flex items-center justify-between">
             <div className="flex items-baseline gap-2">
-              {availableOriginalMrp !== availableSalePrice && (
+              {availableOriginalMrp > 0 && (
                 <span className="font-geist text-base font-semibold text-[#8C827A] line-through">
                   {formatMrp(availableOriginalMrp)}
                 </span>
@@ -52,7 +53,7 @@ export function CartSummarySidebar({
         {requestedItemsCount > 0 && (
           <div className="flex items-center justify-between">
             <div className="flex items-baseline gap-2">
-              {requestedOriginalMrp !== requestedSalePrice && (
+              {requestedOriginalMrp > 0 && (
                 <span className="font-geist text-base font-semibold text-[#8C827A] line-through">
                   {formatMrp(requestedOriginalMrp)}
                 </span>
@@ -72,7 +73,7 @@ export function CartSummarySidebar({
 
       <div className="flex items-center justify-between">
         <div className="flex items-baseline gap-2">
-          {totalOriginalMrp !== totalSalePrice && (
+          {totalOriginalMrp > 0 && totalOriginalMrp !== totalSalePrice && (
             <span className="font-geist text-xl font-bold text-[#8C827A] line-through">
               {formatMrp(totalOriginalMrp)}
             </span>
@@ -84,21 +85,23 @@ export function CartSummarySidebar({
         <span className="font-geist text-2xl font-black text-gray-950">Total</span>
       </div>
 
-      <button
-        type="button"
-        disabled={totalItemsCount === 0 || submitting}
-        onClick={onOpenConfirm}
-        className="font-outfit mt-6 flex h-12 w-full cursor-pointer items-center justify-center rounded-full bg-black text-sm font-bold tracking-wide text-white shadow-sm transition hover:bg-gray-800 disabled:opacity-40"
-      >
-        {submitting ? (
-          <span className="inline-flex items-center gap-2">
-            <ButtonSpinner />
-            Sending...
-          </span>
-        ) : (
-          "Send Requirement"
-        )}
-      </button>
+      {showButton && onOpenConfirm && (
+        <button
+          type="button"
+          disabled={totalItemsCount === 0 || submitting}
+          onClick={onOpenConfirm}
+          className="font-outfit mt-6 flex h-12 w-full cursor-pointer items-center justify-center rounded-full bg-black text-sm font-bold tracking-wide text-white shadow-sm transition hover:bg-gray-800 disabled:opacity-40"
+        >
+          {submitting ? (
+            <span className="inline-flex items-center gap-2">
+              <ButtonSpinner />
+              Sending...
+            </span>
+          ) : (
+            "Send Requirement"
+          )}
+        </button>
+      )}
     </aside>
   );
 }

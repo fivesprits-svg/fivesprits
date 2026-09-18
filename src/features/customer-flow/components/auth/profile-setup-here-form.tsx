@@ -9,12 +9,14 @@ import { FlowNavButtons } from "@/features/customer-flow/components/auth/flow-na
 export function ProfileSetupHereForm() {
   const router = useRouter();
   const { state, completeProfile } = useCustomerFlow();
-  const [permitNumber, setPermitNumber] = useState("LNC-2026-908B");
-  const [address, setAddress] = useState("456 Indiranagar, 80 Feet Road");
-  const [pincode, setPincode] = useState("560038");
-  const [googleMapsUrl, setGoogleMapsUrl] = useState("https://maps.app.goo.gl/vandalbar");
+  const [permitNumber, setPermitNumber] = useState<string | null>(null);
+  const [address, setAddress] = useState<string | null>(null);
+  const [pincode, setPincode] = useState<string | null>(null);
+  const [googleMapsUrl, setGoogleMapsUrl] = useState<string | null>(null);
   const [attachedFile, setAttachedFile] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const userDetails = state.userDetails;
+  console.log("userDetails::", userDetails);
   const [errors, setErrors] = useState<{
     permitNumber?: string;
     address?: string;
@@ -31,10 +33,10 @@ export function ProfileSetupHereForm() {
   function submit(event: React.FormEvent) {
     event.preventDefault();
     const next: { permitNumber?: string; address?: string; pincode?: string } = {};
-    if (!permitNumber.trim()) next.permitNumber = "Please enter your permit number";
-    if (!address.trim()) next.address = "Please enter your address";
-    if (!pincode.trim()) next.pincode = "Please enter your pincode";
-    else if (!/^\d{6}$/.test(pincode)) next.pincode = "Enter a valid 6-digit pincode";
+    if (permitNumber && !permitNumber.trim()) next.permitNumber = "Please enter your permit number";
+    if (address && !address.trim()) next.address = "Please enter your address";
+    if (pincode && !pincode.trim()) next.pincode = "Please enter your pincode";
+    else if (!/^\d{6}$/.test(pincode ?? "")) next.pincode = "Enter a valid 6-digit pincode";
     setErrors(next);
     if (!next.permitNumber && !next.address && !next.pincode) {
       setLoading(true);
@@ -93,7 +95,7 @@ export function ProfileSetupHereForm() {
               Permit Number <span className="text-red-500">*</span>
             </span>
             <input
-              value={permitNumber}
+              value={permitNumber ?? ""}
               onChange={(event) => setPermitNumber(event.target.value)}
               placeholder="e.g. LNC-2026-908B"
               aria-invalid={Boolean(errors.permitNumber)}
@@ -145,7 +147,7 @@ export function ProfileSetupHereForm() {
               Address <span className="text-red-500">*</span>
             </span>
             <input
-              value={address}
+              value={address ?? ""}
               onChange={(event) => setAddress(event.target.value)}
               placeholder="e.g. 456 Indiranagar, 80 Feet Road"
               aria-invalid={Boolean(errors.address)}
@@ -163,7 +165,7 @@ export function ProfileSetupHereForm() {
               Pincode <span className="text-red-500">*</span>
             </span>
             <input
-              value={pincode}
+              value={pincode ?? ""}
               onChange={(event) => setPincode(event.target.value.replace(/\D/g, "").slice(0, 6))}
               inputMode="numeric"
               placeholder="e.g. 560038"
@@ -182,7 +184,7 @@ export function ProfileSetupHereForm() {
               Google Maps URL (Optional)
             </span>
             <input
-              value={googleMapsUrl}
+              value={googleMapsUrl ?? ""}
               onChange={(event) => setGoogleMapsUrl(event.target.value)}
               placeholder="e.g. https://maps.app.goo.gl/vandalbar"
               className="customer-input text-sm"

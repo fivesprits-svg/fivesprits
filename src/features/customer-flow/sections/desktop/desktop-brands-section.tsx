@@ -12,9 +12,11 @@ import type { Brand, Category } from "@/features/customer-flow/types";
 export function DesktopBrandsSection({
   category: propCategory = null,
   brands: propBrands = [],
+  isLoading = false,
 }: {
   category?: Category | null;
   brands?: Brand[];
+  isLoading?: boolean;
 } = {}) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -23,6 +25,7 @@ export function DesktopBrandsSection({
 
   const category = propCategory ?? null;
   const brands = propBrands ?? [];
+  const isEmpty = !isLoading && brands.length === 0;
 
   return (
     <div className="hidden md:block">
@@ -53,11 +56,17 @@ export function DesktopBrandsSection({
               </p>
             </div>
             <span className="inline-flex items-center gap-1.5 rounded-full border border-[#e8d5c4] bg-[#f7f4ee] px-3.5 py-1.5 text-xs font-semibold text-[#a67854]">
-              {brands.length} brands available
+              {isLoading ? "Loading..." : `${brands.length} brands available`}
             </span>
           </div>
 
-          {brands.length === 0 ? (
+          {isLoading ? (
+            <div className="grid grid-cols-2 items-stretch gap-5 sm:grid-cols-3 lg:grid-cols-4">
+              {Array.from({ length: 8 }).map((_, index) => (
+                <CatalogueCard key={index} variant="brand" isLoading={true} image="" title="" />
+              ))}
+            </div>
+          ) : isEmpty ? (
             /* Empty state with hero image */
             <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-2">
               <EmptyState

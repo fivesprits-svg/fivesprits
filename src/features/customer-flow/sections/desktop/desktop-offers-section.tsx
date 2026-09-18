@@ -10,13 +10,15 @@ import { EmptyState } from "@/features/customer-flow/components/ui/empty-state";
 
 export function DesktopOffersSection({
   offersList = [],
+  isLoading = false,
 }: {
   offersList?: ComboOffer[];
+  isLoading?: boolean;
 } = {}) {
   const { addComboToCart, setCartQuantity, removeFromCart, state } = useCustomerFlow();
 
   const cartLines = state.cart;
-  const isEmpty = offersList.length === 0;
+  const isEmpty = !isLoading && offersList.length === 0;
 
   return (
     <div className="hidden md:block">
@@ -50,7 +52,20 @@ export function DesktopOffersSection({
           </div>
 
           {/* Offers Grid or Empty State */}
-          {isEmpty ? (
+          {isLoading ? (
+            <div className="grid grid-cols-2 gap-6">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <ComboOfferCard
+                  key={i}
+                  isLoading={true}
+                  offer={{} as ComboOffer}
+                  onAdd={() => {}}
+                  onQuantityChange={() => {}}
+                  onRemove={() => {}}
+                />
+              ))}
+            </div>
+          ) : isEmpty ? (
             <EmptyState
               icon="sparkles"
               title="No Combo Offers Available"

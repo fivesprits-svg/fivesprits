@@ -42,7 +42,7 @@ export function AgeVerificationForm() {
             <Image src="/customer-flow/icons/success.svg" alt="" width={14} height={14} />
           )}
         </div>
-        <span className="font-geist text-common-black text-[15px] leading-snug md:text-base md:leading-normal">
+        <span className="font-geist text-common-black cursor-pointer text-[15px] leading-snug md:text-base md:leading-normal">
           I confirm that I am 25 years of age or older.
         </span>
       </button>

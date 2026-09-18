@@ -280,7 +280,7 @@ export function MobileProfileSection() {
             </p>
           )}
 
-          <h1 className="font-unbounded mt-2 text-xl font-bold">{profileData.name}</h1>
+          <h1 className="font-unbounded mt-2 text-xl font-bold capitalize">{profileData.name}</h1>
         </div>
 
         <div className="mt-8 space-y-5">
@@ -316,22 +316,24 @@ export function MobileProfileSection() {
             label="Date of Birth"
             value={profileData.dateOfBirth}
             onChange={handleSaveDateOfBirth}
+            disabled
           />
 
-          <div>
-            <div className="mb-2 flex items-center justify-between">
-              <span className="profile-field-label">Permit Number</span>
-              <button
-                type="button"
-                onClick={() => handleEditField("permitNumber", profileData.permitNumber)}
-                className="profile-edit-btn"
-              >
-                Edit
-              </button>
-            </div>
-            <div className="profile-field-value">
-              <span className="flex-1 truncate">{profileData.permitNumber}</span>
-            </div>
+          <div className="mb-2 flex items-center justify-between">
+            <span className="profile-field-label">Permit Number</span>
+            <button
+              type="button"
+              onClick={() => handleEditField("permitNumber", profileData.permitNumber)}
+              className="profile-edit-btn"
+            >
+              Edit
+            </button>
+          </div>
+
+          <div className="profile-field-value">
+            <span className={`flex-1 truncate ${!profileData.permitNumber ? "text-gray-400" : ""}`}>
+              {profileData.permitNumber || "Enter permit number"}
+            </span>
           </div>
 
           <div>
@@ -418,8 +420,11 @@ export function MobileProfileSection() {
                 Edit
               </button>
             </div>
+
             <div className="profile-field-value">
-              <span className="flex-1 truncate">{profileData.address}</span>
+              <span className={`flex-1 truncate ${!profileData.address ? "text-gray-400" : ""}`}>
+                {profileData.address || "Enter delivery address"}
+              </span>
             </div>
           </div>
 
@@ -434,8 +439,11 @@ export function MobileProfileSection() {
                 Edit
               </button>
             </div>
+
             <div className="profile-field-value">
-              <span className="flex-1 truncate">{profileData.pincode}</span>
+              <span className={`flex-1 truncate ${!profileData.pincode ? "text-gray-400" : ""}`}>
+                {profileData.pincode || "Enter pincode"}
+              </span>
             </div>
           </div>
 
@@ -450,16 +458,24 @@ export function MobileProfileSection() {
                 Edit
               </button>
             </div>
+
             <div className="profile-field-value flex items-center justify-between">
-              <span className="flex-1 truncate">{profileData.mapsLocation}</span>
-              <a
-                href={formatGoogleMapsUrl(profileData.mapsLocation)}
-                target="_blank"
-                rel="noreferrer"
-                className="ml-2 text-[11px] font-semibold text-[#a67854] hover:underline"
+              <span
+                className={`flex-1 truncate ${!profileData.mapsLocation ? "text-gray-400" : ""}`}
               >
-                Open Maps
-              </a>
+                {profileData.mapsLocation || "Enter Google Maps location"}
+              </span>
+
+              {profileData.mapsLocation && (
+                <a
+                  href={formatGoogleMapsUrl(profileData.mapsLocation)}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="ml-2 text-[11px] font-semibold text-[#a67854] hover:underline"
+                >
+                  Open Maps
+                </a>
+              )}
             </div>
           </div>
         </div>
@@ -481,7 +497,7 @@ export function MobileProfileSection() {
         <div className="profile-popup-overlay" role="dialog" aria-modal="true">
           <div className="profile-popup-card">
             <h2 className="profile-popup-title">Logout Confirmation</h2>
-            <p className="profile-popup-subtitle mt-3">Are your sure you want to do logout?</p>
+            <p className="profile-popup-subtitle mt-3">Are your sure you want to logout?</p>
             {logoutError && (
               <p className="mt-3 rounded-xl border border-red-200 bg-red-50 p-3 text-center text-xs font-medium text-red-700">
                 {logoutError}
@@ -785,17 +801,31 @@ export function MobileProfileSection() {
               {editingField === "pincode" && "Pincode"}
               {editingField === "mapsLocation" && "Google Maps Location"}
             </span>
+
             <input
               value={editValue}
               onChange={(e) => setEditValue(e.target.value)}
+              placeholder={
+                editingField === "permitNumber"
+                  ? "Enter permit number"
+                  : editingField === "address"
+                    ? "Enter delivery address"
+                    : editingField === "pincode"
+                      ? "Enter pincode"
+                      : editingField === "mapsLocation"
+                        ? "Enter Google Maps location"
+                        : ""
+              }
               className="profile-popup-input mt-4"
               disabled={isSaving}
             />
+
             {saveError && (
               <p className="mt-3 rounded-xl border border-red-200 bg-red-50 p-3 text-center text-xs font-medium text-red-700">
                 {saveError}
               </p>
             )}
+
             <div className="mt-5 flex gap-3">
               <button
                 type="button"
@@ -812,6 +842,7 @@ export function MobileProfileSection() {
                   "Save"
                 )}
               </button>
+
               <button
                 type="button"
                 onClick={() => {

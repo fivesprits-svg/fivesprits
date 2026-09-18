@@ -1,21 +1,23 @@
 "use client";
-import Image from "next/image";
-import { useSearchParams } from "next/navigation";
-import { useRouter } from "next/navigation";
+import { CatalogueCard } from "@/features/customer-flow/components/catalogue-card";
 import { MobileBottomNav } from "@/features/customer-flow/components/navigation/mobile-bottom-nav";
 import { EmptyState } from "@/features/customer-flow/components/ui/empty-state";
+import { ImagePlaceholder } from "@/features/customer-flow/components/ui/image-placeholder";
+import { ImageSkeleton } from "@/features/customer-flow/components/ui/skeleton";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import type { Brand, Category } from "@/features/customer-flow/types";
+import Image from "next/image";
+import { useRouter, useSearchParams } from "next/navigation";
 import { MobileHeader } from "../../components/navigation/mobile-header";
-import { ImageSkeleton } from "@/features/customer-flow/components/ui/skeleton";
-import { ImagePlaceholder } from "@/features/customer-flow/components/ui/image-placeholder";
 
 export function MobileBrandsSection({
   category: propCategory = null,
   brands: propBrands = [],
+  isLoading = false,
 }: {
   category?: Category | null;
   brands?: Brand[];
+  isLoading?: boolean;
 } = {}) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -24,13 +26,12 @@ export function MobileBrandsSection({
 
   const category = propCategory ?? null;
   const brands = propBrands ?? [];
+  const isEmpty = !isLoading && brands.length === 0;
 
   return (
     <div className="min-h-dvh w-full max-w-[390px] overflow-hidden bg-white pb-28 text-[#101010] md:hidden">
-      {/* Top Header with Back Button & Column Hero Image */}
-      {/* Mobile Header */}
       <MobileHeader backHref="/categories" />
-      <div className="relative px-6 pb-2">
+      <div className="relative px-4 pb-2">
         <div className="mt-3 flex items-start justify-between">
           <div className="pt-1">
             <h1 className="font-outfit text-[36px] leading-none font-black tracking-tight text-black uppercase lg:text-[42px]">
@@ -56,7 +57,15 @@ export function MobileBrandsSection({
         </div>
       </div>
 
-      {brands.length === 0 ? (
+      {isLoading ? (
+        <main className="px-4 pt-3">
+          <div className="grid grid-cols-2 gap-x-3.5 gap-y-5">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <CatalogueCard key={index} variant="brand" isLoading={true} image="" title="" />
+            ))}
+          </div>
+        </main>
+      ) : isEmpty ? (
         <EmptyState
           icon="/customer-flow/icons/brands0.svg"
           title="No Brands Available"
@@ -66,11 +75,11 @@ export function MobileBrandsSection({
         />
       ) : (
         /* Brands 2-Column Grid */
-        <main className="px-6 pt-3">
+        <main className="px-4 pt-3">
           <div className="grid grid-cols-2 gap-x-3.5 gap-y-5">
-            {brands.map((brand) => (
+            {brands?.map((brand) => (
               <button
-                key={brand.id}
+                key={brand?.id}
                 type="button"
                 onClick={() => {
                   selectBrand(brand.id);
@@ -78,20 +87,32 @@ export function MobileBrandsSection({
                 }}
                 className="group flex cursor-pointer flex-col items-center text-center"
               >
-                <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[22px] transition-transform duration-200 group-hover:scale-105 active:scale-95">
+                <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[22px] border border-gray-100/90 bg-[#FAF9F7] p-2 transition-all duration-200 group-hover:scale-105 group-hover:border-[#c9a07e] active:scale-95">
+                  {/* Background */}
+                  <Image
+                    src="/customer-flow/hero/bg-remover.png"
+                    alt=""
+                    fill
+                    sizes="160px"
+                    className="object-contain opacity-5"
+                  />
+
                   {brand.image ? (
                     <>
                       <ImageSkeleton className="absolute inset-0" />
+
                       <Image
                         src={brand.image}
                         alt={brand.name}
                         fill
                         sizes="160px"
-                        className="object-contain transition-transform duration-200 group-hover:scale-105"
+                        className="relative z-10 object-contain transition-transform duration-200 group-hover:scale-105"
                       />
                     </>
                   ) : (
-                    <ImagePlaceholder type="brand" />
+                    <div className="relative z-10 h-full w-full">
+                      <ImagePlaceholder type="brand" />
+                    </div>
                   )}
                 </div>
                 <span className="font-geist mt-2.5 w-full truncate text-center text-sm font-bold text-black">

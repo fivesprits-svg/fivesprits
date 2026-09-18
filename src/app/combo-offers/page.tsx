@@ -9,12 +9,20 @@ import type { ComboOffer } from "@/features/customer-flow/types";
 
 export default function ComboOffersPage() {
   const [offers, setOffers] = useState<ComboOffer[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     let active = true;
-    fetchComboOffersApi().then((data) => {
-      if (active) setOffers(data);
-    });
+    fetchComboOffersApi()
+      .then((data) => {
+        if (active) {
+          setOffers(data);
+          setIsLoading(false);
+        }
+      })
+      .catch(() => {
+        if (active) setIsLoading(false);
+      });
     return () => {
       active = false;
     };
@@ -22,8 +30,8 @@ export default function ComboOffersPage() {
 
   return (
     <AuthenticatedRoute>
-      <MobileOffersSection offersList={offers} />
-      <DesktopOffersSection offersList={offers} />
+      <MobileOffersSection offersList={offers} isLoading={isLoading} />
+      <DesktopOffersSection offersList={offers} isLoading={isLoading} />
     </AuthenticatedRoute>
   );
 }

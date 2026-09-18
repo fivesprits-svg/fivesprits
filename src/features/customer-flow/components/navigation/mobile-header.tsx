@@ -24,11 +24,11 @@ export function MobileHeader({
   return (
     <header className="md:hidden">
       {/* <MobileStatusBar /> */}
-      <div className="relative flex h-14 items-center justify-center px-6 md:px-10">
+      <div className="relative flex h-14 items-center justify-center px-4 md:px-10">
         <button
           onClick={handleBack}
           aria-label="Go back"
-          className="absolute left-6 grid size-10 cursor-pointer place-items-center rounded-full bg-[#f7f4ee] md:left-10"
+          className="absolute left-4 grid size-8 cursor-pointer place-items-center rounded-full bg-[#f7f4ee] md:left-10"
         >
           <Image src="/customer-flow/icons/back.svg" alt="" width={16} height={16} />
         </button>

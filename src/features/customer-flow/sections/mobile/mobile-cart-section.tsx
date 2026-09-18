@@ -9,6 +9,7 @@ import { RegularCartItemCard } from "@/features/customer-flow/components/cart/re
 import { GiftCartItemCard } from "@/features/customer-flow/components/cart/gift-cart-item-card";
 import { ComboCartItemCard } from "@/features/customer-flow/components/cart/combo-cart-item-card";
 import { RequirementHistoryCard } from "@/features/customer-flow/components/cart/requirement-history-card";
+import { CartSummarySidebar } from "@/features/customer-flow/components/cart/cart-summary-sidebar";
 
 export function MobileCartSection() {
   const {
@@ -30,7 +31,7 @@ export function MobileCartSection() {
 
   return (
     <div className="min-h-dvh w-full bg-white pb-48 md:hidden">
-      <div className="relative px-6 pb-2">
+      <div className="relative px-4 pb-2">
         <div className="mt-3">
           <h1 className="font-outfit text-[36px] leading-none font-black tracking-tight text-black uppercase">
             Requirement
@@ -41,7 +42,7 @@ export function MobileCartSection() {
         </div>
       </div>
 
-      <main className="mx-auto w-full max-w-[390px] px-6 pt-3">
+      <main className="mx-auto w-full max-w-[390px] px-4 pt-3">
         {totalItemsCount === 0 ? (
           <div className="space-y-8">
             <EmptyState
@@ -136,6 +137,9 @@ export function MobileCartSection() {
                 </div>
               </div>
             )}
+
+            {/* 4. SUMMARY CARD */}
+            <CartSummarySidebar structuredCart={structuredCart} showButton={false} />
 
             {/* Requirement History for Regular Users when cart is populated */}
             {isRegularUser && requirementHistory.length > 0 && (

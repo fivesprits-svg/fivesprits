@@ -6,25 +6,40 @@ import { OfferTabs } from "@/features/customer-flow/components/offers/offer-tabs
 import { ComboOfferCard } from "@/features/customer-flow/components/offers/combo-offer-card";
 import type { ComboOffer } from "@/features/customer-flow/types";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
-import { MobileHeader } from "../../components/navigation/mobile-header";
 import { EmptyState } from "@/features/customer-flow/components/ui/empty-state";
 
 export function MobileOffersSection({
   offersList = [],
+  isLoading = false,
 }: {
   offersList?: ComboOffer[];
+  isLoading?: boolean;
 } = {}) {
   const { addComboToCart, setCartQuantity, removeFromCart, state } = useCustomerFlow();
 
   const cartLines = state.cart;
+  const isEmpty = !isLoading && offersList.length === 0;
 
   return (
     <div className="min-h-dvh bg-white pb-28 md:hidden">
-      <MobileHeader title="Offers" backHref="" />
+      {/* <MobileHeader title="Offers" backHref="" /> */}
       <main className="mx-auto w-full max-w-[390px] px-6 pt-2">
         <OfferTabs active="combo" />
         <MobileOfferHero />
-        {offersList.length === 0 ? (
+        {isLoading ? (
+          <div className="mt-4 space-y-4">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <ComboOfferCard
+                key={i}
+                isLoading={true}
+                offer={{} as ComboOffer}
+                onAdd={() => {}}
+                onQuantityChange={() => {}}
+                onRemove={() => {}}
+              />
+            ))}
+          </div>
+        ) : isEmpty ? (
           <EmptyState
             icon="sparkles"
             title="No Combo Offers Available"

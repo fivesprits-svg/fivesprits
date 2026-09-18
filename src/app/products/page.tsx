@@ -18,6 +18,14 @@ function ProductsContent() {
   const [category, setCategory] = useState<Category | null>(null);
   const [brand, setBrand] = useState<Brand | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [prevParamsKey, setPrevParamsKey] = useState(`${brandId}-${categoryId}`);
+
+  const currentParamsKey = `${brandId}-${categoryId}`;
+  if (currentParamsKey !== prevParamsKey) {
+    setPrevParamsKey(currentParamsKey);
+    setIsLoading(true);
+  }
 
   useEffect(() => {
     let active = true;
@@ -28,13 +36,21 @@ function ProductsContent() {
         ...(brandId ? { brandId } : {}),
         ...(categoryId ? { categoryId } : {}),
       }),
-    ]).then(([catData, brandData, prodData]) => {
-      if (active) {
-        setCategory(catData);
-        setBrand(brandData);
-        setProducts(prodData);
-      }
-    });
+    ])
+      .then(([catData, brandData, prodData]) => {
+        if (active) {
+          setCategory(catData);
+          setBrand(brandData);
+          setProducts(prodData);
+          setIsLoading(false);
+        }
+      })
+      .catch((err) => {
+        console.error("fetchProducts error:", err);
+        if (active) {
+          setIsLoading(false);
+        }
+      });
     return () => {
       active = false;
     };
@@ -42,8 +58,13 @@ function ProductsContent() {
 
   return (
     <>
-      <MobileProductsSection brand={brand} products={products} />
-      <DesktopProductsSection category={category} brand={brand} products={products} />
+      <MobileProductsSection brand={brand} products={products} isLoading={isLoading} />
+      <DesktopProductsSection
+        category={category}
+        brand={brand}
+        products={products}
+        isLoading={isLoading}
+      />
     </>
   );
 }

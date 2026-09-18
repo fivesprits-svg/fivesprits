@@ -2,7 +2,7 @@ export type AadhaarErrors = { aadhaar?: string };
 
 export function validateAadhaar(aadhaar: string): AadhaarErrors {
   const cleaned = aadhaar.replace(/\s/g, "");
-  if (!cleaned) return { aadhaar: "Please enter your Aadhaar number" };
+  if (!cleaned) return { aadhaar: "Aadhaar card number is required" };
   if (!/^\d{12}$/.test(cleaned)) return { aadhaar: "Enter a valid 12-digit Aadhaar number" };
   return {};
 }

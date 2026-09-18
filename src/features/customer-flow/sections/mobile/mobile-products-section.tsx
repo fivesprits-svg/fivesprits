@@ -10,9 +10,11 @@ import type { Brand, Product } from "@/features/customer-flow/types";
 export function MobileProductsSection({
   brand: propBrand = null,
   products: propProducts = [],
+  isLoading = false,
 }: {
   brand?: Brand | null;
   products?: Product[];
+  isLoading?: boolean;
 } = {}) {
   const searchParams = useSearchParams();
   const { addToCart, setCartQuantity, removeFromCart, state } = useCustomerFlow();
@@ -20,7 +22,7 @@ export function MobileProductsSection({
 
   const brand = propBrand ?? null;
   const products = propProducts ?? [];
-  const isEmpty = products.length === 0;
+  const isEmpty = !isLoading && products.length === 0;
 
   const cartLines = state.cart;
 
@@ -32,7 +34,13 @@ export function MobileProductsSection({
         isSearchEnabled={true}
       />
       <main className="mx-auto w-full max-w-[390px] px-6 pt-5">
-        {isEmpty ? (
+        {isLoading ? (
+          <div className="grid grid-cols-2 gap-3">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <CatalogueCard key={index} variant="product" isLoading={true} image="" title="" />
+            ))}
+          </div>
+        ) : isEmpty ? (
           <EmptyState
             icon="/customer-flow/icons/category0.svg"
             title="No Products Yet"

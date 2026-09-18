@@ -32,7 +32,9 @@ export function AadhaarForm() {
   return (
     <form onSubmit={submit} className="space-y-4 md:space-y-5" noValidate>
       <label className="block">
-        <span className="customer-input-label mb-2.5 block md:text-sm">Aadhaar Card</span>
+        <span className="customer-input-label mb-2.5 block md:text-sm">
+          Aadhaar Card <span className="text-red-500">*</span>
+        </span>
         <input
           value={aadhaar}
           onChange={(event) => {

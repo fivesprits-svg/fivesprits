@@ -15,18 +15,33 @@ function BrandsContent() {
 
   const [category, setCategory] = useState<Category | null>(null);
   const [brands, setBrands] = useState<Brand[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [prevCategoryId, setPrevCategoryId] = useState(categoryId);
+
+  if (categoryId !== prevCategoryId) {
+    setPrevCategoryId(categoryId);
+    setIsLoading(true);
+  }
 
   useEffect(() => {
     let active = true;
     Promise.all([
       categoryId ? fetchCategoryByIdApi(categoryId) : Promise.resolve(null),
       fetchBrandsApi(categoryId ? { categoryId } : undefined),
-    ]).then(([catData, brandData]) => {
-      if (active) {
-        setCategory(catData);
-        setBrands(brandData);
-      }
-    });
+    ])
+      .then(([catData, brandData]) => {
+        if (active) {
+          setCategory(catData);
+          setBrands(brandData);
+          setIsLoading(false);
+        }
+      })
+      .catch((err) => {
+        console.error("fetchBrands error:", err);
+        if (active) {
+          setIsLoading(false);
+        }
+      });
     return () => {
       active = false;
     };
@@ -34,8 +49,8 @@ function BrandsContent() {
 
   return (
     <>
-      <MobileBrandsSection category={category} brands={brands} />
-      <DesktopBrandsSection category={category} brands={brands} />
+      <MobileBrandsSection category={category} brands={brands} isLoading={isLoading} />
+      <DesktopBrandsSection category={category} brands={brands} isLoading={isLoading} />
     </>
   );
 }

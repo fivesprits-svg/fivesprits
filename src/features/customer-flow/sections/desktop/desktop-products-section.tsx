@@ -12,10 +12,12 @@ export function DesktopProductsSection({
   category: propCategory = null,
   brand: propBrand = null,
   products: propProducts = [],
+  isLoading = false,
 }: {
   category?: Category | null;
   brand?: Brand | null;
   products?: Product[];
+  isLoading?: boolean;
 } = {}) {
   const searchParams = useSearchParams();
   const { addToCart, setCartQuantity, removeFromCart, state } = useCustomerFlow();
@@ -24,7 +26,7 @@ export function DesktopProductsSection({
   const category = propCategory ?? null;
   const brand = propBrand ?? null;
   const products = propProducts ?? [];
-  const isEmpty = products.length === 0;
+  const isEmpty = !isLoading && products.length === 0;
 
   const cartLines = state.cart;
 
@@ -54,11 +56,11 @@ export function DesktopProductsSection({
               <div className="mb-1.5 flex items-center gap-2">
                 <span className="size-2 rounded-full bg-[#a67854]" />
                 <span className="font-outfit text-xs font-bold tracking-wider text-[#a67854] uppercase">
-                  {brand?.name} Selection
+                  {brand?.name ? `${brand.name} Selection` : "Selection"}
                 </span>
               </div>
               <h1 className="font-unbounded text-2xl font-black tracking-tight text-gray-900 capitalize lg:text-3xl">
-                {brand?.name}
+                {brand?.name ?? "Products"}
               </h1>
               <p className="font-geist mt-1 text-xs text-gray-500 lg:text-sm">
                 Choose quantities and add products directly to your requirement list.
@@ -66,11 +68,17 @@ export function DesktopProductsSection({
             </div>
 
             <span className="inline-flex items-center gap-1.5 rounded-full border border-[#e8d5c4] bg-[#f7f4ee] px-3.5 py-1.5 text-xs font-semibold text-[#a67854]">
-              {products.length} products available
+              {isLoading ? "Loading..." : `${products.length} products available`}
             </span>
           </div>
 
-          {isEmpty ? (
+          {isLoading ? (
+            <div className="grid grid-cols-2 items-stretch gap-5 sm:grid-cols-3 lg:grid-cols-4">
+              {Array.from({ length: 8 }).map((_, index) => (
+                <CatalogueCard key={index} variant="product" isLoading={true} image="" title="" />
+              ))}
+            </div>
+          ) : isEmpty ? (
             <EmptyState
               icon="/customer-flow/icons/category0.svg"
               title="No Products Yet"

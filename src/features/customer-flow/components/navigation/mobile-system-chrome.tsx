@@ -14,10 +14,5 @@ export function MobileStatusBar() {
 }
 
 export function MobileHomeIndicator() {
-  return (
-    <span
-      data-testid="home-indicator"
-      className="fixed bottom-2 left-1/2 z-[60] h-[5px] w-[134px] -translate-x-1/2 rounded-full bg-black md:hidden"
-    />
-  );
+  return <span data-testid="home-indicator" />;
 }

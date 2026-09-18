@@ -121,7 +121,9 @@ export function LoginFormHere() {
   return (
     <form onSubmit={submit} className="mt-8 space-y-[15px] md:mt-10 md:space-y-5" noValidate>
       <label className="block">
-        <span className="customer-input-label mb-2.5 block md:text-sm">Mobile Number</span>
+        <span className="customer-input-label mb-2.5 block md:text-sm">
+          Mobile Number <span className="text-red-500">*</span>
+        </span>
         <div className="phone-input-wrapper">
           <PhoneInput
             country="in"
@@ -164,7 +166,9 @@ export function LoginFormHere() {
         )}
       </label>
       <label className="block">
-        <span className="customer-input-label mb-2.5 block md:text-sm">Password</span>
+        <span className="customer-input-label mb-2.5 block md:text-sm">
+          Password <span className="text-red-500">*</span>
+        </span>
         <div className="relative">
           <input
             type={showPassword ? "text" : "password"}

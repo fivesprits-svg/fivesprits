@@ -45,7 +45,9 @@ export function LoginForm() {
   return (
     <form onSubmit={submit} className="mt-8 space-y-[15px] md:mt-10 md:space-y-5" noValidate>
       <label className="block">
-        <span className="customer-input-label mb-2.5 block md:text-sm">User Name</span>
+        <span className="customer-input-label mb-2.5 block md:text-sm">
+          User Name <span className="text-red-500">*</span>
+        </span>
         <input
           value={name}
           onChange={(event) => {
@@ -70,14 +72,18 @@ export function LoginForm() {
           </span>
         )}
       </label>
+
       <label className="block">
-        <span className="customer-input-label mb-2.5 block md:text-sm">Mobile Number</span>
+        <span className="customer-input-label mb-2.5 block md:text-sm">
+          Mobile Number <span className="text-red-500">*</span>
+        </span>
         <input
           value={mobile}
           onChange={(event) => {
             const next = event.target.value.replace(/\D/g, "").slice(0, 10);
             setMobile(next);
             updateFormDraft({ type: "login", data: { name, mobile: next } });
+
             if (errors.mobile) {
               if (next.length === 0) {
                 setErrors((prev) => ({
@@ -136,11 +142,11 @@ export function LoginForm() {
           <span>Continue</span>
         )}
       </button>
-      <p className="font-geist text-common-gray text-center text-[11px] md:text-sm">
+      <p className="font-geist text-common-gray text-center text-sm md:text-base">
         We&apos;ll send you a one-time verification code to Admin.
       </p>
+
       <p className="font-geist text-common-gray mt-3 text-center text-sm md:text-base">
-        {" "}
         Already have an account?{" "}
         <button
           type="button"
@@ -148,9 +154,8 @@ export function LoginForm() {
           className="text-common-black cursor-pointer font-semibold underline"
           disabled={loading}
         >
-          {" "}
-          Login here{" "}
-        </button>{" "}
+          Login here
+        </button>
       </p>
     </form>
   );
