@@ -18,7 +18,6 @@ export function CartSummarySidebar({
   showButton = true,
 }: CartSummarySidebarProps) {
   const {
-    totalItemsCount,
     totalOriginalMrp,
     totalSalePrice,
     availableItemsCount,
@@ -27,6 +26,7 @@ export function CartSummarySidebar({
     requestedItemsCount,
     requestedOriginalMrp,
     requestedSalePrice,
+    unavailableItemsCount,
   } = structuredCart;
 
   return (
@@ -71,6 +71,16 @@ export function CartSummarySidebar({
 
       <div className="my-4 h-px bg-[#E8E3DC]" />
 
+      {unavailableItemsCount > 0 && (
+        <p
+          className="font-geist mb-4 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900"
+          role="status"
+        >
+          {unavailableItemsCount} out-of-stock{" "}
+          {unavailableItemsCount === 1 ? "item is" : "items are"} excluded from your requirement.
+        </p>
+      )}
+
       <div className="flex items-center justify-between">
         <div className="flex items-baseline gap-2">
           {totalOriginalMrp > 0 && totalOriginalMrp !== totalSalePrice && (
@@ -88,7 +98,7 @@ export function CartSummarySidebar({
       {showButton && onOpenConfirm && (
         <button
           type="button"
-          disabled={totalItemsCount === 0 || submitting}
+          disabled={availableItemsCount === 0 || submitting}
           onClick={onOpenConfirm}
           className="font-outfit mt-6 flex h-12 w-full cursor-pointer items-center justify-center rounded-full bg-black text-sm font-bold tracking-wide text-white shadow-sm transition hover:bg-gray-800 disabled:opacity-40"
         >

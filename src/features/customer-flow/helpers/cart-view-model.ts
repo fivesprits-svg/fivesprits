@@ -23,6 +23,8 @@ export type RegularCartItem = {
   brand?: Brand;
   quantity: number;
   isRequested?: boolean;
+  isOutOfStock?: boolean;
+  priceChange?: CartLine["priceChange"];
 };
 
 export type ComboCartItem = {
@@ -58,6 +60,7 @@ export type StructuredCart = {
   requestedItemsCount: number;
   requestedOriginalMrp: number;
   requestedSalePrice: number;
+  unavailableItemsCount: number;
 };
 
 export type ComboDetails = {
@@ -275,6 +278,7 @@ export function buildStructuredCart(
   let requestedOriginalMrp = 0;
   let requestedSalePrice = 0;
   let requestedItemsCount = 0;
+  let unavailableItemsCount = 0;
 
   lines.forEach((line) => {
     const type = line.itemType ?? "product";
@@ -389,7 +393,17 @@ export function buildStructuredCart(
         brand,
         quantity: line.quantity,
         isRequested,
+        isOutOfStock:
+          line.outOfStock ?? Boolean((line.productDetails as Record<string, unknown>)?.outOfStock),
+        priceChange: line.priceChange,
       });
+
+      const isOutOfStock =
+        line.outOfStock ?? Boolean((line.productDetails as Record<string, unknown>)?.outOfStock);
+      if (isOutOfStock) {
+        unavailableItemsCount += line.quantity;
+        return;
+      }
 
       if (isRequested) {
         requestedOriginalMrp += product.mrp * line.quantity;
@@ -424,5 +438,6 @@ export function buildStructuredCart(
     requestedItemsCount,
     requestedOriginalMrp,
     requestedSalePrice,
+    unavailableItemsCount,
   };
 }

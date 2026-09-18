@@ -11,7 +11,28 @@ export interface BackendBrand {
   active?: boolean;
 }
 
+const brandRequests = new Map<string, Promise<Brand[]>>();
+const brandByIdRequests = new Map<string, Promise<Brand | null>>();
+
 export async function fetchBrandsApi(params?: {
+  categoryId?: string;
+  search?: string;
+  status?: string;
+}): Promise<Brand[]> {
+  const requestKey = JSON.stringify({
+    categoryId: params?.categoryId ?? "",
+    search: params?.search ?? "",
+    status: params?.status ?? "",
+  });
+  const cachedRequest = brandRequests.get(requestKey);
+  if (cachedRequest) return cachedRequest;
+
+  const request = fetchBrands(params);
+  brandRequests.set(requestKey, request);
+  return request;
+}
+
+async function fetchBrands(params?: {
   categoryId?: string;
   search?: string;
   status?: string;
@@ -43,6 +64,15 @@ export async function fetchBrandsApi(params?: {
 }
 
 export async function fetchBrandByIdApi(id: string): Promise<Brand | null> {
+  const cachedRequest = brandByIdRequests.get(id);
+  if (cachedRequest) return cachedRequest;
+
+  const request = fetchBrandById(id);
+  brandByIdRequests.set(id, request);
+  return request;
+}
+
+async function fetchBrandById(id: string): Promise<Brand | null> {
   try {
     const res = await apiFetch<BackendBrand>(`/brands/${id}`);
     if (res.data) {

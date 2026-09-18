@@ -8,6 +8,8 @@ export type CartLine = {
   salePrice?: number;
   saleAmount?: number;
   mrp?: number;
+  priceChange?: { snapshot: number; current: number };
+  outOfStock?: boolean;
 };
 export type UserDetails = {
   _id?: string;
@@ -37,6 +39,7 @@ export type UserDetails = {
   profileFileId?: string | null;
   permitDocumentFileId?: string | null;
   userType?: string;
+  cartCount?: number;
   active?: boolean;
   deletedAt?: string | null;
   isPinSet?: boolean;

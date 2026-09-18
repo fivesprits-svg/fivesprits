@@ -19,7 +19,30 @@ export interface BackendProduct {
   outOfStock?: boolean;
 }
 
+const productRequests = new Map<string, Promise<Product[]>>();
+const productByIdRequests = new Map<string, Promise<Product | null>>();
+
 export async function fetchProductsApi(params?: {
+  brandId?: string;
+  categoryId?: string;
+  search?: string;
+  status?: string;
+}): Promise<Product[]> {
+  const requestKey = JSON.stringify({
+    brandId: params?.brandId ?? "",
+    categoryId: params?.categoryId ?? "",
+    search: params?.search ?? "",
+    status: params?.status ?? "",
+  });
+  const cachedRequest = productRequests.get(requestKey);
+  if (cachedRequest) return cachedRequest;
+
+  const request = fetchProducts(params);
+  productRequests.set(requestKey, request);
+  return request;
+}
+
+async function fetchProducts(params?: {
   brandId?: string;
   categoryId?: string;
   search?: string;
@@ -61,6 +84,15 @@ export async function fetchProductsApi(params?: {
 }
 
 export async function fetchProductByIdApi(id: string): Promise<Product | null> {
+  const cachedRequest = productByIdRequests.get(id);
+  if (cachedRequest) return cachedRequest;
+
+  const request = fetchProductById(id);
+  productByIdRequests.set(id, request);
+  return request;
+}
+
+async function fetchProductById(id: string): Promise<Product | null> {
   try {
     const res = await apiFetch<BackendProduct>(`/products/${id}`);
     if (res.data) {

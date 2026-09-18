@@ -2,6 +2,7 @@ import type { CustomerFlowAction, CustomerFlowState } from "@/features/customer-
 
 export const initialCustomerFlowState: CustomerFlowState = {
   userDetails: null,
+  cartCount: 0,
   selectedCategoryId: null,
   selectedBrandId: null,
   cart: [],
@@ -48,6 +49,7 @@ export function customerFlowReducer(
 
       return {
         ...state,
+        ...(typeof incoming.cartCount === "number" ? { cartCount: incoming.cartCount } : {}),
         userDetails: {
           ...prev,
           ...incoming,
@@ -135,6 +137,9 @@ export function customerFlowReducer(
       };
       return {
         ...state,
+        cartCount: state.cart.some((line) => line.productId === action.productId)
+          ? state.cartCount
+          : state.cartCount + 1,
         cart: state.cart.some((line) => line.productId === action.productId)
           ? state.cart.map((line) => (line.productId === action.productId ? giftLine : line))
           : [...state.cart, giftLine],
@@ -145,6 +150,7 @@ export function customerFlowReducer(
       const details = normalizeDetails(action.productDetails);
       return {
         ...state,
+        cartCount: state.cartCount + Math.max(1, action.quantity),
         cart: current
           ? state.cart.map((line) =>
               line.productId === action.productId
@@ -173,6 +179,12 @@ export function customerFlowReducer(
     case "cart/quantity":
       return {
         ...state,
+        cartCount: state.cart.reduce(
+          (total, line) =>
+            total +
+            (line.productId === action.productId ? Math.max(1, action.quantity) : line.quantity),
+          0,
+        ),
         cart: state.cart.map((line) =>
           line.productId === action.productId
             ? { ...line, quantity: Math.max(1, action.quantity) }
@@ -180,19 +192,26 @@ export function customerFlowReducer(
         ),
       };
     case "cart/remove":
-      return { ...state, cart: state.cart.filter((line) => line.productId !== action.productId) };
+      return {
+        ...state,
+        cartCount: state.cart
+          .filter((line) => line.productId !== action.productId)
+          .reduce((total, line) => total + line.quantity, 0),
+        cart: state.cart.filter((line) => line.productId !== action.productId),
+      };
     case "cart/set":
       return {
         ...state,
+        cartCount: action.cart.reduce((total, line) => total + line.quantity, 0),
         cart: action.cart.map((line) => ({
           ...line,
           ...(line.productDetails ? { productDetails: normalizeDetails(line.productDetails) } : {}),
         })),
       };
     case "cart/clear":
-      return { ...state, cart: [] };
+      return { ...state, cart: [], cartCount: 0 };
     case "requirement/submit":
-      return { ...state, cart: [], showConfirmation: true };
+      return { ...state, cart: [], cartCount: 0, showConfirmation: true };
     case "confirmation/dismiss":
       return { ...state, showConfirmation: false };
     case "session/logout":

@@ -64,7 +64,25 @@ export type GiftProduct = {
   image: string;
 };
 
+const comboOfferRequests = new Map<string, Promise<ComboOffer[]>>();
+let giftOfferRequest:
+  | Promise<{
+      giftOffer: GiftOfferDetail | null;
+      giftProducts: BaseGiftProduct[];
+    }>
+  | undefined;
+
 export async function fetchComboOffersApi(search?: string): Promise<ComboOffer[]> {
+  const requestKey = search ?? "";
+  const cachedRequest = comboOfferRequests.get(requestKey);
+  if (cachedRequest) return cachedRequest;
+
+  const request = fetchComboOffers(search);
+  comboOfferRequests.set(requestKey, request);
+  return request;
+}
+
+async function fetchComboOffers(search?: string): Promise<ComboOffer[]> {
   try {
     const searchParams = new URLSearchParams({
       limit: "5000",
@@ -144,6 +162,15 @@ export async function fetchComboOfferByIdApi(id: string): Promise<ComboOffer | n
 }
 
 export async function fetchGiftOffersApi(): Promise<{
+  giftOffer: GiftOfferDetail | null;
+  giftProducts: BaseGiftProduct[];
+}> {
+  if (giftOfferRequest) return giftOfferRequest;
+  giftOfferRequest = fetchGiftOffers();
+  return giftOfferRequest;
+}
+
+async function fetchGiftOffers(): Promise<{
   giftOffer: GiftOfferDetail | null;
   giftProducts: BaseGiftProduct[];
 }> {

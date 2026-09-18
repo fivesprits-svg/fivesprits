@@ -9,10 +9,23 @@ export interface BackendCategory {
   active?: boolean;
 }
 
+const categoryRequests = new Map<string, Promise<Category[]>>();
+const categoryByIdRequests = new Map<string, Promise<Category | null>>();
+
 export async function fetchCategoriesApi(params?: {
   search?: string;
   status?: string;
 }): Promise<Category[]> {
+  const requestKey = JSON.stringify({ search: params?.search ?? "", status: params?.status ?? "" });
+  const cachedRequest = categoryRequests.get(requestKey);
+  if (cachedRequest) return cachedRequest;
+
+  const request = fetchCategories(params);
+  categoryRequests.set(requestKey, request);
+  return request;
+}
+
+async function fetchCategories(params?: { search?: string; status?: string }): Promise<Category[]> {
   try {
     const searchParams = new URLSearchParams({
       limit: "5000",
@@ -41,6 +54,15 @@ export async function fetchCategoriesApi(params?: {
 }
 
 export async function fetchCategoryByIdApi(id: string): Promise<Category | null> {
+  const cachedRequest = categoryByIdRequests.get(id);
+  if (cachedRequest) return cachedRequest;
+
+  const request = fetchCategoryById(id);
+  categoryByIdRequests.set(id, request);
+  return request;
+}
+
+async function fetchCategoryById(id: string): Promise<Category | null> {
   try {
     const res = await apiFetch<BackendCategory>(`/categories/${id}`);
     if (res.data) {

@@ -14,6 +14,23 @@ export const getAuthToken = (): string | null => {
   );
 };
 
+export const clearAuthStorage = () => {
+  if (typeof window === "undefined") return;
+  window.localStorage.removeItem("customer_access_token");
+  window.localStorage.removeItem("access_token");
+  window.localStorage.removeItem("token");
+  window.localStorage.removeItem("customer_user");
+  document.cookie = "customer_access_token=; path=/; max-age=0; SameSite=Lax";
+};
+
+const handleUnauthorized = (status: number, payload: { status?: number }) => {
+  if (status !== 401 && payload.status !== 401) return;
+  clearAuthStorage();
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new Event("customer-auth-expired"));
+  }
+};
+
 export interface UploadResult {
   _id: string;
   name: string;
@@ -52,6 +69,7 @@ export async function apiUpload(
   });
 
   const json = await res.json().catch(() => ({}));
+  handleUnauthorized(res.status, json);
   if (!res.ok) {
     const errorMsg =
       (Array.isArray(json?.message) ? json.message.join(", ") : json?.message) ||
@@ -105,6 +123,7 @@ export async function apiFetch<T>(
       });
 
       const json = await res.json().catch(() => ({}));
+      handleUnauthorized(res.status, json);
       if (!res.ok) {
         const errorMsg =
           (Array.isArray(json?.message) ? json.message.join(", ") : json?.message) ||

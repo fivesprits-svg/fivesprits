@@ -21,6 +21,7 @@ export interface CustomerProfile {
   permitDocumentUrl?: string | null;
   profileFileId?: string | null;
   permitDocumentFileId?: string | null;
+  cartCount?: number;
 }
 
 export async function fetchCustomerProfileApi(): Promise<CustomerProfile | null> {

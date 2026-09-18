@@ -20,13 +20,15 @@ export function RegularCartItemCard({
   onRemove,
   variant = "desktop",
 }: RegularCartItemCardProps) {
-  const { id, product, brand, quantity } = item;
+  const { id, product, brand, quantity, isOutOfStock, priceChange } = item;
   const [imageError, setImageError] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
 
   if (variant === "mobile") {
     return (
-      <article className="flex items-center justify-between rounded-[22px] border border-gray-200/90 bg-white p-3 shadow-xs">
+      <article
+        className={`flex items-center justify-between rounded-[22px] border p-3 shadow-xs ${isOutOfStock ? "border-amber-200 bg-amber-50/40" : "border-gray-200/90 bg-white"}`}
+      >
         <div className="flex min-w-0 items-center gap-3">
           <div className="relative size-14 shrink-0 overflow-hidden rounded-[14px] bg-[#FAF6F0] p-1">
             {product.image && !imageError ? (
@@ -69,6 +71,15 @@ export function RegularCartItemCard({
                 </div>
               );
             })()}
+            {isOutOfStock ? (
+              <p className="font-geist mt-1 text-[10px] font-bold text-amber-800" role="status">
+                Out of stock
+              </p>
+            ) : priceChange ? (
+              <p className="font-geist mt-1 text-[10px] font-semibold text-amber-800" role="status">
+                Price updated: {formatMrp(priceChange.snapshot)} → {formatMrp(priceChange.current)}
+              </p>
+            ) : null}
           </div>
         </div>
 
@@ -93,7 +104,7 @@ export function RegularCartItemCard({
               type="button"
               onClick={() => onSetQuantity(id, Math.max(1, quantity - 1))}
               className="grid size-5 place-items-center text-sm font-semibold text-[#a67854] disabled:opacity-40"
-              disabled={quantity <= 1}
+              disabled={quantity <= 1 || isOutOfStock}
               aria-label="Decrease quantity"
             >
               −
@@ -106,6 +117,7 @@ export function RegularCartItemCard({
               onClick={() => onSetQuantity(id, quantity + 1)}
               className="grid size-5 place-items-center text-sm font-semibold text-[#a67854]"
               aria-label="Increase quantity"
+              disabled={isOutOfStock}
             >
               +
             </button>
@@ -116,7 +128,9 @@ export function RegularCartItemCard({
   }
 
   return (
-    <article className="flex items-center justify-between gap-5 rounded-[22px] border border-gray-200/90 bg-white p-4 shadow-xs transition hover:border-[#a67854]/40 hover:shadow-sm">
+    <article
+      className={`flex items-center justify-between gap-5 rounded-[22px] border p-4 shadow-xs transition ${isOutOfStock ? "border-amber-200 bg-amber-50/40" : "border-gray-200/90 bg-white hover:border-[#a67854]/40 hover:shadow-sm"}`}
+    >
       <div className="flex min-w-0 items-center gap-4">
         <div className="relative size-18 shrink-0 overflow-hidden rounded-[16px] bg-[#FAF6F0] p-1.5">
           {product.image && !imageError ? (
@@ -159,6 +173,15 @@ export function RegularCartItemCard({
               </div>
             );
           })()}
+          {isOutOfStock ? (
+            <p className="font-geist mt-1.5 text-xs font-bold text-amber-800" role="status">
+              Out of stock — remove this item to update your cart.
+            </p>
+          ) : priceChange ? (
+            <p className="font-geist mt-1.5 text-xs font-semibold text-amber-800" role="status">
+              Price updated: {formatMrp(priceChange.snapshot)} → {formatMrp(priceChange.current)}
+            </p>
+          ) : null}
         </div>
       </div>
 
@@ -168,7 +191,7 @@ export function RegularCartItemCard({
             type="button"
             onClick={() => onSetQuantity(id, Math.max(1, quantity - 1))}
             className="grid size-6 cursor-pointer place-items-center text-base font-semibold text-[#a67854] disabled:opacity-40"
-            disabled={quantity <= 1}
+            disabled={quantity <= 1 || isOutOfStock}
             aria-label="Decrease quantity"
           >
             −
@@ -181,6 +204,7 @@ export function RegularCartItemCard({
             onClick={() => onSetQuantity(id, quantity + 1)}
             className="grid size-6 cursor-pointer place-items-center text-base font-semibold text-[#a67854]"
             aria-label="Increase quantity"
+            disabled={isOutOfStock}
           >
             +
           </button>

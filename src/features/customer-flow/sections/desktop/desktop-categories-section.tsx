@@ -247,15 +247,23 @@ export function DesktopCategoriesSection() {
                     onClick={() => handleCategoryClick(category.id)}
                     className="group flex cursor-pointer flex-col items-center justify-between rounded-2xl border border-gray-200/80 bg-white p-3 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-[#a67854]/60 hover:shadow-md"
                   >
-                    <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl bg-gray-50 p-2 transition-colors group-hover:bg-gray-100">
-                      <ImageSkeleton className="absolute inset-0" />
+                    <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[18px] border border-gray-100/90 bg-[#FAF9F7] p-2 shadow-2xs transition-all duration-200 active:scale-95">
+                      {/* Background */}
+                      <Image
+                        src="/customer-flow/hero/bg-remover.png"
+                        alt=""
+                        fill
+                        sizes="80px"
+                        className="object-contain opacity-5"
+                      />
 
+                      {/* Category Image */}
                       <Image
                         src={category.image}
                         alt={category.name}
                         fill
-                        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 200px"
-                        className="object-contain p-2 transition-transform duration-300 group-hover:scale-105"
+                        sizes="80px"
+                        className="relative z-10 object-contain p-1 opacity-90 transition-transform duration-200 group-hover:scale-105"
                       />
                     </div>
 

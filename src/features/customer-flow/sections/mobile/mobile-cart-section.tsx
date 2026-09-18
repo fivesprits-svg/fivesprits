@@ -27,7 +27,8 @@ export function MobileCartSection() {
     handleDismissConfirmation,
   } = useCartSection();
 
-  const { regularItems, comboItems, giftItems, totalItemsCount } = structuredCart;
+  const { regularItems, comboItems, giftItems, totalItemsCount, availableItemsCount } =
+    structuredCart;
 
   return (
     <div className="min-h-dvh w-full bg-white pb-48 md:hidden">
@@ -169,7 +170,7 @@ export function MobileCartSection() {
         <div className="fixed right-0 bottom-[92px] left-0 z-30 mx-auto max-w-[390px] border-t border-gray-100 bg-white/95 px-6 py-3 backdrop-blur-xs">
           <button
             type="button"
-            disabled={submitting}
+            disabled={availableItemsCount === 0 || submitting}
             onClick={() => setShowConfirmPopup(true)}
             className="font-outfit flex h-12 w-full items-center justify-center rounded-full bg-black text-sm font-bold tracking-wide text-white shadow-md transition hover:bg-gray-800 active:scale-[0.99] disabled:opacity-70"
           >

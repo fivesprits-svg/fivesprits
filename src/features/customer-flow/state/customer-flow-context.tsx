@@ -28,6 +28,7 @@ import {
   type SubmitOrderPayload,
 } from "@/features/customer-flow/services/orders-api";
 import { fetchCustomerProfileApi } from "@/features/customer-flow/services/user-api";
+import { clearAuthStorage, getAuthToken } from "@/features/customer-flow/services/api-client";
 import type { CartLine, UserDetails } from "@/features/customer-flow/types/state";
 
 const STORAGE_KEY = "five-spirits-customer-flow-v1";
@@ -70,8 +71,10 @@ function formatCartItem(
   const rawDetails = (item.productDetails ?? fallbackDetails ?? {}) as Record<string, unknown>;
   const itemSale = "saleAmount" in item ? item.saleAmount : undefined;
   const itemMrp = "mrpAmount" in item ? item.mrpAmount : "mrp" in item ? item.mrp : undefined;
+  const priceChange = "change" in item ? item.change?.saleAmount : undefined;
   const salePrice = Number(
-    rawDetails.salePrice ??
+    priceChange?.current ??
+      rawDetails.salePrice ??
       rawDetails.saleAmount ??
       item.salePrice ??
       itemSale ??
@@ -91,6 +94,7 @@ function formatCartItem(
     mrpAmount: mrp || salePrice,
     salePrice,
     saleAmount: salePrice,
+    outOfStock: Boolean(rawDetails.outOfStock),
   };
 
   return {
@@ -101,6 +105,15 @@ function formatCartItem(
     salePrice,
     saleAmount: salePrice,
     mrp: mrp || salePrice,
+    ...(priceChange?.snapshot != null && priceChange.current != null
+      ? {
+          priceChange: {
+            snapshot: Number(priceChange.snapshot),
+            current: Number(priceChange.current),
+          },
+        }
+      : {}),
+    outOfStock: Boolean(rawDetails.outOfStock),
     productDetails,
   };
 }
@@ -154,6 +167,8 @@ function useCustomerFlowValue() {
       setHydrated(true);
     }
 
+    if (!getAuthToken()) return;
+
     // Fetch latest user details from /api/v1/users/me
     fetchCustomerProfileApi()
       .then((user) => {
@@ -177,6 +192,18 @@ function useCustomerFlowValue() {
         }
       })
       .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    const handleAuthExpired = () => {
+      dispatch({ type: "session/logout" });
+      window.localStorage.removeItem(STORAGE_KEY);
+      clearAuthStorage();
+      window.location.replace("/");
+    };
+
+    window.addEventListener("customer-auth-expired", handleAuthExpired);
+    return () => window.removeEventListener("customer-auth-expired", handleAuthExpired);
   }, []);
 
   useEffect(() => {
@@ -380,9 +407,7 @@ function useCustomerFlowValue() {
     clearCartApi().catch(() => {});
     dispatch({ type: "session/logout" });
     window.localStorage.removeItem(STORAGE_KEY);
-    window.localStorage.removeItem("customer_access_token");
-    window.localStorage.removeItem("access_token");
-    window.localStorage.removeItem("customer_user");
+    clearAuthStorage();
   }, []);
 
   const updateFormDraft = useCallback(
@@ -432,7 +457,7 @@ function useCustomerFlowValue() {
       state,
       hydrated,
       userDetails: state.userDetails,
-      cartCount: state.cart.reduce((total, line) => total + line.quantity, 0),
+      cartCount: state.cartCount,
       setUserDetails,
       login,
       loginHere,

@@ -6,43 +6,38 @@ import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-co
 import { buildStructuredCart } from "@/features/customer-flow/helpers/cart-view-model";
 import type { RequirementHistoryEntry } from "@/features/customer-flow/types";
 import { logoutApi } from "@/features/customer-flow/services/auth-api";
-import { fetchCustomerProfileApi } from "@/features/customer-flow/services/user-api";
-import { getOrderHistoryApi } from "@/features/customer-flow/services/orders-api";
+import {
+  getOrderHistoryApi,
+  type OrderHistoryEntry,
+} from "@/features/customer-flow/services/orders-api";
+import { getAuthToken } from "@/features/customer-flow/services/api-client";
 import { useToast } from "@/features/customer-flow/components/ui/toast";
+
+const orderHistoryRequests = new Map<string, Promise<OrderHistoryEntry[]>>();
 
 export function useCartSection() {
   const router = useRouter();
-  const {
-    state,
-    setCartQuantity,
-    removeFromCart,
-    submitRequirement,
-    dismissConfirmation,
-    logout,
-    syncCart,
-  } = useCustomerFlow();
+  const { state, setCartQuantity, removeFromCart, submitRequirement, dismissConfirmation, logout } =
+    useCustomerFlow();
+  const userDetails = state.userDetails;
 
   const [submitting, setSubmitting] = useState(false);
   const [showConfirmPopup, setShowConfirmPopup] = useState(false);
   const [logoutLoading, setLogoutLoading] = useState(false);
 
   const [requirementHistory, setRequirementHistory] = useState<RequirementHistoryEntry[]>([]);
-  const [profileData, setProfileData] = useState({ address: "", permitNumber: "" });
   const { success: showSuccessToast, error: showErrorToast } = useToast();
 
   useEffect(() => {
     let isMounted = true;
-    syncCart();
+    const userKey = getAuthToken() ?? "anonymous";
+    let request = orderHistoryRequests.get(userKey);
+    if (!request) {
+      request = getOrderHistoryApi();
+      orderHistoryRequests.set(userKey, request);
+    }
 
-    fetchCustomerProfileApi().then((user) => {
-      if (!isMounted || !user) return;
-      setProfileData({
-        address: user.address ?? "",
-        permitNumber: user.permitNumber ?? "",
-      });
-    });
-
-    getOrderHistoryApi()
+    request
       .then((orders) => {
         if (!isMounted || !orders || orders.length === 0) return;
         const mapped: RequirementHistoryEntry[] = orders.map((order) => ({
@@ -126,15 +121,9 @@ export function useCartSection() {
     return () => {
       isMounted = false;
     };
-  }, [syncCart]);
+  }, []);
 
-  const isRegularUser = Boolean(
-    state.userDetails?.userType === "regular" ||
-    state.userDetails?.cameFromLoginHere ||
-    state.userDetails?.mobile ||
-    state.userDetails?.mobileNumber ||
-    state.userDetails?._id,
-  );
+  const isRegularUser = Boolean(state.userDetails?.userType === "regular");
   console.log(state.cart);
 
   const handleLogout = useCallback(async () => {
@@ -154,40 +143,35 @@ export function useCartSection() {
   const handleConfirmSubmit = useCallback(async () => {
     setSubmitting(true);
     try {
-      const orderItems = state.cart.map((line) => {
-        const details = (line.productDetails ?? {}) as Record<string, unknown>;
-        const mrp = Number(details.mrp ?? details.mrpAmount ?? details.originalPrice ?? 0);
-        const salePrice = Number(
-          details.salePrice ?? details.saleAmount ?? details.offerPrice ?? mrp,
-        );
-        return {
-          productId: line.productId,
-          quantity: line.quantity,
-          itemType: line.itemType ?? "product",
-          ...(line.selectedProductIds ? { selectedProductIds: line.selectedProductIds } : {}),
-          mrp,
-          salePrice,
-        };
-      });
+      const orderItems = state.cart
+        .filter((line) => !line.outOfStock)
+        .map((line) => {
+          const details = (line.productDetails ?? {}) as Record<string, unknown>;
+          const mrp = Number(details.mrp ?? details.mrpAmount ?? details.originalPrice ?? 0);
+          const salePrice = Number(
+            details.salePrice ?? details.saleAmount ?? details.offerPrice ?? mrp,
+          );
+          return {
+            productId: line.productId,
+            quantity: line.quantity,
+            itemType: line.itemType ?? "product",
+            ...(line.selectedProductIds ? { selectedProductIds: line.selectedProductIds } : {}),
+            mrp,
+            salePrice,
+          };
+        });
 
       await submitRequirement({
         items: orderItems,
-        deliveryAddress: profileData.address,
-        permitNumber: profileData.permitNumber,
+        deliveryAddress: userDetails?.address ?? "",
+        permitNumber: userDetails?.permitNumber ?? "",
       });
       showSuccessToast("Requirement submitted successfully.");
     } catch (err) {
       showErrorToast(err instanceof Error ? err.message : "Failed to submit requirement.");
       setSubmitting(false);
     }
-  }, [
-    state.cart,
-    profileData.address,
-    profileData.permitNumber,
-    submitRequirement,
-    showSuccessToast,
-    showErrorToast,
-  ]);
+  }, [state.cart, userDetails, submitRequirement, showSuccessToast, showErrorToast]);
 
   const handleDismissConfirmation = useCallback(() => {
     setShowConfirmPopup(false);

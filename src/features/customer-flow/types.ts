@@ -9,6 +9,7 @@ export type {
 
 export type CustomerFlowState = {
   userDetails: UserDetails | null;
+  cartCount: number;
   selectedCategoryId: string | null;
   selectedBrandId: string | null;
   cart: CartLine[];

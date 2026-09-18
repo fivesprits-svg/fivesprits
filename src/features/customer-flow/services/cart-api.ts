@@ -17,6 +17,7 @@ export interface CartItemResponse {
   mrpAmount?: number;
   saleAmount?: number;
   salePrice?: number;
+  change?: { saleAmount?: { snapshot?: number; current?: number } };
   productDetails?: Record<string, unknown>;
 }
 
