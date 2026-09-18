@@ -27,6 +27,7 @@ export interface CustomerUser {
   name?: string;
   username?: string;
   mobileNumber?: string;
+  cartCount?: number;
   role?: string;
   [key: string]: unknown;
 }
