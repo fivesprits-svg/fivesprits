@@ -294,7 +294,7 @@ export function DesktopCategoriesSection() {
 
                   <div className="pt-2">
                     <Link
-                      href="/brands?categoryId=whisky"
+                      href="/categories#categories"
                       className="font-outfit inline-flex h-11 items-center gap-2 rounded-full bg-white px-7 text-xs font-bold tracking-wider text-black uppercase transition hover:bg-[#c9a07e]"
                     >
                       <span>Explore Collection</span>
@@ -352,13 +352,13 @@ export function DesktopCategoriesSection() {
 
               <ul className="font-geist mt-3 space-y-2 text-xs text-gray-500">
                 <li>
-                  <Link href="/categories" className="hover:text-black">
+                  <Link href="/categories#categories" className="hover:text-black">
                     Catalogue
                   </Link>
                 </li>
 
                 <li>
-                  <Link href="/categories" className="hover:text-black">
+                  <Link href="/categories#categories" className="hover:text-black">
                     Categories
                   </Link>
                 </li>
