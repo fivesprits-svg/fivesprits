@@ -21,12 +21,7 @@ export function MobileVerificationProcessingSection() {
     const timer = setTimeout(() => {
       const result = mockVerifyAadhaar(state.userDetails!.aadhaarNumber!);
       completeVerification(result.dateOfBirth, result.age);
-
-      if (result.age < 25) {
-        router.push("/digilocker/verification-failed");
-      } else {
-        router.push("/age-verification");
-      }
+      router.push("/age-verification");
     }, 3000);
 
     return () => clearTimeout(timer);

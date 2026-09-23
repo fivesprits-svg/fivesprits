@@ -9,17 +9,26 @@ import type { UserDetails } from "@/features/customer-flow/types/state";
  * - Aadhaar ending in an odd digit → age < 25 (fail)
  */
 export function mockVerifyAadhaar(aadhaarNumber: string): { dateOfBirth: string; age: number } {
-  const cleaned = aadhaarNumber.replace(/\s/g, "");
-  const lastDigit = parseInt(cleaned[cleaned.length - 1] || "0", 10);
-  const isEven = lastDigit % 2 === 0;
+  const dateOfBirth = "1990-01-15";
+  console.log(aadhaarNumber);
 
+  const dob = new Date(dateOfBirth);
   const now = new Date();
-  const year = now.getFullYear();
 
-  if (isEven) {
-    return { dateOfBirth: "1990-01-15", age: year - 1990 };
+  let age = now.getFullYear() - dob.getFullYear();
+
+  const hasBirthdayPassed =
+    now.getMonth() > dob.getMonth() ||
+    (now.getMonth() === dob.getMonth() && now.getDate() >= dob.getDate());
+
+  if (!hasBirthdayPassed) {
+    age--;
   }
-  return { dateOfBirth: "2005-06-20", age: year - 2005 };
+
+  return {
+    dateOfBirth,
+    age,
+  };
 }
 
 export function shouldVerificationFail(userDetails: UserDetails | null): boolean {
