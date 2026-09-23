@@ -4,10 +4,12 @@ import { useRouter } from "next/navigation";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import { formatDisplayMobile } from "@/features/customer-flow/utils/validation";
 import { FlowNavButtons } from "@/features/customer-flow/components/auth/flow-nav-buttons";
+import { useToast } from "../ui/toast";
 
 export function ProfileSetupForm() {
   const router = useRouter();
   const { state, completeProfile } = useCustomerFlow();
+  const { success } = useToast();
   const [name, setName] = useState(state.userDetails?.name ?? "");
   const [loading, setLoading] = useState(false);
 
@@ -16,6 +18,7 @@ export function ProfileSetupForm() {
     if (!name.trim()) return;
     setLoading(true);
     completeProfile();
+    success("Registration completed successfully! Welcome to The Five Spirits.");
     router.push("/categories");
   }
 

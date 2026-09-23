@@ -1,11 +1,12 @@
 "use client";
 
-import { FlowNavButtons } from "@/features/customer-flow/components/auth/flow-nav-buttons";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import { formatDisplayMobile } from "@/features/customer-flow/utils/validation";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useToast } from "@/features/customer-flow/components/ui/toast";
+import { FlowNavButtons } from "@/features/customer-flow/components/auth/flow-nav-buttons";
 
 // API configuration from environment variables
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
@@ -15,6 +16,7 @@ const API_URL = `${API_BASE_URL}${API_ENDPOINT}`;
 export function ProfileSetupHereForm() {
   const router = useRouter();
   const { state, completeProfile } = useCustomerFlow();
+  const { success } = useToast();
   const [customerName, setCustomerName] = useState(state.userDetails?.name ?? "");
   const [permitNumber, setPermitNumber] = useState(state.userDetails?.permitNumber ?? "");
   const [address, setAddress] = useState(state.userDetails?.address ?? "");
@@ -150,6 +152,7 @@ export function ProfileSetupHereForm() {
 
       // Success: complete profile and navigate
       completeProfile();
+      success("Registration completed successfully! Welcome to The Five Spirits.");
       router.push("/categories");
     } catch (error) {
       console.error("Failed to save profile:", error);

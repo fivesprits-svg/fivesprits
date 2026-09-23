@@ -48,6 +48,15 @@ export function LoginFormHere() {
     setCountryData(nextCountry);
     setPhoneValue(value);
     syncDraft(value, nextCountry, password);
+
+    // Validate that only India is selected
+    if (data.countryCode !== "in") {
+      showError("Only Indian phone numbers are accepted.");
+      setCountryData({ countryCode: "in", dialCode: "91" });
+      setPhoneValue("");
+      return;
+    }
+
     if (errors.mobile) setErrors((prev) => ({ ...prev, mobile: undefined }));
     if (apiError) setApiError("");
   }
