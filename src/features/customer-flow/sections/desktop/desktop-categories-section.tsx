@@ -55,7 +55,7 @@ export function DesktopCategoriesSection() {
       {/* Header */}
       <DesktopHeader />
 
-      <main className="mx-auto max-w-7xl px-6 py-8">
+      <main className="mx-auto w-full px-14 py-8 sm:px-20 md:px-20 lg:px-26 2xl:px-26">
         {isLoading && categoriesList.length === 0 ? (
           <div className="space-y-8 py-4">
             <div className="grid grid-cols-12 items-center gap-8">
@@ -225,7 +225,7 @@ export function DesktopCategoriesSection() {
                   </p>
                 </div>
 
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-[#e8d5c4] bg-[#f7f4ee] px-3.5 py-1.5 text-xs font-semibold text-[#a67854]">
+                <span className="inline-flex min-w-[160px] items-center gap-1.5 rounded-full border border-[#e8d5c4] bg-[#f7f4ee] px-3.5 py-1.5 text-xs font-semibold text-[#a67854]">
                   {categoriesList.length} categories available
                 </span>
               </div>

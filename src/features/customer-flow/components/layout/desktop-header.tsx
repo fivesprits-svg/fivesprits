@@ -28,7 +28,7 @@ export function DesktopHeader() {
 
   return (
     <header className="sticky top-0 z-50 hidden border-b border-black/10 bg-white md:block">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
+      <div className="mx-auto flex h-16 w-full items-center justify-between px-14 sm:px-20 md:px-20 lg:px-26 2xl:px-26">
         <Link href="/categories" className="flex items-center gap-3">
           <Image
             src="/logo.svg"
