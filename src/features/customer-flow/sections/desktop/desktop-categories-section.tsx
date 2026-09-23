@@ -85,14 +85,6 @@ export function DesktopCategoriesSection() {
               ))}
             </div>
           </div>
-        ) : isEmpty ? (
-          <EmptyState
-            icon="box"
-            title="No Products Yet"
-            description="We're currently curating this selection. Please check back soon or explore our other collections."
-            actionLabel="Browse Categories"
-            actionHref="/categories"
-          />
         ) : (
           <>
             {/* Hero Section */}
@@ -239,40 +231,50 @@ export function DesktopCategoriesSection() {
               </div>
 
               {/* Categories Grid */}
-              <div className="mt-8 grid grid-cols-2 gap-5 sm:grid-cols-4 lg:gap-6">
-                {categoriesList.map((category) => (
-                  <button
-                    key={category.id}
-                    type="button"
-                    onClick={() => handleCategoryClick(category.id)}
-                    className="group flex cursor-pointer flex-col items-center justify-between rounded-2xl border border-gray-200/80 bg-white p-3 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-[#a67854]/60 hover:shadow-md"
-                  >
-                    <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[18px] border border-gray-100/90 bg-[#FAF9F7] p-2 shadow-2xs transition-all duration-200 active:scale-95">
-                      {/* Background */}
-                      <Image
-                        src="/customer-flow/hero/bg-remover.png"
-                        alt=""
-                        fill
-                        sizes="80px"
-                        className="object-contain opacity-5"
-                      />
+              {isEmpty ? (
+                <EmptyState
+                  icon="box"
+                  title="No Products Yet"
+                  description="We're currently curating this selection. Please check back soon or explore our other collections."
+                  actionLabel="Browse Categories"
+                  actionHref="/categories"
+                />
+              ) : (
+                <div className="mt-8 grid grid-cols-2 gap-5 sm:grid-cols-4 lg:gap-6">
+                  {categoriesList.map((category) => (
+                    <button
+                      key={category.id}
+                      type="button"
+                      onClick={() => handleCategoryClick(category.id)}
+                      className="group flex cursor-pointer flex-col items-center justify-between rounded-2xl border border-gray-200/80 bg-white p-3 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-[#a67854]/60 hover:shadow-md"
+                    >
+                      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[18px] border border-gray-100/90 bg-[#FAF9F7] p-2 shadow-2xs transition-all duration-200 active:scale-95">
+                        {/* Background */}
+                        <Image
+                          src="/customer-flow/hero/bg-remover.png"
+                          alt=""
+                          fill
+                          sizes="80px"
+                          className="object-contain opacity-5"
+                        />
 
-                      {/* Category Image */}
-                      <Image
-                        src={category.image}
-                        alt={category.name}
-                        fill
-                        sizes="80px"
-                        className="relative z-10 object-contain p-1 opacity-90 transition-transform duration-200 group-hover:scale-105"
-                      />
-                    </div>
+                        {/* Category Image */}
+                        <Image
+                          src={category.image}
+                          alt={category.name}
+                          fill
+                          sizes="80px"
+                          className="relative z-10 object-contain p-1 opacity-90 transition-transform duration-200 group-hover:scale-105"
+                        />
+                      </div>
 
-                    <span className="font-geist mt-3 text-xs font-bold tracking-widest text-gray-900 uppercase transition-colors group-hover:text-[#a67854]">
-                      {category.name}
-                    </span>
-                  </button>
-                ))}
-              </div>
+                      <span className="font-geist mt-3 text-xs font-bold tracking-widest text-gray-900 uppercase transition-colors group-hover:text-[#a67854]">
+                        {category.name}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              )}
             </section>
 
             {/* The Art of Aging */}

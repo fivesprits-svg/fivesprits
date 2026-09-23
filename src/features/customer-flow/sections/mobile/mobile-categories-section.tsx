@@ -87,14 +87,6 @@ export function MobileCategoriesSection() {
             ))}
           </div>
         </div>
-      ) : isEmpty ? (
-        <EmptyState
-          icon="/customer-flow/icons/category0.svg"
-          title="No Products Yet"
-          description="We're currently curating this selection. Please check back soon or explore our other collections."
-          actionLabel="Browse Categories"
-          actionHref="/categories"
-        />
       ) : (
         <>
           {/* Hero Section */}
@@ -138,42 +130,52 @@ export function MobileCategoriesSection() {
           <div className="px-6">
             <h2 className="font-outfit text-xl font-black text-black">Categories</h2>
 
-            <div className="mt-4 grid grid-cols-4 gap-x-2.5 gap-y-4">
-              {categoriesList?.map((category) => (
-                <button
-                  key={category.id}
-                  type="button"
-                  onClick={() => {
-                    selectCategory(category.id);
-                    router.push(`/brands?categoryId=${category.id}`);
-                  }}
-                  className="group flex cursor-pointer flex-col items-center"
-                >
-                  <div className="relative aspect-[4/5] w-full overflow-hidden rounded-[18px] border border-gray-100/90 bg-[#FAF9F7] p-2 shadow-2xs transition-all duration-200 hover:border-[#c9a07e] active:scale-95">
-                    {/* Background */}
-                    <Image
-                      src="/customer-flow/hero/bg-remover.png"
-                      alt=""
-                      fill
-                      sizes="80px"
-                      className="object-contain opacity-5"
-                    />
+            {isEmpty ? (
+              <EmptyState
+                icon="/customer-flow/icons/category0.svg"
+                title="No Products Yet"
+                description="We're currently curating this selection. Please check back soon or explore our other collections."
+                actionLabel="Browse Categories"
+                actionHref="/categories"
+              />
+            ) : (
+              <div className="mt-4 grid grid-cols-4 gap-x-2.5 gap-y-4">
+                {categoriesList?.map((category) => (
+                  <button
+                    key={category.id}
+                    type="button"
+                    onClick={() => {
+                      selectCategory(category.id);
+                      router.push(`/brands?categoryId=${category.id}`);
+                    }}
+                    className="group flex cursor-pointer flex-col items-center"
+                  >
+                    <div className="relative aspect-[4/5] w-full overflow-hidden rounded-[18px] border border-gray-100/90 bg-[#FAF9F7] p-2 shadow-2xs transition-all duration-200 hover:border-[#c9a07e] active:scale-95">
+                      {/* Background */}
+                      <Image
+                        src="/customer-flow/hero/bg-remover.png"
+                        alt=""
+                        fill
+                        sizes="80px"
+                        className="object-contain opacity-5"
+                      />
 
-                    {/* Category Image */}
-                    <Image
-                      src={category.image}
-                      alt={category.name}
-                      fill
-                      sizes="80px"
-                      className="relative z-10 object-contain p-1 opacity-90 transition-transform duration-200 group-hover:scale-105"
-                    />
-                  </div>
-                  <span className="font-geist mt-2 w-full truncate text-center text-xs font-bold text-black">
-                    {category.name}
-                  </span>
-                </button>
-              ))}
-            </div>
+                      {/* Category Image */}
+                      <Image
+                        src={category.image}
+                        alt={category.name}
+                        fill
+                        sizes="80px"
+                        className="relative z-10 object-contain p-1 opacity-90 transition-transform duration-200 group-hover:scale-105"
+                      />
+                    </div>
+                    <span className="font-geist mt-2 w-full truncate text-center text-xs font-bold text-black">
+                      {category.name}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         </>
       )}
