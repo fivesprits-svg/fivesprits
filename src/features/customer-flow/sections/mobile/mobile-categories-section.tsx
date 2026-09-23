@@ -46,39 +46,23 @@ export function MobileCategoriesSection() {
   return (
     <section className="mx-auto min-h-dvh w-full max-w-[390px] overflow-hidden bg-white pb-28 md:hidden">
       {/* Top Header Bar */}
-      <header className="flex h-14 items-center justify-between px-6 pt-2">
+      <header className="flex h-14 items-center px-6 pt-2">
+        {/* Logo */}
         <div className="relative size-8">
           <Image src="/logo.svg" alt="The Five Spirits" fill className="object-contain" priority />
         </div>
 
-        <h1 className="font-unbounded text-lg font-black tracking-tight text-gray-950">
-          {isEmpty ? "Categories" : "The Five Spirits"}
+        {/* Brand Name */}
+        <h1 className="font-unbounded absolute left-1/2 -translate-x-1/2 text-lg font-black tracking-tight text-gray-950">
+          The Five <span className="text-[#A67854]">Spirits</span>
         </h1>
-
-        {isEmpty ? (
-          <div className="size-9" />
-        ) : (
-          <button
-            type="button"
-            aria-label="Search"
-            className="grid size-9 place-items-center text-gray-800 transition active:scale-95"
-          >
-            <Image
-              src="/customer-flow/icons/icon-search.svg"
-              alt="Search"
-              width={18}
-              height={18}
-              className="opacity-90"
-            />
-          </button>
-        )}
       </header>
 
       {isLoading && categoriesList.length === 0 ? (
         <div className="space-y-6 px-6 py-4">
           <div className="h-40 w-full animate-pulse rounded-2xl bg-gray-100" />
 
-          <div className="grid grid-cols-4 gap-2.5">
+          <div className="grid grid-cols-3 gap-2.5">
             {Array.from({ length: 8 }).map((_, i) => (
               <div key={i} className="flex flex-col items-center">
                 <div className="relative aspect-square w-full animate-pulse rounded-[18px] bg-gray-100" />
@@ -139,7 +123,7 @@ export function MobileCategoriesSection() {
                 actionHref="/categories"
               />
             ) : (
-              <div className="mt-4 grid grid-cols-4 gap-x-2.5 gap-y-4">
+              <div className="mt-4 grid grid-cols-3 gap-x-4 gap-y-4">
                 {categoriesList?.map((category) => (
                   <button
                     key={category.id}
@@ -169,7 +153,7 @@ export function MobileCategoriesSection() {
                         className="relative z-10 object-contain p-1 opacity-90 transition-transform duration-200 group-hover:scale-105"
                       />
                     </div>
-                    <span className="font-geist mt-2 w-full truncate text-center text-xs font-bold text-black">
+                    <span className="font-geist mt-2 line-clamp-2 min-h-[32px] w-full text-center text-xs leading-4 font-bold text-black">
                       {category.name}
                     </span>
                   </button>

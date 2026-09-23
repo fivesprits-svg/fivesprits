@@ -106,7 +106,7 @@ export function LoginFormHere() {
         document.cookie = `customer_access_token=${res.data.accessToken}; path=/; max-age=86400; SameSite=Lax`;
       }
 
-      loginHere(fullPhone, password, res.data?.user);
+      loginHere(fullPhone, password, res.data?.user, res.data?.accessToken);
       success("Logged in successfully.");
       router.replace("/digilocker");
     } catch (err: unknown) {

@@ -2,6 +2,7 @@ import type { CustomerFlowAction, CustomerFlowState } from "@/features/customer-
 
 export const initialCustomerFlowState: CustomerFlowState = {
   userDetails: null,
+  accessToken: null,
   cartCount: 0,
   selectedCategoryId: null,
   selectedBrandId: null,
@@ -76,6 +77,7 @@ export function customerFlowReducer(
     case "session/login-here":
       return {
         ...state,
+        ...(action.accessToken ? { accessToken: action.accessToken } : {}),
         userDetails: {
           ...(state.userDetails || {}),
           name: state.userDetails?.name || "",
@@ -85,6 +87,8 @@ export function customerFlowReducer(
           ...(state.userDetails?.formDrafts ? { formDrafts: state.userDetails.formDrafts } : {}),
         },
       };
+    case "session/set-access-token":
+      return { ...state, accessToken: action.accessToken };
     case "session/verify":
       return state.userDetails
         ? { ...state, userDetails: { ...state.userDetails, verified: true } }

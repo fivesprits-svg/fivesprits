@@ -137,6 +137,9 @@ function useCustomerFlowValue() {
             userDetails: user,
           });
         }
+        if (value.accessToken) {
+          dispatch({ type: "session/set-access-token", accessToken: value.accessToken });
+        }
         if (value.selectedCategoryId)
           dispatch({ type: "selection/category", categoryId: value.selectedCategoryId });
         if (value.selectedBrandId)
@@ -219,8 +222,8 @@ function useCustomerFlowValue() {
   }, []);
 
   const loginHere = useCallback(
-    (mobile: string, password: string, userData?: Partial<UserDetails>) => {
-      dispatch({ type: "session/login-here", mobile, password });
+    (mobile: string, password: string, userData?: Partial<UserDetails>, accessToken?: string) => {
+      dispatch({ type: "session/login-here", mobile, password, accessToken });
       if (userData) {
         dispatch({
           type: "userDetails/set",
@@ -231,7 +234,10 @@ function useCustomerFlowValue() {
     [],
   );
 
-  const verifyOtp = useCallback((userData?: Partial<UserDetails>) => {
+  const verifyOtp = useCallback((userData?: Partial<UserDetails>, accessToken?: string) => {
+    if (accessToken) {
+      dispatch({ type: "session/set-access-token", accessToken });
+    }
     dispatch({ type: "session/verify" });
     if (userData) {
       dispatch({ type: "userDetails/set", userDetails: userData });

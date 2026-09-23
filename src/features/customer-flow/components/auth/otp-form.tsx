@@ -39,7 +39,7 @@ export function OtpForm() {
         window.localStorage.setItem("customer_user", JSON.stringify(res.data.user));
       }
 
-      verifyOtp(res.data?.user);
+      verifyOtp(res.data?.user, res.data?.accessToken);
       success("Mobile number verified. Welcome to The Five Spirits!");
       router.replace("/digilocker");
     } catch (err: unknown) {

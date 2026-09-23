@@ -9,6 +9,7 @@ export type {
 
 export type CustomerFlowState = {
   userDetails: UserDetails | null;
+  accessToken: string | null;
   cartCount: number;
   selectedCategoryId: string | null;
   selectedBrandId: string | null;
@@ -19,7 +20,8 @@ export type CustomerFlowState = {
 export type CustomerFlowAction =
   | { type: "userDetails/set"; userDetails: Partial<UserDetails> }
   | { type: "session/login"; name: string; mobile: string }
-  | { type: "session/login-here"; mobile: string; password: string }
+  | { type: "session/login-here"; mobile: string; password: string; accessToken?: string }
+  | { type: "session/set-access-token"; accessToken: string }
   | { type: "session/verify" }
   | { type: "session/verify-aadhaar"; aadhaarNumber: string }
   | { type: "session/verify-digilocker-otp" }
