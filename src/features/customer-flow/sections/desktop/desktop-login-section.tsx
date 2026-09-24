@@ -22,7 +22,7 @@ export function DesktopLoginSection() {
           </h1>
         </div>
       </div>
-      <div className="flex items-start justify-center px-12 pt-4">
+      <div className="flex items-center justify-center px-12 py-12">
         <div className="w-full max-w-md">
           {/* Logo */}
           <div className="mb-12">
