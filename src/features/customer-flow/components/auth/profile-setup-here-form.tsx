@@ -40,9 +40,16 @@ export function ProfileSetupHereForm() {
   };
 
   const validateGoogleMapsUrl = (value: string): string | undefined => {
-    if (value.trim() && !/^https:\/\/(www\.)?google\.com\/maps/.test(value)) {
+    const url = value.trim();
+
+    if (
+      url &&
+      !/^https:\/\/(www\.)?google\.com\/maps(\/|$)/i.test(url) &&
+      !/^https:\/\/maps\.app\.goo\.gl\/[A-Za-z0-9_-]+$/i.test(url)
+    ) {
       return "Please enter a valid Google Maps URL";
     }
+
     return undefined;
   };
 
