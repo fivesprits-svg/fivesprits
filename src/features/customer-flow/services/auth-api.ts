@@ -1,7 +1,7 @@
 import { getAuthToken } from "./api-client";
 
 const getBaseUrl = () => {
-  const envUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+  const envUrl = process.env.NEXT_PUBLIC_API_URL || "https://pwn.appristine.in";
   const clean = envUrl.replace(/\/+$/, "");
   return clean.endsWith("/api/v1") ? clean : `${clean}/api/v1`;
 };

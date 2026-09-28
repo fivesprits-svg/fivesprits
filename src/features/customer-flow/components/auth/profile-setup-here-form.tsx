@@ -9,7 +9,7 @@ import { useToast } from "@/features/customer-flow/components/ui/toast";
 import { FlowNavButtons } from "@/features/customer-flow/components/auth/flow-nav-buttons";
 
 // API configuration from environment variables
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://pwn.appristine.in";
 const API_ENDPOINT = "/api/v1/users/me";
 const API_URL = `${API_BASE_URL}${API_ENDPOINT}`;
 
