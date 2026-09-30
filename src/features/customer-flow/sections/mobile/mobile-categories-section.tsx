@@ -92,7 +92,7 @@ export function MobileCategoriesSection() {
               <p className="font-geist mt-4 text-[15px] leading-snug font-bold text-black">
                 Your favorite
                 <br />
-                drinks Catalogue
+                drinks catalogue
               </p>
             </div>
 
