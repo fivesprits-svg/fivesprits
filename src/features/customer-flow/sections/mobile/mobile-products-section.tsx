@@ -31,7 +31,7 @@ export function MobileProductsSection({
       <MobileHeader
         title={brand?.name ?? "Products"}
         backHref={`/brands?categoryId=${categoryId}`}
-        isSearchEnabled={true}
+        isSearchEnabled={false}
       />
       <main className="mx-auto w-full max-w-[390px] px-6 pt-5">
         {isLoading ? (

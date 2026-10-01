@@ -88,12 +88,12 @@ export function LoginForm() {
               if (next.length === 0) {
                 setErrors((prev) => ({
                   ...prev,
-                  mobile: "Mobile Number is required",
+                  mobile: "Mobile number is required",
                 }));
               } else if (next.length < 10) {
                 setErrors((prev) => ({
                   ...prev,
-                  mobile: "Mobile Number must be 10 digits",
+                  mobile: "Mobile number must be exactly 10 digits.",
                 }));
               } else {
                 setErrors((prev) => ({
@@ -142,11 +142,11 @@ export function LoginForm() {
           <span>Continue</span>
         )}
       </button>
-      <p className="font-geist text-common-gray text-center text-sm md:text-base">
+      <p className="font-geist text-common-gray m-0 text-center text-sm leading-5 md:text-base">
         We&apos;ll send you a one-time verification code to Admin.
       </p>
 
-      <p className="font-geist text-common-gray mt-3 text-center text-sm md:text-base">
+      <p className="font-geist text-common-gray mt-2.5 mb-0 text-center text-sm leading-5 md:text-base">
         Already have an account?{" "}
         <button
           type="button"

@@ -50,6 +50,18 @@ export function DesktopCategoriesSection() {
     router.push(`/brands?categoryId=${categoryId}`);
   };
 
+  const scrollToCategories = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    const categoriesSection = document.getElementById("categories");
+    if (!categoriesSection) return;
+
+    if (window.location.hash !== "#categories") {
+      window.history.pushState(null, "", "#categories");
+    }
+
+    categoriesSection.scrollIntoView({ behavior: "smooth", block: "center" });
+  };
+
   return (
     <div className="hidden min-h-dvh bg-[#f8f9fa] text-gray-900 md:block">
       {/* Header */}
@@ -135,6 +147,7 @@ export function DesktopCategoriesSection() {
                   <div className="flex flex-wrap items-center gap-4 pt-3">
                     <a
                       href="#categories"
+                      onClick={scrollToCategories}
                       className="font-outfit inline-flex h-12 items-center justify-center rounded-full bg-gray-900 px-8 text-xs font-bold tracking-wider text-white uppercase shadow-md transition hover:bg-[#a67854]"
                     >
                       Explore Categories ↓
@@ -297,6 +310,7 @@ export function DesktopCategoriesSection() {
                   <div className="pt-2">
                     <Link
                       href="/categories#categories"
+                      onClick={scrollToCategories}
                       className="font-outfit inline-flex h-11 items-center gap-2 rounded-full bg-white px-7 text-xs font-bold tracking-wider text-black uppercase transition hover:bg-[#c9a07e]"
                     >
                       <span>Explore Collection</span>
@@ -354,13 +368,21 @@ export function DesktopCategoriesSection() {
 
               <ul className="font-geist mt-3 space-y-2 text-xs text-gray-500">
                 <li>
-                  <Link href="/categories#categories" className="hover:text-black">
+                  <Link
+                    href="/categories#categories"
+                    onClick={scrollToCategories}
+                    className="hover:text-black"
+                  >
                     Catalogue
                   </Link>
                 </li>
 
                 <li>
-                  <Link href="/categories#categories" className="hover:text-black">
+                  <Link
+                    href="/categories#categories"
+                    onClick={scrollToCategories}
+                    className="hover:text-black"
+                  >
                     Categories
                   </Link>
                 </li>

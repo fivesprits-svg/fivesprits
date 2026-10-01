@@ -36,8 +36,8 @@ export function DesktopCartSection() {
           {/* Breadcrumb Navigation */}
           <Breadcrumb items={[{ label: "Requirement Checklist" }]} />
 
-          <div className="grid grid-cols-[1fr_380px] items-start gap-8">
-            <section>
+          <div className="grid grid-cols-[minmax(0,1fr)_380px] items-start gap-8">
+            <section className="min-w-0">
               {/* Header Title */}
               <div className="mb-6 border-b border-gray-200/80 pb-5">
                 <div className="mb-1.5 flex items-center gap-2">

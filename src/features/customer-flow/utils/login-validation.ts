@@ -8,7 +8,7 @@ export function validateLogin(name: string, mobile: string): LoginErrors {
   if (!mobile.trim()) {
     errors.mobile = "Mobile number is required";
   } else if (!/^\d{10}$/.test(mobile)) {
-    errors.mobile = "Enter a 10-digit valid number";
+    errors.mobile = "Mobile number must be exactly 10 digits.";
   }
   return errors;
 }

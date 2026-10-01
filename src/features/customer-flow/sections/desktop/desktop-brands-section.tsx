@@ -76,7 +76,7 @@ export function DesktopBrandsSection({
                 actionLabel="Back to Collections"
                 actionHref="/categories"
               />
-              <div className="relative mx-auto hidden aspect-[4/5] w-full max-w-[360px] overflow-hidden rounded-3xl bg-[#FAF6F0] lg:block">
+              <div className="relative mx-auto hidden aspect-[4/5] w-full max-w-[360px] overflow-hidden rounded-3xl lg:block">
                 <Image
                   src="/customer-flow/hero/hero-right-column.png"
                   alt="Brand Collection Hero"

@@ -73,7 +73,7 @@ const colorByVariant: Record<ToastVariant, { text: string; border: string; bg: s
   error: {
     text: "text-white",
     border: "border-[#991b1b]",
-    bg: "bg-[#b83a32]",
+    bg: "bg-[#ff3b30]",
   },
   info: {
     text: "text-white",
