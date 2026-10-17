@@ -62,8 +62,9 @@ export function MobileProductsSection({
                   key={product.id}
                   variant="product"
                   image={product.image}
-                  title={product.name}
+                  title={product.displayName ?? product.name}
                   subtitle={product.pack}
+                  subtitleRight={product.unitType}
                   mrp={product.mrp}
                   salePrice={product.saleAmount ?? product.mrp}
                   actionLabel={isOutOfStock ? "Requested" : "Add"}

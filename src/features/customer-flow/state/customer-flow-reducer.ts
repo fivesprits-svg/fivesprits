@@ -124,6 +124,17 @@ export function customerFlowReducer(
       return state.userDetails
         ? { ...state, userDetails: { ...state.userDetails, ageVerified: true } }
         : state;
+    case "session/skip-verification":
+      return state.userDetails
+        ? {
+            ...state,
+            userDetails: {
+              ...state.userDetails,
+              verificationSkipped: true,
+              ageVerified: true,
+            },
+          }
+        : state;
     case "session/profile-complete":
       return state.userDetails
         ? { ...state, userDetails: { ...state.userDetails, profileComplete: true } }

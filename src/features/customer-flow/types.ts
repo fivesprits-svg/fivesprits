@@ -27,6 +27,7 @@ export type CustomerFlowAction =
   | { type: "session/verify-digilocker-otp" }
   | { type: "session/verification-complete"; dateOfBirth: string; age: number }
   | { type: "session/verify-age" }
+  | { type: "session/skip-verification" }
   | { type: "session/profile-complete" }
   | { type: "selection/category"; categoryId: string }
   | { type: "selection/brand"; brandId: string }

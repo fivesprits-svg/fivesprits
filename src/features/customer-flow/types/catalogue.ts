@@ -4,7 +4,9 @@ export type Product = {
   id: string;
   brandId: string;
   name: string;
+  displayName?: string;
   pack: string;
+  unitType?: string;
   mrp: number;
   image: string;
   outOfStock?: boolean;

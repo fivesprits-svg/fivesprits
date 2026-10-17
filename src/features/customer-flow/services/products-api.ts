@@ -10,6 +10,10 @@ export interface BackendProduct {
   categoryName?: string;
   size?: string;
   pack?: string;
+  unitTypeId?: string | { _id: string; customId?: string; name?: string };
+  unitTypeName?: string;
+  unitName?: string;
+  unitType?: { unitTypeName?: string; name?: string };
   mrpAmount?: number;
   saleAmount?: number;
   mrp?: number;
@@ -17,6 +21,31 @@ export interface BackendProduct {
   image?: string;
   active?: boolean;
   outOfStock?: boolean;
+}
+
+export function mapBackendProduct(item: BackendProduct): Product {
+  const mrp = Number(item.mrpAmount ?? item.mrp ?? 0);
+  const saleAmount = Number(item.saleAmount ?? item.mrpAmount ?? item.mrp ?? 0);
+  const unitTypeIdName = typeof item.unitTypeId === "object" ? item.unitTypeId.name : undefined;
+  const unitType =
+    item.unitTypeName ||
+    item.unitName ||
+    unitTypeIdName ||
+    item.unitType?.unitTypeName ||
+    item.unitType?.name;
+
+  return {
+    id: String(item._id),
+    brandId: String(item.brandId),
+    name: item.name,
+    displayName: item.brandName || item.name,
+    pack: item.size || item.pack || "750ml",
+    unitType,
+    mrp: mrp || saleAmount,
+    saleAmount: saleAmount || mrp,
+    image: item.productImageUrl || item.image || "",
+    outOfStock: Boolean(item.outOfStock),
+  };
 }
 
 const productRequests = new Map<string, Promise<Product[]>>();
@@ -61,20 +90,7 @@ async function fetchProducts(params?: {
     const items = res.data?.items;
 
     if (items && Array.isArray(items)) {
-      return items.map((item) => {
-        const mrp = Number(item.mrpAmount ?? item.mrp ?? 0);
-        const saleAmount = Number(item.saleAmount);
-        return {
-          id: String(item._id),
-          brandId: String(item.brandId),
-          name: item.name,
-          pack: item.size || item.pack || "750ml",
-          mrp: mrp || saleAmount,
-          saleAmount: saleAmount || mrp,
-          image: item.productImageUrl || item.image || "",
-          outOfStock: Boolean(item.outOfStock),
-        };
-      });
+      return items.map(mapBackendProduct);
     }
     return [];
   } catch (err) {
@@ -96,18 +112,7 @@ async function fetchProductById(id: string): Promise<Product | null> {
   try {
     const res = await apiFetch<BackendProduct>(`/products/${id}`);
     if (res.data) {
-      const mrp = Number(res.data.mrpAmount ?? res.data.mrp ?? 0);
-      const saleAmount = Number(res.data.saleAmount ?? res.data.mrpAmount ?? res.data.mrp ?? 0);
-      return {
-        id: String(res.data._id),
-        brandId: String(res.data.brandId),
-        name: res.data.name,
-        pack: res.data.size || res.data.pack || "750ml",
-        mrp: mrp || saleAmount,
-        saleAmount: saleAmount || mrp,
-        image: res.data.productImageUrl || res.data.image || "",
-        outOfStock: Boolean(res.data.outOfStock),
-      };
+      return mapBackendProduct(res.data);
     }
     return null;
   } catch (err) {

@@ -7,7 +7,11 @@ export function isSessionLoggedIn(userDetails: UserDetails | null): boolean {
 
 export function isDigilockerCompleted(userDetails: UserDetails | null): boolean {
   if (!userDetails) return false;
-  return Boolean(userDetails.verificationComplete || userDetails.profileComplete);
+  return Boolean(
+    userDetails.verificationComplete ||
+    userDetails.verificationSkipped ||
+    userDetails.profileComplete,
+  );
 }
 
 export function isProfileCompleted(userDetails: UserDetails | null): boolean {

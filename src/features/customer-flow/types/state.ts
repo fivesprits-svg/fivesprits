@@ -55,6 +55,7 @@ export type UserDetails = {
   aadhaarVerified?: boolean;
   digilockerOtpVerified?: boolean;
   verificationComplete?: boolean;
+  verificationSkipped?: boolean;
   ageVerified?: boolean;
   profileComplete?: boolean;
   formDrafts?: {

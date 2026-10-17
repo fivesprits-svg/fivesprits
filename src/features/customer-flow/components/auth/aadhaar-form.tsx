@@ -7,7 +7,7 @@ import { FlowNavButtons } from "@/features/customer-flow/components/auth/flow-na
 
 export function AadhaarForm() {
   const router = useRouter();
-  const { state, verifyAadhaar, updateFormDraft, logout } = useCustomerFlow();
+  const { state, verifyAadhaar, skipVerification, updateFormDraft, logout } = useCustomerFlow();
   const draft = state.userDetails?.formDrafts?.aadhaar;
   const [aadhaar, setAadhaar] = useState(draft ?? "");
   const [errors, setErrors] = useState<ReturnType<typeof validateAadhaar>>({});
@@ -27,6 +27,11 @@ export function AadhaarForm() {
   const handleLogout = () => {
     logout();
     router.replace(state.userDetails?.cameFromLoginHere ? "/login-here" : "/");
+  };
+
+  const handleSkip = () => {
+    skipVerification();
+    router.replace("/profile-setup");
   };
 
   return (
@@ -63,6 +68,14 @@ export function AadhaarForm() {
         loading={loading}
         loadingLabel="Processing..."
       />
+      <button
+        type="button"
+        onClick={handleSkip}
+        disabled={loading}
+        className="font-geist text-common-gray hover:text-common-black mx-auto block cursor-pointer text-xs font-semibold underline transition-colors disabled:cursor-not-allowed disabled:opacity-60 md:text-sm"
+      >
+        Skip for now
+      </button>
       <div className="mt-4 text-center">
         <button
           type="button"

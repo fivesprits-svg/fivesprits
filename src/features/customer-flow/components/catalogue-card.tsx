@@ -13,6 +13,7 @@ type CatalogueCardProps = {
   image: string;
   title: string;
   subtitle?: string;
+  subtitleRight?: string;
   price?: string;
   originalPrice?: string;
   mrp?: number | string;
@@ -35,6 +36,7 @@ export function CatalogueCard({
   image,
   title,
   subtitle,
+  subtitleRight,
   price,
   originalPrice,
   mrp,
@@ -169,10 +171,11 @@ export function CatalogueCard({
             {title}
           </h2>
 
-          {subtitle && (
-            <p className="font-geist mt-0.5 text-[11px] font-normal text-gray-500 sm:text-xs">
-              {subtitle}
-            </p>
+          {(subtitle || subtitleRight) && (
+            <div className="font-geist mt-0.5 flex items-center justify-between gap-2 text-[11px] font-normal text-gray-500 sm:text-xs">
+              <span>{subtitle}</span>
+              {subtitleRight && <span className="text-right">{subtitleRight}</span>}
+            </div>
           )}
 
           {(() => {

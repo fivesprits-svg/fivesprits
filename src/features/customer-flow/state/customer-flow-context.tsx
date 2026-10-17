@@ -260,6 +260,10 @@ function useCustomerFlowValue() {
     dispatch({ type: "session/verify-age" });
   }, []);
 
+  const skipVerification = useCallback(() => {
+    dispatch({ type: "session/skip-verification" });
+  }, []);
+
   const completeProfile = useCallback(() => {
     dispatch({ type: "session/profile-complete" });
   }, []);
@@ -472,6 +476,7 @@ function useCustomerFlowValue() {
       verifyDigilockerOtp,
       completeVerification,
       verifyAge,
+      skipVerification,
       completeProfile,
       selectCategory,
       selectBrand,
@@ -497,6 +502,7 @@ function useCustomerFlowValue() {
       verifyDigilockerOtp,
       completeVerification,
       verifyAge,
+      skipVerification,
       completeProfile,
       selectCategory,
       selectBrand,
