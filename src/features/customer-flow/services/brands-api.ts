@@ -1,5 +1,6 @@
 import { apiFetch } from "./api-client";
 import type { Brand } from "@/features/customer-flow/types";
+import { sortCatalogueItems } from "@/features/customer-flow/utils/catalogue-sort";
 
 export interface BackendBrand {
   _id: string;
@@ -49,12 +50,14 @@ async function fetchBrands(params?: {
     const items = res.data?.items;
 
     if (items && Array.isArray(items)) {
-      return items.map((item) => ({
-        id: String(item._id),
-        categoryId: String(item.categoryId),
-        name: item.brandName,
-        image: item.brandImageUrl || item.image || "",
-      }));
+      return sortCatalogueItems(
+        items.map((item) => ({
+          id: String(item._id),
+          categoryId: String(item.categoryId),
+          name: item.brandName,
+          image: item.brandImageUrl || item.image || "",
+        })),
+      );
     }
     return [];
   } catch (err) {

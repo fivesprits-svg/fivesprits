@@ -1,5 +1,6 @@
 import { apiFetch } from "./api-client";
 import type { Product } from "@/features/customer-flow/types";
+import { sortCatalogueItems } from "@/features/customer-flow/utils/catalogue-sort";
 
 export interface BackendProduct {
   _id: string;
@@ -90,7 +91,7 @@ async function fetchProducts(params?: {
     const items = res.data?.items;
 
     if (items && Array.isArray(items)) {
-      return items.map(mapBackendProduct);
+      return sortCatalogueItems(items.map(mapBackendProduct));
     }
     return [];
   } catch (err) {

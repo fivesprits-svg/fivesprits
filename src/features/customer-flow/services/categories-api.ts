@@ -1,5 +1,6 @@
 import { apiFetch } from "./api-client";
 import type { Category } from "@/features/customer-flow/types";
+import { sortCatalogueItems } from "@/features/customer-flow/utils/catalogue-sort";
 
 export interface BackendCategory {
   _id: string;
@@ -40,11 +41,13 @@ async function fetchCategories(params?: { search?: string; status?: string }): P
     const items = res.data?.items;
 
     if (items && Array.isArray(items)) {
-      return items.map((item) => ({
-        id: String(item._id),
-        name: item.categoryName,
-        image: item.categoryImageUrl || item.image || "",
-      }));
+      return sortCatalogueItems(
+        items.map((item) => ({
+          id: String(item._id),
+          name: item.categoryName,
+          image: item.categoryImageUrl || item.image || "",
+        })),
+      );
     }
     return [];
   } catch (err) {
