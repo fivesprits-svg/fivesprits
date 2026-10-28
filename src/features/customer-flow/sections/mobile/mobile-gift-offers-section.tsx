@@ -9,12 +9,15 @@ import { type GiftOfferDetail } from "@/features/customer-flow/services/offers-a
 import { ImageSkeleton } from "@/features/customer-flow/components/ui/skeleton";
 import { ImagePlaceholder } from "@/features/customer-flow/components/ui/image-placeholder";
 import { EmptyState } from "@/features/customer-flow/components/ui/empty-state";
+import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 
 export function MobileGiftOffersSection({
   offer,
 }: {
   offer?: GiftOfferDetail | null;
 } = {}) {
+  const { state } = useCustomerFlow();
+  const isGuest = Boolean(state.userDetails?.isGuest);
   return (
     <div className="min-h-dvh bg-white pb-28 md:hidden">
       {/* <MobileHeader title="Offers" backHref="" /> */}
@@ -62,12 +65,14 @@ export function MobileGiftOffersSection({
               </p>
               <p className="font-geist mt-1.5 text-[11px] text-gray-500">{offer.terms}</p>
             </div>
-            <Link
-              href="/gift-offers/select"
-              className="font-outfit mt-4 flex h-11 w-full cursor-pointer items-center justify-center rounded-full bg-black text-sm font-bold tracking-wide text-white transition hover:bg-gray-800 active:scale-[0.99]"
-            >
-              View Offer
-            </Link>
+            {!isGuest && (
+              <Link
+                href="/gift-offers/select"
+                className="font-outfit mt-4 flex h-11 w-full cursor-pointer items-center justify-center rounded-full bg-black text-sm font-bold tracking-wide text-white transition hover:bg-gray-800 active:scale-[0.99]"
+              >
+                View Offer
+              </Link>
+            )}
           </article>
         )}
       </main>

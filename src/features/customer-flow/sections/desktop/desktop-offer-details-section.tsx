@@ -15,7 +15,8 @@ import { ImagePlaceholder } from "@/features/customer-flow/components/ui/image-p
 export function DesktopOfferDetailsSection({ offer }: { offer: ComboOffer }) {
   const [quantity, setQuantity] = useState(1);
   const [adding, setAdding] = useState(false);
-  const { addComboToCart } = useCustomerFlow();
+  const { addComboToCart, state } = useCustomerFlow();
+  const isGuest = Boolean(state.userDetails?.isGuest);
 
   return (
     <div className="hidden md:block">
@@ -120,41 +121,43 @@ export function DesktopOfferDetailsSection({ offer }: { offer: ComboOffer }) {
                   </p>
                 </div>
 
-                <div className="flex items-center gap-3">
-                  <QuantityStepper value={quantity} onChange={setQuantity} />
-                  <button
-                    type="button"
-                    disabled={adding}
-                    onClick={async () => {
-                      try {
-                        setAdding(true);
-                        await addComboToCart(offer.id, quantity, {
-                          id: offer.id,
-                          comboName: offer.title,
-                          badge: offer.badge,
-                          mrp: offer.mrp,
-                          originalPrice: offer.mrp,
-                          salePrice: offer.salePrice,
-                          offerPrice: offer.salePrice,
-                          image: offer.image,
-                          offerImageUrl: offer.image,
-                        });
-                      } finally {
-                        setAdding(false);
-                      }
-                    }}
-                    className="font-outfit h-11 rounded-full bg-black px-7 text-sm font-bold text-white transition hover:bg-gray-800 active:scale-[0.99] disabled:opacity-70 sm:h-12 sm:px-8 sm:text-base"
-                  >
-                    {adding ? (
-                      <span className="inline-flex items-center gap-2">
-                        <ButtonSpinner />
-                        Adding...
-                      </span>
-                    ) : (
-                      "Add"
-                    )}
-                  </button>
-                </div>
+                {!isGuest && (
+                  <div className="flex items-center gap-3">
+                    <QuantityStepper value={quantity} onChange={setQuantity} />
+                    <button
+                      type="button"
+                      disabled={adding}
+                      onClick={async () => {
+                        try {
+                          setAdding(true);
+                          await addComboToCart(offer.id, quantity, {
+                            id: offer.id,
+                            comboName: offer.title,
+                            badge: offer.badge,
+                            mrp: offer.mrp,
+                            originalPrice: offer.mrp,
+                            salePrice: offer.salePrice,
+                            offerPrice: offer.salePrice,
+                            image: offer.image,
+                            offerImageUrl: offer.image,
+                          });
+                        } finally {
+                          setAdding(false);
+                        }
+                      }}
+                      className="font-outfit h-11 rounded-full bg-black px-7 text-sm font-bold text-white transition hover:bg-gray-800 active:scale-[0.99] disabled:opacity-70 sm:h-12 sm:px-8 sm:text-base"
+                    >
+                      {adding ? (
+                        <span className="inline-flex items-center gap-2">
+                          <ButtonSpinner />
+                          Adding...
+                        </span>
+                      ) : (
+                        "Add"
+                      )}
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </article>

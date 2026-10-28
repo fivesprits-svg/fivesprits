@@ -16,4 +16,20 @@ describe("customerFlowReducer", () => {
     });
     expect(next.userDetails?.verificationComplete).toBeUndefined();
   });
+
+  it("starts a guest session that can browse without completing customer verification", () => {
+    const next = customerFlowReducer(initialCustomerFlowState, {
+      type: "session/login-as-guest",
+      accessToken: "guest-token",
+    });
+
+    expect(next.accessToken).toBe("guest-token");
+    expect(next.userDetails).toMatchObject({
+      name: "Guest",
+      verified: true,
+      isGuest: true,
+      verificationSkipped: true,
+      profileComplete: true,
+    });
+  });
 });

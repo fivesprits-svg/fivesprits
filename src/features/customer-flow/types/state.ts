@@ -58,6 +58,7 @@ export type UserDetails = {
   verificationSkipped?: boolean;
   ageVerified?: boolean;
   profileComplete?: boolean;
+  isGuest?: boolean;
   formDrafts?: {
     login?: { name: string; mobile: string };
     loginHere?: { phoneValue: string; countryCode: string; dialCode: string; password: string };

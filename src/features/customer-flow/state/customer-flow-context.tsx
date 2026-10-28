@@ -28,7 +28,11 @@ import {
   type SubmitOrderPayload,
 } from "@/features/customer-flow/services/orders-api";
 import { fetchCustomerProfileApi } from "@/features/customer-flow/services/user-api";
-import { clearAuthStorage, getAuthToken } from "@/features/customer-flow/services/api-client";
+import {
+  clearAuthStorage,
+  getAuthToken,
+  isGuestSession,
+} from "@/features/customer-flow/services/api-client";
 import type { CartLine, UserDetails } from "@/features/customer-flow/types/state";
 
 const STORAGE_KEY = "five-spirits-customer-flow-v1";
@@ -124,6 +128,7 @@ const CustomerFlowContext = createContext<CustomerFlowContextValue | null>(null)
 function useCustomerFlowValue() {
   const [state, dispatch] = useReducer(customerFlowReducer, initialCustomerFlowState);
   const [hydrated, setHydrated] = useState(false);
+  const isGuest = Boolean(state.userDetails?.isGuest);
 
   useEffect(() => {
     try {
@@ -170,7 +175,7 @@ function useCustomerFlowValue() {
       setHydrated(true);
     }
 
-    if (!getAuthToken()) return;
+    if (!getAuthToken() || isGuestSession()) return;
 
     // Fetch latest user details from /api/v1/users/me
     fetchCustomerProfileApi()
@@ -219,6 +224,13 @@ function useCustomerFlowValue() {
 
   const login = useCallback((name: string, mobile: string) => {
     dispatch({ type: "session/login", name, mobile });
+  }, []);
+
+  const loginAsGuest = useCallback((accessToken: string) => {
+    window.localStorage.setItem("customer_access_token", accessToken);
+    window.localStorage.setItem("customer_is_guest", "true");
+    document.cookie = `customer_access_token=${accessToken}; path=/; SameSite=Lax`;
+    dispatch({ type: "session/login-as-guest", accessToken });
   }, []);
 
   const loginHere = useCallback(
@@ -278,6 +290,7 @@ function useCustomerFlowValue() {
 
   const addToCart = useCallback(
     async (productId: string, quantity: number, productDetails?: Record<string, unknown>) => {
+      if (isGuest) return;
       const mrp = productDetails ? Number(productDetails.mrp ?? productDetails.mrpAmount ?? 0) : 0;
       const sale = productDetails
         ? Number(
@@ -307,11 +320,12 @@ function useCustomerFlowValue() {
         }
       } catch {}
     },
-    [],
+    [isGuest],
   );
 
   const addComboToCart = useCallback(
     async (offerId: string, quantity: number, productDetails?: Record<string, unknown>) => {
+      if (isGuest) return;
       const mrp = productDetails
         ? Number(productDetails.mrp ?? productDetails.originalPrice ?? 0)
         : 0;
@@ -349,7 +363,7 @@ function useCustomerFlowValue() {
         }
       } catch {}
     },
-    [],
+    [isGuest],
   );
 
   const addGiftToCart = useCallback(
@@ -358,6 +372,7 @@ function useCustomerFlowValue() {
       selectedProductIds: string[],
       productDetails?: Record<string, unknown>,
     ) => {
+      if (isGuest) return;
       const payload = buildCartItemPayload(offerId, 1, "gift", selectedProductIds);
       dispatch({
         type: "cart/gift",
@@ -372,10 +387,11 @@ function useCustomerFlowValue() {
         }
       } catch {}
     },
-    [],
+    [isGuest],
   );
 
   const syncCart = useCallback(async () => {
+    if (isGuest) return;
     try {
       const items = await getCartApi();
       if (items && items.length > 0) {
@@ -383,42 +399,54 @@ function useCustomerFlowValue() {
         dispatch({ type: "cart/set", cart: cartItems });
       }
     } catch {}
-  }, []);
+  }, [isGuest]);
 
-  const setCartQuantity = useCallback(async (productId: string, quantity: number) => {
-    if (quantity <= 0) {
+  const setCartQuantity = useCallback(
+    async (productId: string, quantity: number) => {
+      if (isGuest) return;
+      if (quantity <= 0) {
+        removeCartItemApi(productId).catch(() => {});
+        dispatch({ type: "cart/remove", productId });
+      } else {
+        updateCartItemApi(productId, { quantity }).catch(() => {});
+        dispatch({ type: "cart/quantity", productId, quantity });
+      }
+    },
+    [isGuest],
+  );
+
+  const removeFromCart = useCallback(
+    async (productId: string) => {
+      if (isGuest) return;
       removeCartItemApi(productId).catch(() => {});
       dispatch({ type: "cart/remove", productId });
-    } else {
-      updateCartItemApi(productId, { quantity }).catch(() => {});
-      dispatch({ type: "cart/quantity", productId, quantity });
-    }
-  }, []);
+    },
+    [isGuest],
+  );
 
-  const removeFromCart = useCallback(async (productId: string) => {
-    removeCartItemApi(productId).catch(() => {});
-    dispatch({ type: "cart/remove", productId });
-  }, []);
-
-  const submitRequirement = useCallback(async (payload?: SubmitOrderPayload) => {
-    if (payload) {
-      await submitOrderApi(payload);
-    }
-    await clearCartApi();
-    await getOrderHistoryApi();
-    dispatch({ type: "requirement/submit" });
-  }, []);
+  const submitRequirement = useCallback(
+    async (payload?: SubmitOrderPayload) => {
+      if (isGuest) return;
+      if (payload) {
+        await submitOrderApi(payload);
+      }
+      await clearCartApi();
+      await getOrderHistoryApi();
+      dispatch({ type: "requirement/submit" });
+    },
+    [isGuest],
+  );
 
   const dismissConfirmation = useCallback(() => {
     dispatch({ type: "confirmation/dismiss" });
   }, []);
 
   const logout = useCallback(() => {
-    clearCartApi().catch(() => {});
+    if (!isGuest) clearCartApi().catch(() => {});
     dispatch({ type: "session/logout" });
     window.localStorage.removeItem(STORAGE_KEY);
     clearAuthStorage();
-  }, []);
+  }, [isGuest]);
 
   const updateFormDraft = useCallback(
     (draft: {
@@ -470,6 +498,7 @@ function useCustomerFlowValue() {
       cartCount: state.cartCount,
       setUserDetails,
       login,
+      loginAsGuest,
       loginHere,
       verifyOtp,
       verifyAadhaar,
@@ -496,6 +525,7 @@ function useCustomerFlowValue() {
       hydrated,
       setUserDetails,
       login,
+      loginAsGuest,
       loginHere,
       verifyOtp,
       verifyAadhaar,

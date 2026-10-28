@@ -18,6 +18,7 @@ export function MobileOffersSection({
   const { addComboToCart, setCartQuantity, removeFromCart, state } = useCustomerFlow();
 
   const cartLines = state.cart;
+  const isGuest = Boolean(state.userDetails?.isGuest);
   const isEmpty = !isLoading && offersList.length === 0;
 
   return (
@@ -60,6 +61,7 @@ export function MobileOffersSection({
                   key={offer.id}
                   offer={offer}
                   quantity={item?.quantity}
+                  canRequest={!isGuest}
                   onAdd={() =>
                     addComboToCart(offer.id, 1, {
                       id: offer.id,

@@ -1,16 +1,18 @@
 "use client";
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import { AuthPageSkeleton } from "@/features/customer-flow/components/ui/skeleton";
 import {
   isSessionLoggedIn,
   isDigilockerCompleted,
   isProfileCompleted,
+  canGuestViewPath,
 } from "@/features/customer-flow/utils/auth-guards";
 
 export function AuthenticatedRoute({ children }: { children: React.ReactNode }) {
   const router = useRouter();
+  const pathname = usePathname();
   const { state, hydrated } = useCustomerFlow();
 
   const loggedIn = isSessionLoggedIn(state.userDetails);
@@ -18,12 +20,19 @@ export function AuthenticatedRoute({ children }: { children: React.ReactNode }) 
   const profileDone = isProfileCompleted(state.userDetails);
 
   const isAllowed = loggedIn && digilockerDone && profileDone;
+  const isGuest = Boolean(state.userDetails?.isGuest);
+  const canGuestViewPage = canGuestViewPath(pathname);
 
   useEffect(() => {
     if (!hydrated) return;
 
     if (!loggedIn) {
       router.replace("/");
+      return;
+    }
+
+    if (isGuest && !canGuestViewPage) {
+      router.replace("/categories");
       return;
     }
 
@@ -40,8 +49,17 @@ export function AuthenticatedRoute({ children }: { children: React.ReactNode }) 
       }
       return;
     }
-  }, [hydrated, loggedIn, digilockerDone, profileDone, state.userDetails?.ageVerified, router]);
+  }, [
+    hydrated,
+    loggedIn,
+    digilockerDone,
+    profileDone,
+    isGuest,
+    canGuestViewPage,
+    state.userDetails?.ageVerified,
+    router,
+  ]);
 
-  if (!hydrated || !isAllowed) return <AuthPageSkeleton />;
+  if (!hydrated || !isAllowed || (isGuest && !canGuestViewPage)) return <AuthPageSkeleton />;
   return <>{children}</>;
 }

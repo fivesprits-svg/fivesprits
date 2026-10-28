@@ -12,7 +12,10 @@ const items = [
 ];
 
 export function MobileBottomNav({ active }: { active: string }) {
-  const { cartCount } = useCustomerFlow();
+  const { cartCount, state } = useCustomerFlow();
+  const itemsToDisplay = state.userDetails?.isGuest
+    ? items.filter((item) => item.label === "Product" || item.label === "Offer")
+    : items;
   const isActive = (label: string) =>
     active === label || (label === "Request" && (active === "Cart" || active === "Request"));
 
@@ -22,7 +25,7 @@ export function MobileBottomNav({ active }: { active: string }) {
         aria-label="Primary"
         className="fixed right-6 bottom-5 left-6 z-40 flex h-[60px] items-center justify-around rounded-full bg-black px-4 shadow-[0_12px_32px_rgba(0,0,0,0.28)] md:hidden"
       >
-        {items.map((item) => (
+        {itemsToDisplay.map((item) => (
           <Link
             key={item.label}
             href={item.href}

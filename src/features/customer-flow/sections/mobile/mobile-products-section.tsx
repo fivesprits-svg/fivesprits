@@ -25,6 +25,7 @@ export function MobileProductsSection({
   const isEmpty = !isLoading && products.length === 0;
 
   const cartLines = state.cart;
+  const isGuest = Boolean(state.userDetails?.isGuest);
 
   return (
     <div className="min-h-dvh bg-white pb-28 md:hidden">
@@ -67,7 +68,7 @@ export function MobileProductsSection({
                   subtitleRight={product.unitType}
                   mrp={product.mrp}
                   salePrice={product.saleAmount ?? product.mrp}
-                  actionLabel={isOutOfStock ? "Requested" : "Add"}
+                  actionLabel={isGuest ? undefined : isOutOfStock ? "Requested" : "Add"}
                   actionVariant={isOutOfStock ? "requested" : "add"}
                   disabled={isOutOfStock}
                   outOfStock={isOutOfStock}
@@ -88,7 +89,7 @@ export function MobileProductsSection({
                       });
                     }
                   }}
-                  quantity={isOutOfStock ? undefined : item?.quantity}
+                  quantity={isGuest || isOutOfStock ? undefined : item?.quantity}
                   onQuantityChange={(value) => {
                     if (value <= 0) {
                       removeFromCart(product.id);

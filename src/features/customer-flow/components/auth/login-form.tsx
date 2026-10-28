@@ -8,7 +8,7 @@ import { requestOtpApi } from "@/features/customer-flow/services/auth-api";
 
 export function LoginForm() {
   const router = useRouter();
-  const { state, login, updateFormDraft } = useCustomerFlow();
+  const { state, login, loginAsGuest, updateFormDraft } = useCustomerFlow();
   const { success, error: showError } = useToast();
   const loginDraft = state.userDetails?.formDrafts?.login;
   const [name, setName] = useState(loginDraft?.name ?? "");
@@ -41,6 +41,18 @@ export function LoginForm() {
         setLoading(false);
       }
     }
+  }
+
+  function continueAsGuest() {
+    const guestToken = process.env.NEXT_PUBLIC_API_GUEST_TOKEN;
+    if (!guestToken) {
+      const message = "Guest access is not configured. Please try signing in instead.";
+      setApiError(message);
+      showError(message);
+      return;
+    }
+    loginAsGuest(guestToken);
+    router.push("/categories");
   }
   return (
     <form onSubmit={submit} className="mt-8 space-y-[15px] md:mt-10 md:space-y-5" noValidate>
@@ -157,6 +169,14 @@ export function LoginForm() {
           Login here
         </button>
       </p>
+      <button
+        type="button"
+        onClick={continueAsGuest}
+        className="text-common-black mx-auto block cursor-pointer text-sm font-semibold underline disabled:opacity-60 md:text-base"
+        disabled={loading}
+      >
+        Continue as guest
+      </button>
     </form>
   );
 }

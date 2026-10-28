@@ -18,3 +18,15 @@ export function isProfileCompleted(userDetails: UserDetails | null): boolean {
   if (!userDetails) return false;
   return Boolean(userDetails.profileComplete);
 }
+
+export function canGuestViewPath(pathname: string): boolean {
+  if (
+    ["/categories", "/brands", "/products", "/combo-offers", "/offers"].some(
+      (path) => pathname === path || pathname.startsWith(`${path}/`),
+    )
+  ) {
+    return true;
+  }
+
+  return pathname === "/gift-offers";
+}

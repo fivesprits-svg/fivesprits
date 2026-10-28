@@ -17,12 +17,16 @@ export const getAuthToken = (): string | null => {
   );
 };
 
+export const isGuestSession = (): boolean =>
+  typeof window !== "undefined" && window.localStorage.getItem("customer_is_guest") === "true";
+
 export const clearAuthStorage = () => {
   if (typeof window === "undefined") return;
   window.localStorage.removeItem("customer_access_token");
   window.localStorage.removeItem("access_token");
   window.localStorage.removeItem("token");
   window.localStorage.removeItem("customer_user");
+  window.localStorage.removeItem("customer_is_guest");
   document.cookie = "customer_access_token=; path=/; max-age=0; SameSite=Lax";
 };
 

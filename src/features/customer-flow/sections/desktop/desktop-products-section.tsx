@@ -29,6 +29,7 @@ export function DesktopProductsSection({
   const isEmpty = !isLoading && products.length === 0;
 
   const cartLines = state.cart;
+  const isGuest = Boolean(state.userDetails?.isGuest);
 
   return (
     <div className="hidden md:block">
@@ -62,9 +63,11 @@ export function DesktopProductsSection({
               <h1 className="font-unbounded text-2xl font-black tracking-tight text-gray-900 capitalize lg:text-3xl">
                 {brand?.name ?? "Products"}
               </h1>
-              <p className="font-geist mt-1 text-xs text-gray-500 lg:text-sm">
-                Choose quantities and add products directly to your requirement list.
-              </p>
+              {!isGuest && (
+                <p className="font-geist mt-1 text-xs text-gray-500 lg:text-sm">
+                  Choose quantities and add products directly to your requirement list.
+                </p>
+              )}
             </div>
 
             <span className="inline-flex items-center gap-1.5 rounded-full border border-[#e8d5c4] bg-[#f7f4ee] px-3.5 py-1.5 text-xs font-semibold text-[#a67854]">
@@ -108,11 +111,11 @@ export function DesktopProductsSection({
                       subtitleRight={product.unitType}
                       mrp={product.mrp}
                       salePrice={product.saleAmount ?? product.mrp}
-                      actionLabel={isOutOfStock ? "Requested" : "Add"}
+                      actionLabel={isGuest ? undefined : isOutOfStock ? "Requested" : "Add"}
                       actionVariant={isOutOfStock ? "requested" : "add"}
                       disabled={isOutOfStock}
                       outOfStock={isOutOfStock}
-                      quantity={isOutOfStock ? undefined : item?.quantity}
+                      quantity={isGuest || isOutOfStock ? undefined : item?.quantity}
                       onAction={() => {
                         if (!isRequested && !isOutOfStock) {
                           addToCart(product.id, 1, {

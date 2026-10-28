@@ -7,12 +7,15 @@ import { Breadcrumb } from "@/features/customer-flow/components/navigation/bread
 import { type GiftOfferDetail } from "@/features/customer-flow/services/offers-api";
 import { ImagePlaceholder } from "@/features/customer-flow/components/ui/image-placeholder";
 import { EmptyState } from "@/features/customer-flow/components/ui/empty-state";
+import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 
 export function DesktopGiftOffersSection({
   offer,
 }: {
   offer?: GiftOfferDetail | null;
 } = {}) {
+  const { state } = useCustomerFlow();
+  const isGuest = Boolean(state.userDetails?.isGuest);
   return (
     <div className="hidden md:block">
       <PortalShell title="Offers" eyebrow="Exclusive rewards">
@@ -85,14 +88,16 @@ export function DesktopGiftOffersSection({
                   </p>
                   <p className="font-geist mt-2 text-xs text-gray-500">{offer.terms}</p>
                 </div>
-                <div className="mt-6 flex items-center justify-end">
-                  <Link
-                    href="/gift-offers/select"
-                    className="font-outfit flex h-11 cursor-pointer items-center justify-center rounded-full bg-black px-8 text-sm font-bold tracking-wide text-white transition hover:bg-gray-800 active:scale-[0.99] sm:h-12 sm:text-base"
-                  >
-                    View Offer
-                  </Link>
-                </div>
+                {!isGuest && (
+                  <div className="mt-6 flex items-center justify-end">
+                    <Link
+                      href="/gift-offers/select"
+                      className="font-outfit flex h-11 cursor-pointer items-center justify-center rounded-full bg-black px-8 text-sm font-bold tracking-wide text-white transition hover:bg-gray-800 active:scale-[0.99] sm:h-12 sm:text-base"
+                    >
+                      View Offer
+                    </Link>
+                  </div>
+                )}
               </div>
             </article>
           )}

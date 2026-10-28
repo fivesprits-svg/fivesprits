@@ -87,6 +87,20 @@ export function customerFlowReducer(
           ...(state.userDetails?.formDrafts ? { formDrafts: state.userDetails.formDrafts } : {}),
         },
       };
+    case "session/login-as-guest":
+      return {
+        ...state,
+        accessToken: action.accessToken,
+        cartCount: 0,
+        cart: [],
+        userDetails: {
+          name: "Guest",
+          verified: true,
+          isGuest: true,
+          verificationSkipped: true,
+          profileComplete: true,
+        },
+      };
     case "session/set-access-token":
       return { ...state, accessToken: action.accessToken };
     case "session/verify":
