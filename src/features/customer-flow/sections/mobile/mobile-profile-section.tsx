@@ -17,6 +17,7 @@ import { DatePickerField } from "@/features/customer-flow/components/ui/date-pic
 export function MobileProfileSection() {
   const router = useRouter();
   const { state, logout } = useCustomerFlow();
+  const isGuest = Boolean(state.userDetails?.isGuest);
   const [showLogoutPopup, setShowLogoutPopup] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [logoutError, setLogoutError] = useState("");
@@ -51,6 +52,7 @@ export function MobileProfileSection() {
   const [uploadError, setUploadError] = useState("");
 
   useEffect(() => {
+    if (isGuest) return;
     let isMounted = true;
     fetchCustomerProfileApi().then((user) => {
       if (isMounted && user) {
@@ -85,7 +87,7 @@ export function MobileProfileSection() {
     return () => {
       isMounted = false;
     };
-  }, [state.userDetails?.mobile]);
+  }, [isGuest, state.userDetails?.mobile]);
 
   function handleEditField(field: string, currentValue: string) {
     setEditingField(field);
@@ -210,7 +212,12 @@ export function MobileProfileSection() {
   return (
     <div className="min-h-dvh bg-white pb-28 md:hidden">
       <MobileHeader title="My Profile" backHref="/categories" />
-      <main className="mx-auto w-full max-w-[390px] px-6 pt-6">
+      <main
+        aria-disabled={isGuest}
+        className={`mx-auto w-full max-w-[390px] px-6 pt-6 ${
+          isGuest ? "pointer-events-none select-none" : ""
+        }`}
+      >
         <div className="text-center">
           <div className="relative mx-auto size-24">
             {profilePhoto ? (
@@ -483,7 +490,7 @@ export function MobileProfileSection() {
         <button
           type="button"
           onClick={() => setShowLogoutPopup(true)}
-          className="customer-logout-button mt-8"
+          className="customer-logout-button pointer-events-auto mt-8"
         >
           <Image src="/customer-flow/icons/log-out.svg" alt="" width={18} height={18} />
           Logout

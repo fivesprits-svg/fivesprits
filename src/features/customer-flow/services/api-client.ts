@@ -32,6 +32,7 @@ export const clearAuthStorage = () => {
 
 const handleUnauthorized = (status: number, payload: { status?: number }) => {
   if (status !== 401 && payload.status !== 401) return;
+  if (isGuestSession()) return;
   clearAuthStorage();
   if (typeof window !== "undefined") {
     window.dispatchEvent(new Event("customer-auth-expired"));

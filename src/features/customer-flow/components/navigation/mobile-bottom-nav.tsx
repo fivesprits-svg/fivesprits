@@ -14,7 +14,7 @@ const items = [
 export function MobileBottomNav({ active }: { active: string }) {
   const { cartCount, state } = useCustomerFlow();
   const itemsToDisplay = state.userDetails?.isGuest
-    ? items.filter((item) => item.label === "Product" || item.label === "Offer")
+    ? items.filter((item) => item.label !== "Request")
     : items;
   const isActive = (label: string) =>
     active === label || (label === "Request" && (active === "Cart" || active === "Request"));

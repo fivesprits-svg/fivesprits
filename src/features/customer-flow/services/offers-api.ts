@@ -72,6 +72,10 @@ let giftOfferRequest:
     }>
   | undefined;
 
+export function isValidComboOfferId(id: string): boolean {
+  return /^[a-f\d]{24}$/i.test(id);
+}
+
 export async function fetchComboOffersApi(search?: string): Promise<ComboOffer[]> {
   const requestKey = search ?? "";
   const cachedRequest = comboOfferRequests.get(requestKey);
@@ -128,6 +132,8 @@ async function fetchComboOffers(search?: string): Promise<ComboOffer[]> {
 }
 
 export async function fetchComboOfferByIdApi(id: string): Promise<ComboOffer | null> {
+  if (!isValidComboOfferId(id)) return null;
+
   try {
     const res = await apiFetch<BackendComboOffer>(`/combo-offers/${id}`);
     if (res.data) {

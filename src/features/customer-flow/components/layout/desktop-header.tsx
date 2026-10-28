@@ -77,25 +77,23 @@ export function DesktopHeader() {
 
         {/* My Account Direct Link */}
         <div className="flex items-center gap-3">
-          {!isGuest && (
-            <Link
-              href="/profile"
-              className={`flex items-center gap-2.5 rounded-full border py-1.5 pr-4 pl-2 transition-all ${
-                isActive("/profile")
-                  ? "border-gray-900 bg-gray-900 text-white shadow-sm"
-                  : "border-gray-200 bg-gray-50 text-gray-800 hover:border-gray-400 hover:bg-gray-100"
+          <Link
+            href="/profile"
+            className={`flex items-center gap-2.5 rounded-full border py-1.5 pr-4 pl-2 transition-all ${
+              isActive("/profile")
+                ? "border-gray-900 bg-gray-900 text-white shadow-sm"
+                : "border-gray-200 bg-gray-50 text-gray-800 hover:border-gray-400 hover:bg-gray-100"
+            }`}
+          >
+            <div
+              className={`grid size-7 place-items-center rounded-full text-xs font-bold transition-colors ${
+                isActive("/profile") ? "bg-white/20 text-white" : "bg-gray-200 text-gray-800"
               }`}
             >
-              <div
-                className={`grid size-7 place-items-center rounded-full text-xs font-bold transition-colors ${
-                  isActive("/profile") ? "bg-white/20 text-white" : "bg-gray-200 text-gray-800"
-                }`}
-              >
-                {userName.slice(0, 1).toUpperCase()}
-              </div>
-              <span className="font-geist text-xs font-semibold">My Account</span>
-            </Link>
-          )}
+              {userName.slice(0, 1).toUpperCase()}
+            </div>
+            <span className="font-geist text-xs font-semibold">My Account</span>
+          </Link>
         </div>
       </div>
     </header>

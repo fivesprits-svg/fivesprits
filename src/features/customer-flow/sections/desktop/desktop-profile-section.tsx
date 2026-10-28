@@ -16,6 +16,7 @@ import { DatePickerField } from "@/features/customer-flow/components/ui/date-pic
 export function DesktopProfileSection() {
   const router = useRouter();
   const { state, logout } = useCustomerFlow();
+  const isGuest = Boolean(state.userDetails?.isGuest);
   const [showLogoutPopup, setShowLogoutPopup] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [logoutError, setLogoutError] = useState("");
@@ -53,6 +54,7 @@ export function DesktopProfileSection() {
   const [uploadError, setUploadError] = useState("");
 
   useEffect(() => {
+    if (isGuest) return;
     let isMounted = true;
     fetchCustomerProfileApi().then((user) => {
       if (isMounted && user) {
@@ -89,7 +91,7 @@ export function DesktopProfileSection() {
     return () => {
       isMounted = false;
     };
-  }, [state.userDetails?.mobile]);
+  }, [isGuest, state.userDetails?.mobile]);
 
   function handleEditField(field: string, currentValue: string) {
     setEditingField(field);
@@ -228,7 +230,12 @@ export function DesktopProfileSection() {
           </div>
 
           {/* Main 2-Column Dashboard Grid */}
-          <div className="grid grid-cols-12 items-start gap-6">
+          <div
+            aria-disabled={isGuest}
+            className={`grid grid-cols-12 items-start gap-6 ${
+              isGuest ? "pointer-events-none select-none" : ""
+            }`}
+          >
             {/* Left Column: User Summary & Navigation */}
             <div className="col-span-4 rounded-2xl border border-gray-200/90 bg-white p-6 shadow-sm">
               <div className="flex flex-col items-center text-center">
@@ -332,7 +339,7 @@ export function DesktopProfileSection() {
                 <button
                   type="button"
                   onClick={() => setShowLogoutPopup(true)}
-                  className="flex h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-red-200 bg-red-50/50 text-xs font-bold text-red-600 transition hover:bg-red-50"
+                  className="pointer-events-auto flex h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-red-200 bg-red-50/50 text-xs font-bold text-red-600 transition hover:bg-red-50"
                 >
                   <Image src="/customer-flow/icons/log-out.svg" alt="" width={15} height={15} />
                   Sign Out Account
