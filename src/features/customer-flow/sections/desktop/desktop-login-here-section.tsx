@@ -3,8 +3,8 @@ import Image from "next/image";
 import { LoginFormHere } from "@/features/customer-flow/components/auth/login-here-form";
 export function DesktopLoginHereSection() {
   return (
-    <section className="hidden min-h-dvh grid-cols-2 bg-white md:grid">
-      <div className="relative overflow-hidden bg-black">
+    <section className="hidden h-dvh grid-cols-2 overflow-hidden bg-white md:grid">
+      <div className="relative min-h-0 overflow-hidden bg-black">
         <Image
           src="/customer-flow/categories/whisky.png"
           alt=""
@@ -23,10 +23,10 @@ export function DesktopLoginHereSection() {
           </h1>
         </div>
       </div>
-      <div className="flex items-center justify-center px-12 py-12">
-        <div className="w-full max-w-md">
+      <div className="desktop-login-panel flex min-h-0 items-start justify-center px-12">
+        <div className="desktop-login-content w-full max-w-md">
           {/* Logo */}
-          <div className="mb-12">
+          <div className="desktop-login-logo mb-12">
             <Image
               src="/logo.svg"
               alt="The Five Spirits Logo"
@@ -37,7 +37,7 @@ export function DesktopLoginHereSection() {
             />
           </div>
           {/* Welcome */}
-          <h2 className="font-unbounded text-common-black text-4xl font-black uppercase">
+          <h2 className="desktop-login-heading font-unbounded text-common-black text-4xl font-black uppercase">
             Welcome
           </h2>
           <p className="customer-section-description mt-3">

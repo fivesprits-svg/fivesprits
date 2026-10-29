@@ -6,7 +6,7 @@ import {
 } from "@/features/customer-flow/components/navigation/mobile-system-chrome";
 export function MobileLoginSection() {
   return (
-    <section className="customer-page-container md:hidden">
+    <section className="customer-page-container h-dvh overflow-hidden md:hidden">
       {/* <MobileStatusBar /> */}
       <div className="flex h-[108px] items-center gap-3 px-6 pt-4 md:h-[120px] md:justify-center md:px-12 md:pt-6">
         <Image src="/logo.svg" alt="The Five Spirits" width={44} height={76} />

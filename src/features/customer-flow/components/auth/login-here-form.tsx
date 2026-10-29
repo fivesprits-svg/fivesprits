@@ -8,6 +8,7 @@ import "react-phone-input-2/lib/style.css";
 
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import { useToast } from "@/features/customer-flow/components/ui/toast";
+import { AuthRequestError } from "@/features/customer-flow/components/auth/auth-request-error";
 import { customerLoginApi } from "@/features/customer-flow/services/auth-api";
 
 type CountryData = {
@@ -23,7 +24,7 @@ type FormErrors = {
 export function LoginFormHere() {
   const router = useRouter();
   const { state, loginHere, updateFormDraft } = useCustomerFlow();
-  const { success, error: showError } = useToast();
+  const { success } = useToast();
 
   const draft = state.userDetails?.formDrafts?.loginHere;
 
@@ -36,6 +37,7 @@ export function LoginFormHere() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
+  const [apiError, setApiError] = useState("");
 
   function syncDraft(phone: string, country: CountryData, nextPassword: string) {
     updateFormDraft({
@@ -119,6 +121,7 @@ export function LoginFormHere() {
 
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    setApiError("");
 
     const newErrors = validateForm();
 
@@ -138,19 +141,10 @@ export function LoginFormHere() {
     const normalizedMobile = cleanDigits.length > 10 ? cleanDigits.slice(-10) : cleanDigits;
 
     try {
-      let response;
-
-      try {
-        response = await customerLoginApi({
-          mobileNumber: normalizedMobile,
-          password,
-        });
-      } catch {
-        response = await customerLoginApi({
-          mobileNumber: cleanDigits,
-          password,
-        });
-      }
+      const response = await customerLoginApi({
+        mobileNumber: normalizedMobile,
+        password,
+      });
 
       const accessToken = response.data?.accessToken;
       const user = response.data?.user;
@@ -174,15 +168,18 @@ export function LoginFormHere() {
       router.replace("/digilocker");
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : "Invalid mobile number or password.";
-
-      showError(message);
+      setApiError(message);
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <form onSubmit={submit} noValidate className="mt-8 space-y-[15px] md:mt-10 md:space-y-5">
+    <form
+      onSubmit={submit}
+      noValidate
+      className="auth-login-form mt-8 space-y-[15px] md:mt-10 md:min-h-[404px] md:space-y-5"
+    >
       <label className="block">
         <span className="customer-input-label mb-2.5 block md:text-sm">
           Mobile Number <span className="text-red-500">*</span>
@@ -273,6 +270,8 @@ export function LoginFormHere() {
           </span>
         )}
       </label>
+
+      <AuthRequestError message={apiError} />
 
       <button
         type="submit"

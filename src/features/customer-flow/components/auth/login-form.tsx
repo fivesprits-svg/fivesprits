@@ -3,13 +3,14 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import { useToast } from "@/features/customer-flow/components/ui/toast";
+import { AuthRequestError } from "@/features/customer-flow/components/auth/auth-request-error";
 import { validateLogin } from "@/features/customer-flow/utils/login-validation";
 import { requestOtpApi } from "@/features/customer-flow/services/auth-api";
 
 export function LoginForm() {
   const router = useRouter();
   const { state, login, loginAsGuest, updateFormDraft } = useCustomerFlow();
-  const { success, error: showError } = useToast();
+  const { success } = useToast();
   const loginDraft = state.userDetails?.formDrafts?.login;
   const [name, setName] = useState(loginDraft?.name ?? "");
   const [mobile, setMobile] = useState(loginDraft?.mobile ?? "");
@@ -36,7 +37,6 @@ export function LoginForm() {
         const message =
           err instanceof Error ? err.message : "Failed to generate OTP. Please try again.";
         setApiError(message);
-        showError(message);
       } finally {
         setLoading(false);
       }
@@ -48,14 +48,17 @@ export function LoginForm() {
     if (!guestToken) {
       const message = "Guest access is not configured. Please try signing in instead.";
       setApiError(message);
-      showError(message);
       return;
     }
     loginAsGuest(guestToken);
     router.push("/categories");
   }
   return (
-    <form onSubmit={submit} className="mt-8 space-y-[15px] md:mt-10 md:space-y-5" noValidate>
+    <form
+      onSubmit={submit}
+      className="auth-login-form mt-8 space-y-[15px] md:mt-10 md:min-h-[472px] md:space-y-5"
+      noValidate
+    >
       <label className="block">
         <span className="customer-input-label mb-2.5 block md:text-sm">
           User Name <span className="text-red-500">*</span>
@@ -131,14 +134,7 @@ export function LoginForm() {
         )}
       </label>
 
-      {apiError && (
-        <div
-          role="alert"
-          className="rounded-xl border border-red-200 bg-red-50 p-3 text-center text-xs font-medium text-red-700 md:text-sm"
-        >
-          {apiError}
-        </div>
-      )}
+      <AuthRequestError message={apiError} />
 
       <button
         type="submit"
@@ -154,29 +150,30 @@ export function LoginForm() {
           <span>Continue</span>
         )}
       </button>
-      <p className="font-geist text-common-gray m-0 text-center text-sm leading-5 md:text-base">
-        We&apos;ll send you a one-time verification code to Admin.
-      </p>
-
-      <p className="font-geist text-common-gray mt-2.5 mb-0 text-center text-sm leading-5 md:text-base">
-        Already have an account?{" "}
+      <div className="space-y-3 pt-1 text-center">
+        <p className="font-geist text-common-gray m-0 text-sm leading-5 md:text-base">
+          We&apos;ll send you a one-time verification code to Admin.
+        </p>
+        <p className="font-geist text-common-gray m-0 text-sm leading-5 md:text-base">
+          Already have an account?{" "}
+          <button
+            type="button"
+            onClick={() => router.push("/login-here")}
+            className="text-common-black cursor-pointer font-semibold underline"
+            disabled={loading}
+          >
+            Login here
+          </button>
+        </p>
         <button
           type="button"
-          onClick={() => router.push("/login-here")}
-          className="text-common-black cursor-pointer font-semibold underline"
+          onClick={continueAsGuest}
+          className="text-common-black block w-full cursor-pointer text-center text-sm font-semibold underline disabled:opacity-60 md:text-base"
           disabled={loading}
         >
-          Login here
+          Continue as guest
         </button>
-      </p>
-      <button
-        type="button"
-        onClick={continueAsGuest}
-        className="text-common-black mx-auto block cursor-pointer text-sm font-semibold underline disabled:opacity-60 md:text-base"
-        disabled={loading}
-      >
-        Continue as guest
-      </button>
+      </div>
     </form>
   );
 }
