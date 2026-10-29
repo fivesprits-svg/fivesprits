@@ -15,7 +15,7 @@ export function MobileAgeVerificationSection() {
         />
         <div className="mt-8 text-center md:mt-10">
           <h1 className="customer-section-title md:text-3xl">Age Verification</h1>
-          <p className="customer-section-description mt-3 px-2 md:mt-4 md:px-6 md:text-base">
+          <p className="customer-section-description mt-2 px-2 md:mt-4 md:px-6 md:text-base">
             Access to this catalogue is restricted. You must confirm that you are of legal age in
             your jurisdiction to proceed.
           </p>

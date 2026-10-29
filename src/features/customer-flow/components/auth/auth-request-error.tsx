@@ -9,7 +9,7 @@ export function AuthRequestError({ message }: AuthRequestErrorProps) {
     <div
       role="alert"
       aria-live="assertive"
-      className="flex items-start gap-1 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm leading-5 text-red-800"
+      className="flex items-start gap-1 rounded-xl border border-red-200 bg-red-50 px-3 py-3 text-sm leading-5 text-red-800"
     >
       <svg
         className="mt-0.5 size-4 shrink-0"

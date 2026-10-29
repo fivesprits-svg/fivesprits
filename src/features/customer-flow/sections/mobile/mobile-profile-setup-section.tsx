@@ -23,7 +23,7 @@ export function MobileProfileSetupSection() {
             <h1 className="customer-section-title mt-4 md:mt-6 md:text-center md:text-[32px]">
               Profile Setup
             </h1>
-            <p className="customer-section-description mt-3 max-w-[340px] md:mx-auto md:mt-4 md:max-w-md md:text-center md:text-base md:leading-relaxed">
+            <p className="customer-section-description mt-2 max-w-[340px] md:mx-auto md:mt-4 md:max-w-md md:text-center md:text-base md:leading-relaxed">
               Please provide your delivery and permit details to unlock fast checkout.
             </p>
             <div className="md:mx-auto md:max-w-md">
@@ -38,7 +38,7 @@ export function MobileProfileSetupSection() {
             <h1 className="customer-section-title mt-4 md:mt-6 md:text-center md:text-[32px]">
               Profile Setup
             </h1>
-            <p className="customer-section-description mt-3 max-w-[340px] md:mx-auto md:mt-4 md:max-w-md md:text-center md:text-base md:leading-relaxed">
+            <p className="customer-section-description mt-2 max-w-[340px] md:mx-auto md:mt-4 md:max-w-md md:text-center md:text-base md:leading-relaxed">
               Please provide your delivery and permit details to unlock fast checkout.
             </p>
             <div className="md:mx-auto md:max-w-md">

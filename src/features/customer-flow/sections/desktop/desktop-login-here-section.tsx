@@ -26,7 +26,7 @@ export function DesktopLoginHereSection() {
       <div className="desktop-login-panel flex min-h-0 items-start justify-center px-12">
         <div className="desktop-login-content w-full max-w-md">
           {/* Logo */}
-          <div className="desktop-login-logo mb-12">
+          <div className="desktop-login-logo mb-8">
             <Image
               src="/logo.svg"
               alt="The Five Spirits Logo"
@@ -40,7 +40,7 @@ export function DesktopLoginHereSection() {
           <h2 className="desktop-login-heading font-unbounded text-common-black text-4xl font-black uppercase">
             Welcome
           </h2>
-          <p className="customer-section-description mt-3">
+          <p className="customer-section-description mt-2">
             Enter your mobile number to verify your identity and get started.
           </p>
           <LoginFormHere />

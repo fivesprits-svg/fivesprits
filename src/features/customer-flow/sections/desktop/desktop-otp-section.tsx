@@ -7,7 +7,7 @@ export function DesktopOtpSection() {
         <h1 className="font-unbounded text-common-black mt-5 text-3xl font-black uppercase">
           Verify your number
         </h1>
-        <p className="customer-section-description mt-3">
+        <p className="customer-section-description mt-2">
           We sent a verification code to Admin please check with them.
         </p>
         <OtpForm />

@@ -14,7 +14,7 @@ export function DesktopAgeVerificationSection() {
           className="border-none"
         />
         <h1 className="customer-section-title mt-8">Age Verification</h1>
-        <p className="customer-section-description mt-3 max-w-[360px]">
+        <p className="customer-section-description mt-2 max-w-[360px]">
           Access to this catalogue is restricted. You must confirm that you are of legal age in your
           jurisdiction to proceed.
         </p>
