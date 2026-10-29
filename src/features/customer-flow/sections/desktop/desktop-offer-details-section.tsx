@@ -20,8 +20,13 @@ export function DesktopOfferDetailsSection({ offer }: { offer: ComboOffer }) {
 
   return (
     <div className="hidden md:block">
-      <PortalShell title="Offers" eyebrow="Limited time" backHref="/combo-offers">
-        <div className="mx-auto max-w-7xl">
+      <PortalShell
+        title="Offers"
+        eyebrow="Limited time"
+        backHref="/combo-offers"
+        className="2xl:max-w-none 2xl:px-26"
+      >
+        <div className="mx-auto max-w-7xl 2xl:max-w-none">
           {/* Breadcrumb Navigation */}
           <Breadcrumb
             items={[

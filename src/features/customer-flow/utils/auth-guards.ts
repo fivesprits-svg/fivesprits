@@ -21,7 +21,7 @@ export function isProfileCompleted(userDetails: UserDetails | null): boolean {
 
 export function canGuestViewPath(pathname: string): boolean {
   if (
-    ["/categories", "/brands", "/products", "/combo-offers", "/offers", "/profile"].some(
+    ["/categories", "/brands", "/products", "/combo-offers", "/offers", "/guest-account"].some(
       (path) => pathname === path || pathname.startsWith(`${path}/`),
     )
   ) {
