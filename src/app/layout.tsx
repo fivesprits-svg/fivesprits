@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { CustomerFlowProvider } from "@/features/customer-flow/state/customer-flow-context";
 import { ToastProvider } from "@/features/customer-flow/components/ui/toast";
+import { PlatformClass } from "@/features/customer-flow/components/layout/platform-class";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -22,6 +23,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en">
       <body>
+        <PlatformClass />
         <a
           href="#main-content"
           className="sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:block focus:rounded-lg focus:bg-white focus:px-4 focus:py-2 focus:text-black"

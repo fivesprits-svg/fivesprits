@@ -367,6 +367,13 @@
     }
   }
 
+  @media (min-width: 768px) {
+    html[data-platform="windows"] .desktop-login-screen .desktop-login-content {
+      transform: scale(0.9);
+      transform-origin: center;
+    }
+  }
+
   @media (min-width: 640px) {
     .customer-page-container {
       max-width: 480px;

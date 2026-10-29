@@ -2,7 +2,7 @@ import Image from "next/image";
 import { LoginForm } from "@/features/customer-flow/components/auth/login-form";
 export function DesktopLoginSection() {
   return (
-    <section className="hidden h-dvh grid-cols-2 overflow-hidden bg-white md:grid">
+    <section className="desktop-login-screen hidden h-dvh grid-cols-2 overflow-hidden bg-white md:grid">
       <div className="relative min-h-0 overflow-hidden bg-black">
         <Image
           src="/customer-flow/categories/whisky.png"
