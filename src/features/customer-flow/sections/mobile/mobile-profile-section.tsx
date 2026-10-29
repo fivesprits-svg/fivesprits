@@ -56,10 +56,11 @@ export function MobileProfileSection() {
     let isMounted = true;
     fetchCustomerProfileApi().then((user) => {
       if (isMounted && user) {
+        const displayName = [user.firstName, user.lastName].filter(Boolean).join(" ").trim();
         setUserId(user._id || "");
         setProfileData((prev) => ({
           ...prev,
-          name: user.name || user.username || prev.name,
+          name: user.name || user.username || displayName || prev.name,
           mobile:
             formatDisplayMobile(user.mobileNumber || state.userDetails?.mobile) || prev.mobile,
           permitNumber: user.permitNumber || prev.permitNumber,
