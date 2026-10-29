@@ -362,7 +362,7 @@
 
   @media (min-width: 768px) and (min-height: 701px) {
     .desktop-login-panel {
-      padding-top: clamp(4rem, 10vh, 5rem);
+      padding-top: clamp(3rem, 5vh, 2rem);
       padding-bottom: 2rem;
     }
   }
