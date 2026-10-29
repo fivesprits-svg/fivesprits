@@ -33,12 +33,21 @@ export function OtpForm() {
         otp,
       });
 
-      if (typeof window !== "undefined" && res.data?.accessToken) {
-        window.localStorage.setItem("customer_access_token", res.data.accessToken);
-        window.localStorage.setItem("customer_user", JSON.stringify(res.data.user));
+      const accessToken = res?.data?.accessToken;
+      const user = res?.data?.user;
+
+      if (!accessToken) {
+        throw new Error(
+          "The server did not return a valid verification session. Please try again.",
+        );
       }
 
-      verifyOtp(res.data?.user, res.data?.accessToken);
+      if (typeof window !== "undefined") {
+        window.localStorage.setItem("customer_access_token", accessToken);
+        window.localStorage.setItem("customer_user", JSON.stringify(user));
+      }
+
+      verifyOtp(user, accessToken);
       success("Mobile number verified. Welcome to The Five Spirits!");
       router.replace("/digilocker");
     } catch (err: unknown) {

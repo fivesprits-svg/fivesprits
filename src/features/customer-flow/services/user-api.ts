@@ -48,5 +48,11 @@ export async function uploadFileApi(
   recordId?: string,
 ): Promise<{ fileUrl: string; _id: string }> {
   const res = await apiUpload(file, folder, recordId);
-  return { fileUrl: res.data.fileUrl, _id: res.data._id };
+  const upload = res.data;
+
+  if (!upload || typeof upload.fileUrl !== "string" || typeof upload._id !== "string") {
+    throw new Error("The server returned an incomplete upload response. Please try again.");
+  }
+
+  return { fileUrl: upload.fileUrl, _id: upload._id };
 }

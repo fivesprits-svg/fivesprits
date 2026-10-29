@@ -38,7 +38,7 @@ export function MobileProfileSection() {
 
   const [profileData, setProfileData] = useState({
     name: state.userDetails?.name || "",
-    mobile: formatDisplayMobile(state.userDetails?.mobile),
+    mobile: isGuest ? "" : formatDisplayMobile(state.userDetails?.mobile),
     permitNumber: "",
     dateOfBirth: "",
     address: "",
@@ -305,19 +305,21 @@ export function MobileProfileSection() {
             </div>
           </div>
 
-          <div>
-            <span className="profile-field-label mb-2 block">Mobile Number</span>
-            <div className="profile-field-value">
-              <span className="flex-1 truncate">{profileData.mobile}</span>
-              <Image
-                src="/customer-flow/icons/lock.svg"
-                alt="Locked"
-                width={18}
-                height={18}
-                className="opacity-80"
-              />
+          {!isGuest && (
+            <div>
+              <span className="profile-field-label mb-2 block">Mobile Number</span>
+              <div className="profile-field-value">
+                <span className="flex-1 truncate">{profileData.mobile}</span>
+                <Image
+                  src="/customer-flow/icons/lock.svg"
+                  alt="Locked"
+                  width={18}
+                  height={18}
+                  className="opacity-80"
+                />
+              </div>
             </div>
-          </div>
+          )}
 
           <DatePickerField
             label="Date of Birth"

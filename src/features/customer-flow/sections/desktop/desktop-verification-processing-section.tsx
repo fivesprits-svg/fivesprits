@@ -13,13 +13,14 @@ export function DesktopVerificationProcessingSection() {
   useEffect(() => {
     if (!hydrated) return;
 
-    if (!state.userDetails?.aadhaarNumber) {
+    const aadhaarNumber = state.userDetails?.aadhaarNumber;
+    if (!aadhaarNumber) {
       router.replace("/digilocker");
       return;
     }
 
     const timer = setTimeout(() => {
-      const result = mockVerifyAadhaar(state.userDetails!.aadhaarNumber!);
+      const result = mockVerifyAadhaar(aadhaarNumber);
       completeVerification(result.dateOfBirth, result.age);
 
       if (result.age < 25) {
@@ -30,7 +31,7 @@ export function DesktopVerificationProcessingSection() {
     }, 3000);
 
     return () => clearTimeout(timer);
-  }, [hydrated, state.userDetails, completeVerification, router]);
+  }, [hydrated, state.userDetails?.aadhaarNumber, completeVerification, router]);
 
   return (
     <DesktopAuthPageLayout>

@@ -7,6 +7,14 @@ export const getBaseUrl = () => {
   return clean.endsWith("/api/v1") ? clean : `${clean}/api/v1`;
 };
 
+export function hasResponseData(value: unknown): value is { data: unknown } {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    Object.prototype.hasOwnProperty.call(value, "data")
+  );
+}
+
 export const getAuthToken = (): string | null => {
   if (typeof window === "undefined") return null;
   return (
@@ -85,7 +93,11 @@ export async function apiUpload(
     throw new Error(errorMsg);
   }
 
-  return json;
+  if (!hasResponseData(json)) {
+    throw new Error("The server returned an incomplete upload response. Please try again.");
+  }
+
+  return json as { success?: boolean; status?: number; message?: string; data: UploadResult };
 }
 
 const inFlightRequests = new Map<string, Promise<unknown>>();
@@ -139,7 +151,11 @@ export async function apiFetch<T>(
         throw new Error(errorMsg);
       }
 
-      return json;
+      if (!hasResponseData(json)) {
+        throw new Error("The server returned an incomplete response. Please try again.");
+      }
+
+      return json as { success?: boolean; status?: number; message?: string; data: T };
     } finally {
       if (method === "GET") {
         setTimeout(() => {

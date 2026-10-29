@@ -146,8 +146,12 @@ export function LoginFormHere() {
         password,
       });
 
-      const accessToken = response.data?.accessToken;
-      const user = response.data?.user;
+      const accessToken = response?.data?.accessToken;
+      const user = response?.data?.user;
+
+      if (!accessToken) {
+        throw new Error("The server did not return a valid sign-in session. Please try again.");
+      }
 
       if (typeof window !== "undefined" && accessToken) {
         localStorage.setItem("customer_access_token", accessToken);

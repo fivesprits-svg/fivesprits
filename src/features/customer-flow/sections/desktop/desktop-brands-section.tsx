@@ -29,8 +29,13 @@ export function DesktopBrandsSection({
 
   return (
     <div className="hidden md:block">
-      <PortalShell title="Brands" eyebrow="Catalogue" backHref="/categories">
-        <div className="mx-auto max-w-7xl">
+      <PortalShell
+        title="Brands"
+        eyebrow="Catalogue"
+        backHref="/categories"
+        className="2xl:max-w-none 2xl:px-26"
+      >
+        <div className="mx-auto max-w-7xl 2xl:max-w-none">
           {/* Breadcrumb Navigation */}
           <Breadcrumb
             items={[
@@ -61,7 +66,7 @@ export function DesktopBrandsSection({
           </div>
 
           {isLoading ? (
-            <div className="grid grid-cols-2 items-stretch gap-5 sm:grid-cols-3 lg:grid-cols-4">
+            <div className="grid grid-cols-2 items-stretch gap-5 sm:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-[repeat(auto-fill,minmax(260px,280px))] 2xl:justify-start">
               {Array.from({ length: 8 }).map((_, index) => (
                 <CatalogueCard key={index} variant="brand" isLoading={true} image="" title="" />
               ))}
@@ -89,7 +94,7 @@ export function DesktopBrandsSection({
             </div>
           ) : (
             /* Brands Grid */
-            <div className="grid grid-cols-2 items-stretch gap-5 sm:grid-cols-3 lg:grid-cols-4">
+            <div className="grid grid-cols-2 items-stretch gap-5 sm:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-[repeat(auto-fill,minmax(260px,280px))] 2xl:justify-start">
               {brands.map((brand) => (
                 <CatalogueCard
                   key={brand.id}

@@ -79,8 +79,15 @@ export function ProfileSetupHereForm() {
     });
 
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || `API error: ${response.status}`);
+      const errorData: unknown = await response.json().catch(() => null);
+      const message =
+        typeof errorData === "object" &&
+        errorData !== null &&
+        "message" in errorData &&
+        typeof errorData.message === "string"
+          ? errorData.message
+          : `API error: ${response.status}`;
+      throw new Error(message);
     }
 
     return response.json();

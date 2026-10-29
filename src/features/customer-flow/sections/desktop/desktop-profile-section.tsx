@@ -40,7 +40,7 @@ export function DesktopProfileSection() {
     firstName: state.userDetails?.firstName || "",
     lastName: state.userDetails?.lastName || "",
     name: state.userDetails?.name || "",
-    mobile: formatDisplayMobile(state.userDetails?.mobile),
+    mobile: isGuest ? "" : formatDisplayMobile(state.userDetails?.mobile),
     permitNumber: "",
     dateOfBirth: "",
     address: "",
@@ -321,7 +321,11 @@ export function DesktopProfileSection() {
                 <h2 className="font-unbounded mt-3.5 text-base font-bold text-gray-900">
                   {profileData.name}
                 </h2>
-                <p className="font-geist text-xs font-medium text-gray-500">{profileData.mobile}</p>
+                {!isGuest && (
+                  <p className="font-geist text-xs font-medium text-gray-500">
+                    {profileData.mobile}
+                  </p>
+                )}
 
                 <div className="mt-4 w-full divide-y divide-gray-100 rounded-xl border border-gray-100 bg-gray-50/70 p-3 text-xs">
                   <div className="flex items-center justify-between pb-2">
@@ -366,9 +370,7 @@ export function DesktopProfileSection() {
                       Customer Name
                     </span>
                     <div className="flex h-11 items-center justify-between rounded-xl border border-gray-200 bg-gray-50/70 px-3.5 text-xs font-medium text-gray-700">
-                      <span className="truncate">
-                        {profileData.firstName} {profileData.lastName} {profileData.username}
-                      </span>
+                      <span className="truncate">{profileData.name}</span>
                       <Image
                         src="/customer-flow/icons/lock.svg"
                         alt="Verified"
@@ -379,21 +381,23 @@ export function DesktopProfileSection() {
                     </div>
                   </div>
 
-                  <div>
-                    <span className="mb-1.5 block text-[11px] font-semibold tracking-wider text-gray-500 uppercase">
-                      Mobile Number
-                    </span>
-                    <div className="flex h-11 items-center justify-between rounded-xl border border-gray-200 bg-gray-50/70 px-3.5 text-xs font-medium text-gray-700">
-                      <span className="truncate">{profileData.mobile}</span>
-                      <Image
-                        src="/customer-flow/icons/lock.svg"
-                        alt="Verified"
-                        width={14}
-                        height={14}
-                        className="opacity-40"
-                      />
+                  {!isGuest && (
+                    <div>
+                      <span className="mb-1.5 block text-[11px] font-semibold tracking-wider text-gray-500 uppercase">
+                        Mobile Number
+                      </span>
+                      <div className="flex h-11 items-center justify-between rounded-xl border border-gray-200 bg-gray-50/70 px-3.5 text-xs font-medium text-gray-700">
+                        <span className="truncate">{profileData.mobile}</span>
+                        <Image
+                          src="/customer-flow/icons/lock.svg"
+                          alt="Verified"
+                          width={14}
+                          height={14}
+                          className="opacity-40"
+                        />
+                      </div>
                     </div>
-                  </div>
+                  )}
 
                   <div className="col-span-2">
                     <DatePickerField

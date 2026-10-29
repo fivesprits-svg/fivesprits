@@ -13,19 +13,20 @@ export function MobileVerificationProcessingSection() {
   useEffect(() => {
     if (!hydrated) return;
 
-    if (!state.userDetails?.aadhaarNumber) {
+    const aadhaarNumber = state.userDetails?.aadhaarNumber;
+    if (!aadhaarNumber) {
       router.replace("/digilocker");
       return;
     }
 
     const timer = setTimeout(() => {
-      const result = mockVerifyAadhaar(state.userDetails!.aadhaarNumber!);
+      const result = mockVerifyAadhaar(aadhaarNumber);
       completeVerification(result.dateOfBirth, result.age);
       router.push("/age-verification");
     }, 3000);
 
     return () => clearTimeout(timer);
-  }, [hydrated, state.userDetails, completeVerification, router]);
+  }, [hydrated, state.userDetails?.aadhaarNumber, completeVerification, router]);
 
   return (
     <AuthPageLayout>
