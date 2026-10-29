@@ -31,8 +31,13 @@ export function DesktopCartSection() {
 
   return (
     <div className="hidden md:block">
-      <PortalShell title="Requirement" eyebrow="Checklist" backHref="/products">
-        <div className="mx-auto max-w-7xl">
+      <PortalShell
+        title="Requirement"
+        eyebrow="Checklist"
+        backHref="/products"
+        className="2xl:max-w-none 2xl:px-26"
+      >
+        <div className="mx-auto max-w-7xl 2xl:max-w-none">
           {/* Breadcrumb Navigation */}
           <Breadcrumb items={[{ label: "Requirement Checklist" }]} />
 

@@ -215,8 +215,12 @@ export function DesktopProfileSection() {
 
   return (
     <div className="hidden md:block">
-      <PortalShell title="My Profile" eyebrow="Account Settings">
-        <div className="mx-auto max-w-7xl">
+      <PortalShell
+        title="My Profile"
+        eyebrow="Account Settings"
+        className="2xl:max-w-none 2xl:px-26"
+      >
+        <div className="mx-auto max-w-7xl 2xl:max-w-none">
           {/* Header Title & Subtitle */}
           <div className="mb-6 flex items-center justify-between">
             <div>
