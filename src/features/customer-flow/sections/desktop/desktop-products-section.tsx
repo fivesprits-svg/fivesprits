@@ -37,8 +37,9 @@ export function DesktopProductsSection({
         title="Products"
         eyebrow="Collection"
         backHref={`/brands?categoryId=${categoryId}`}
+        className="2xl:max-w-none 2xl:px-26"
       >
-        <div className="mx-auto max-w-7xl">
+        <div className="mx-auto max-w-7xl 2xl:max-w-none">
           {/* Breadcrumb Navigation */}
           <Breadcrumb
             items={[
@@ -76,7 +77,7 @@ export function DesktopProductsSection({
           </div>
 
           {isLoading ? (
-            <div className="grid grid-cols-2 items-stretch gap-5 sm:grid-cols-3 lg:grid-cols-4">
+            <div className="grid grid-cols-2 items-stretch gap-5 sm:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-[repeat(auto-fill,minmax(260px,280px))] 2xl:justify-start">
               {Array.from({ length: 8 }).map((_, index) => (
                 <CatalogueCard key={index} variant="product" isLoading={true} image="" title="" />
               ))}
@@ -92,7 +93,7 @@ export function DesktopProductsSection({
           ) : (
             <>
               {/* Products Grid */}
-              <div className="grid grid-cols-2 items-stretch gap-5 sm:grid-cols-3 lg:grid-cols-4">
+              <div className="grid grid-cols-2 items-stretch gap-5 sm:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-[repeat(auto-fill,minmax(260px,280px))] 2xl:justify-start">
                 {products.map((product) => {
                   const item = cartLines.find(
                     (line) =>
