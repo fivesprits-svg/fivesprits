@@ -7,11 +7,10 @@ import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-co
 import { formatDisplayMobile } from "@/features/customer-flow/utils/validation";
 import { useToast } from "@/features/customer-flow/components/ui/toast";
 import { FlowNavButtons } from "@/features/customer-flow/components/auth/flow-nav-buttons";
+import { uploadFileApi } from "@/features/customer-flow/services/user-api";
+import { getBaseUrl } from "@/features/customer-flow/services/api-client";
 
-// API configuration from environment variables
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://pwn.appristine.in";
-const API_ENDPOINT = "/api/v1/users/me";
-const API_URL = `${API_BASE_URL}${API_ENDPOINT}`;
+const API_URL = `${getBaseUrl()}/users/me`;
 
 export function ProfileSetupHereForm() {
   const router = useRouter();
@@ -133,36 +132,14 @@ export function ProfileSetupHereForm() {
         payload.googleMapsLocation = googleMapsUrl.trim();
       }
 
-      // Upload file if attached
+      // Upload the permit before saving its URL and file ID on the profile.
       if (attachedFile) {
-        const formData = new FormData();
-        formData.append("permitDocument", attachedFile);
-        formData.append("firstName", firstName);
-        formData.append("lastName", lastName);
-        formData.append("pincode", pincode);
-        formData.append("address", address);
-        formData.append("permitNumber", permitNumber);
-        if (googleMapsUrl.trim()) {
-          formData.append("googleMapsLocation", googleMapsUrl.trim());
-        }
-
-        const accessToken = state?.accessToken;
-        const formDataResponse = await fetch(API_URL, {
-          method: "PATCH",
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-          body: formData,
-        });
-
-        if (!formDataResponse.ok) {
-          throw new Error(`API error: ${formDataResponse.status}`);
-        }
-
-        await formDataResponse.json();
-      } else {
-        await submitProfileUpdate(payload);
+        const { fileUrl, _id } = await uploadFileApi(attachedFile, "permits");
+        payload.permitDocumentUrl = fileUrl;
+        payload.permitDocumentFileId = _id;
       }
+
+      await submitProfileUpdate(payload);
 
       // Success: complete profile and navigate
       completeProfile();
