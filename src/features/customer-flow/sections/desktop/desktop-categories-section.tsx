@@ -7,7 +7,9 @@ import { useEffect, useState } from "react";
 
 import { DesktopHeader } from "@/features/customer-flow/components/layout/desktop-header";
 import { EmptyState } from "@/features/customer-flow/components/ui/empty-state";
+import { ImagePlaceholder } from "@/features/customer-flow/components/ui/image-placeholder";
 import { ImageSkeleton } from "@/features/customer-flow/components/ui/skeleton";
+import { hasImageSource } from "@/features/customer-flow/helpers/image-source";
 import { fetchCategoriesApi } from "@/features/customer-flow/services/categories-api";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import type { Category } from "@/features/customer-flow/types";
@@ -272,13 +274,19 @@ export function DesktopCategoriesSection() {
                         />
 
                         {/* Category Image */}
-                        <Image
-                          src={category.image}
-                          alt={category.name}
-                          fill
-                          sizes="80px"
-                          className="relative z-10 object-contain p-1 opacity-90 transition-transform duration-200 group-hover:scale-105"
-                        />
+                        {hasImageSource(category.image) ? (
+                          <Image
+                            src={category.image}
+                            alt={category.name}
+                            fill
+                            sizes="80px"
+                            className="relative z-10 object-contain p-1 opacity-90 transition-transform duration-200 group-hover:scale-105"
+                          />
+                        ) : (
+                          <div className="relative z-10 size-full">
+                            <ImagePlaceholder type="category" compact />
+                          </div>
+                        )}
                       </div>
 
                       <span className="font-geist mt-3 text-xs font-bold tracking-widest text-gray-900 uppercase transition-colors group-hover:text-[#a67854]">

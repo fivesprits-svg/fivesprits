@@ -2,7 +2,9 @@
 
 import { MobileBottomNav } from "@/features/customer-flow/components/navigation/mobile-bottom-nav";
 import { EmptyState } from "@/features/customer-flow/components/ui/empty-state";
+import { ImagePlaceholder } from "@/features/customer-flow/components/ui/image-placeholder";
 import { ImageSkeleton } from "@/features/customer-flow/components/ui/skeleton";
+import { hasImageSource } from "@/features/customer-flow/helpers/image-source";
 import { fetchCategoriesApi } from "@/features/customer-flow/services/categories-api";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import type { Category } from "@/features/customer-flow/types";
@@ -145,13 +147,19 @@ export function MobileCategoriesSection() {
                       />
 
                       {/* Category Image */}
-                      <Image
-                        src={category.image}
-                        alt={category.name}
-                        fill
-                        sizes="80px"
-                        className="relative z-10 object-contain p-1 opacity-90 transition-transform duration-200 group-hover:scale-105"
-                      />
+                      {hasImageSource(category.image) ? (
+                        <Image
+                          src={category.image}
+                          alt={category.name}
+                          fill
+                          sizes="80px"
+                          className="relative z-10 object-contain p-1 opacity-90 transition-transform duration-200 group-hover:scale-105"
+                        />
+                      ) : (
+                        <div className="relative z-10 size-full">
+                          <ImagePlaceholder type="category" compact />
+                        </div>
+                      )}
                     </div>
                     <span className="font-geist mt-2 line-clamp-2 min-h-[32px] w-full text-center text-xs leading-4 font-bold text-black">
                       {category.name}
