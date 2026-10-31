@@ -8,6 +8,7 @@ import { AuthenticatedRoute } from "@/features/customer-flow/components/layout/a
 import { fetchCategoryByIdApi } from "@/features/customer-flow/services/categories-api";
 import { fetchBrandByIdApi } from "@/features/customer-flow/services/brands-api";
 import { fetchProductsApi } from "@/features/customer-flow/services/products-api";
+import { canRenderCatalogueResults } from "@/features/customer-flow/helpers/catalogue-request";
 import type { Brand, Category, Product } from "@/features/customer-flow/types";
 
 function ProductsContent() {
@@ -19,13 +20,9 @@ function ProductsContent() {
   const [brand, setBrand] = useState<Brand | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [prevParamsKey, setPrevParamsKey] = useState(`${brandId}-${categoryId}`);
-
-  const currentParamsKey = `${brandId}-${categoryId}`;
-  if (currentParamsKey !== prevParamsKey) {
-    setPrevParamsKey(currentParamsKey);
-    setIsLoading(true);
-  }
+  const currentParamsKey = JSON.stringify({ brandId: brandId ?? "", categoryId: categoryId ?? "" });
+  const [loadedParamsKey, setLoadedParamsKey] = useState<string | null>(null);
+  const canRenderResults = canRenderCatalogueResults(loadedParamsKey, currentParamsKey, isLoading);
 
   useEffect(() => {
     let active = true;
@@ -42,28 +39,33 @@ function ProductsContent() {
           setCategory(catData);
           setBrand(brandData);
           setProducts(prodData);
+          setLoadedParamsKey(currentParamsKey);
           setIsLoading(false);
         }
       })
       .catch((err) => {
         console.error("fetchProducts error:", err);
         if (active) {
+          setCategory(null);
+          setBrand(null);
+          setProducts([]);
+          setLoadedParamsKey(currentParamsKey);
           setIsLoading(false);
         }
       });
     return () => {
       active = false;
     };
-  }, [brandId, categoryId]);
+  }, [brandId, categoryId, currentParamsKey]);
 
   return (
     <>
-      <MobileProductsSection brand={brand} products={products} isLoading={isLoading} />
+      <MobileProductsSection brand={brand} products={products} isLoading={!canRenderResults} />
       <DesktopProductsSection
         category={category}
         brand={brand}
         products={products}
-        isLoading={isLoading}
+        isLoading={!canRenderResults}
       />
     </>
   );

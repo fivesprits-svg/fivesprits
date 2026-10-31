@@ -7,6 +7,7 @@ import { DesktopBrandsSection } from "@/features/customer-flow/sections/desktop/
 import { AuthenticatedRoute } from "@/features/customer-flow/components/layout/authenticated-route";
 import { fetchCategoryByIdApi } from "@/features/customer-flow/services/categories-api";
 import { fetchBrandsApi } from "@/features/customer-flow/services/brands-api";
+import { canRenderCatalogueResults } from "@/features/customer-flow/helpers/catalogue-request";
 import type { Brand, Category } from "@/features/customer-flow/types";
 
 function BrandsContent() {
@@ -16,12 +17,9 @@ function BrandsContent() {
   const [category, setCategory] = useState<Category | null>(null);
   const [brands, setBrands] = useState<Brand[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [prevCategoryId, setPrevCategoryId] = useState(categoryId);
-
-  if (categoryId !== prevCategoryId) {
-    setPrevCategoryId(categoryId);
-    setIsLoading(true);
-  }
+  const [loadedCategoryId, setLoadedCategoryId] = useState<string | null>(null);
+  const activeCategoryId = categoryId ?? "";
+  const canRenderResults = canRenderCatalogueResults(loadedCategoryId, activeCategoryId, isLoading);
 
   useEffect(() => {
     let active = true;
@@ -33,24 +31,28 @@ function BrandsContent() {
         if (active) {
           setCategory(catData);
           setBrands(brandData);
+          setLoadedCategoryId(activeCategoryId);
           setIsLoading(false);
         }
       })
       .catch((err) => {
         console.error("fetchBrands error:", err);
         if (active) {
+          setCategory(null);
+          setBrands([]);
+          setLoadedCategoryId(activeCategoryId);
           setIsLoading(false);
         }
       });
     return () => {
       active = false;
     };
-  }, [categoryId]);
+  }, [categoryId, activeCategoryId]);
 
   return (
     <>
-      <MobileBrandsSection category={category} brands={brands} isLoading={isLoading} />
-      <DesktopBrandsSection category={category} brands={brands} isLoading={isLoading} />
+      <MobileBrandsSection category={category} brands={brands} isLoading={!canRenderResults} />
+      <DesktopBrandsSection category={category} brands={brands} isLoading={!canRenderResults} />
     </>
   );
 }

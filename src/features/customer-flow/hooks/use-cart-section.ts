@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import { buildStructuredCart } from "@/features/customer-flow/helpers/cart-view-model";
+import { mapRequirementHistory } from "@/features/customer-flow/helpers/requirement-history";
 import type { RequirementHistoryEntry } from "@/features/customer-flow/types";
 import { logoutApi } from "@/features/customer-flow/services/auth-api";
 import {
@@ -39,82 +40,8 @@ export function useCartSection() {
 
     request
       .then((orders) => {
-        if (!isMounted || !orders || orders.length === 0) return;
-        const mapped: RequirementHistoryEntry[] = orders.map((order) => ({
-          id: order._id,
-          requirementNo: order.orderNumber ?? order._id,
-          date: order.createdAt
-            ? new Date(order.createdAt).toLocaleDateString("en-IN", {
-                day: "numeric",
-                month: "short",
-                year: "numeric",
-              })
-            : "",
-          status: (order.status as RequirementHistoryEntry["status"]) ?? "In Review",
-          permitNumber: order.permitNumber ?? "",
-          deliveryAddress: order.deliveryAddress ?? "",
-          totalItems: order.totalItems ?? order.items?.length ?? 0,
-          totalOriginalMrp: order.totalMrp ?? 0,
-          totalSalePrice: order.totalSalePrice ?? 0,
-          items: (order.items ?? []).map((rawItem: unknown) => {
-            const item = (rawItem ?? {}) as Record<string, unknown>;
-            const rawProd = (
-              typeof item.productId === "object" && item.productId !== null ? item.productId : {}
-            ) as Record<string, unknown>;
-            const details = (item.productDetails ?? {}) as Record<string, unknown>;
-
-            const name = String(
-              item.name ||
-                details.name ||
-                details.productName ||
-                details.comboName ||
-                details.giftName ||
-                rawProd.name ||
-                rawProd.title ||
-                item.productId ||
-                "Product",
-            );
-            const rawSize =
-              item.pack || details.pack || details.size || rawProd.pack || rawProd.size || "";
-            const pack = rawSize
-              ? /^\d+$/.test(String(rawSize).trim())
-                ? `${rawSize}ml`
-                : String(rawSize)
-              : "";
-            const image = String(
-              item.image ||
-                item.productImageUrl ||
-                item.imageUrl ||
-                details.image ||
-                details.productImageUrl ||
-                details.offerImageUrl ||
-                details.imageUrl ||
-                rawProd.image ||
-                rawProd.productImageUrl ||
-                rawProd.imageUrl ||
-                "",
-            );
-            const price = Number(
-              item.salePrice ??
-                item.price ??
-                item.mrp ??
-                details.salePrice ??
-                details.saleAmount ??
-                details.mrp ??
-                details.mrpAmount ??
-                0,
-            );
-
-            return {
-              name,
-              pack,
-              quantity: Number(item.quantity ?? 1),
-              price,
-              image,
-            };
-          }),
-        }));
-        setRequirementHistory(mapped);
+        if (!isMounted) return;
+        setRequirementHistory(mapRequirementHistory(orders));
       })
       .catch(() => {});
 
@@ -166,6 +93,9 @@ export function useCartSection() {
         deliveryAddress: userDetails?.address ?? "",
         permitNumber: userDetails?.permitNumber ?? "",
       });
+      orderHistoryRequests.delete(getAuthToken() ?? "anonymous");
+      const orders = await getOrderHistoryApi();
+      setRequirementHistory(mapRequirementHistory(orders));
       showSuccessToast("Requirement submitted successfully.");
     } catch (err) {
       showErrorToast(err instanceof Error ? err.message : "Failed to submit requirement.");
