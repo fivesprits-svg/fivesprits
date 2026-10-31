@@ -237,6 +237,35 @@ export function customerFlowReducer(
           ...(line.productDetails ? { productDetails: normalizeDetails(line.productDetails) } : {}),
         })),
       };
+    case "cart/merge": {
+      const incomingByProductId = new Map(action.cart.map((line) => [line.productId, line]));
+      const cart = [
+        ...state.cart.map((line) => {
+          const incoming = incomingByProductId.get(line.productId);
+          return incoming
+            ? {
+                ...incoming,
+                ...(incoming.productDetails
+                  ? { productDetails: normalizeDetails(incoming.productDetails) }
+                  : {}),
+              }
+            : line;
+        }),
+        ...action.cart
+          .filter((line) => !state.cart.some((current) => current.productId === line.productId))
+          .map((line) => ({
+            ...line,
+            ...(line.productDetails
+              ? { productDetails: normalizeDetails(line.productDetails) }
+              : {}),
+          })),
+      ];
+      return {
+        ...state,
+        cartCount: cart.reduce((total, line) => total + line.quantity, 0),
+        cart,
+      };
+    }
     case "cart/clear":
       return { ...state, cart: [], cartCount: 0 };
     case "requirement/submit":

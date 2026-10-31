@@ -316,7 +316,7 @@ function useCustomerFlowValue() {
         const items = await addToCartApi([payload]);
         if (items && items.length > 0) {
           const cartItems = items.map((item) => formatCartItem(item, enrichedDetails));
-          dispatch({ type: "cart/set", cart: cartItems });
+          dispatch({ type: "cart/merge", cart: cartItems });
         }
       } catch {}
     },
@@ -359,7 +359,7 @@ function useCustomerFlowValue() {
         const items = await addToCartApi([payload]);
         if (items && items.length > 0) {
           const cartItems = items.map((item) => formatCartItem(item, enrichedDetails));
-          dispatch({ type: "cart/set", cart: cartItems });
+          dispatch({ type: "cart/merge", cart: cartItems });
         }
       } catch {}
     },
@@ -383,7 +383,7 @@ function useCustomerFlowValue() {
         const items = await addToCartApi([payload]);
         if (items && items.length > 0) {
           const cartItems = items.map((item) => formatCartItem(item, productDetails));
-          dispatch({ type: "cart/set", cart: cartItems });
+          dispatch({ type: "cart/merge", cart: cartItems });
         }
       } catch {}
     },

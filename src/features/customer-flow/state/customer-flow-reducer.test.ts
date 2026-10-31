@@ -32,4 +32,27 @@ describe("customerFlowReducer", () => {
       profileComplete: true,
     });
   });
+
+  it("keeps existing products when an add response contains only a new offer line", () => {
+    const state = {
+      ...initialCustomerFlowState,
+      cartCount: 2,
+      cart: [
+        { productId: "product-a", quantity: 1, itemType: "product" as const },
+        { productId: "product-b", quantity: 1, itemType: "product" as const },
+      ],
+    };
+
+    const next = customerFlowReducer(state, {
+      type: "cart/merge",
+      cart: [{ productId: "offer-a", quantity: 1, itemType: "combo" }],
+    });
+
+    expect(next.cart).toEqual([
+      { productId: "product-a", quantity: 1, itemType: "product" },
+      { productId: "product-b", quantity: 1, itemType: "product" },
+      { productId: "offer-a", quantity: 1, itemType: "combo" },
+    ]);
+    expect(next.cartCount).toBe(3);
+  });
 });

@@ -44,6 +44,7 @@ export type CustomerFlowAction =
   | { type: "cart/quantity"; productId: string; quantity: number }
   | { type: "cart/remove"; productId: string }
   | { type: "cart/set"; cart: CartLine[] }
+  | { type: "cart/merge"; cart: CartLine[] }
   | { type: "cart/clear" }
   | { type: "requirement/submit" }
   | { type: "confirmation/dismiss" }
