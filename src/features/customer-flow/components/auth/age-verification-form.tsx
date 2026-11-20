@@ -1,13 +1,18 @@
 "use client";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
-import { TermsOfServiceModal } from "@/features/customer-flow/components/auth/terms-of-service-modal";
 import { FlowNavButtons } from "@/features/customer-flow/components/auth/flow-nav-buttons";
-import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
+import { TermsOfServiceModal } from "@/features/customer-flow/components/auth/terms-of-service-modal";
+import { OnboardingStep } from "@/features/customer-flow/components/onboarding/index";
 import { updateProfileApi } from "@/features/customer-flow/services/profile-api";
+import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
-export function AgeVerificationForm() {
+interface AgeVerificationFormProps {
+  onComplete?: (step: OnboardingStep) => void;
+}
+
+export function AgeVerificationForm({ onComplete }: AgeVerificationFormProps) {
   const router = useRouter();
   const { state, setUserDetails, updateFormDraft } = useCustomerFlow();
   const draft = state.userDetails?.formDrafts?.ageVerification;
@@ -22,7 +27,14 @@ export function AgeVerificationForm() {
     try {
       const profile = await updateProfileApi({ ageVerified: true });
       setUserDetails({ ...profile, ageVerified: true });
-      router.push("/profile-setup");
+
+      // Trigger callback for onboarding flow
+      if (onComplete) {
+        onComplete("age-verification");
+      } else {
+        // Fallback to old navigation
+        router.push("/profile-setup");
+      }
     } finally {
       setloading(false);
     }
@@ -35,7 +47,10 @@ export function AgeVerificationForm() {
         onClick={() => {
           const next = !confirmed;
           setConfirmed(next);
-          updateFormDraft({ type: "age-verification", data: { confirmed: next } });
+          updateFormDraft({
+            type: "age-verification",
+            data: { confirmed: next },
+          });
         }}
         className="border-common-border flex w-full items-start gap-4 rounded-2xl border p-5 text-left md:gap-5 md:p-6"
       >
@@ -53,7 +68,7 @@ export function AgeVerificationForm() {
         </span>
       </button>
       <FlowNavButtons
-        backHref="/digilocker/verification"
+        backHref="/onboarding"
         submitLabel="Continue"
         loading={loading}
         loadingLabel="Processing..."

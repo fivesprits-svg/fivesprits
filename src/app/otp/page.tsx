@@ -3,10 +3,6 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import { AuthPageSkeleton } from "@/features/customer-flow/components/ui/skeleton";
-import {
-  isDigilockerCompleted,
-  isProfileCompleted,
-} from "@/features/customer-flow/utils/auth-guards";
 import { DesktopOtpSection } from "@/features/customer-flow/sections/desktop/desktop-otp-section";
 import { MobileOtpSection } from "@/features/customer-flow/sections/mobile/mobile-otp-section";
 
@@ -14,8 +10,6 @@ export default function OtpPage() {
   const router = useRouter();
   const { state, hydrated } = useCustomerFlow();
 
-  const digilockerDone = isDigilockerCompleted(state.userDetails);
-  const profileDone = isProfileCompleted(state.userDetails);
   const isOtpVerified = Boolean(state.userDetails?.verified);
 
   useEffect(() => {
@@ -27,23 +21,9 @@ export default function OtpPage() {
     }
 
     if (isOtpVerified) {
-      if (!digilockerDone) {
-        router.replace("/digilocker");
-      } else if (!profileDone) {
-        router.replace(state.userDetails?.ageVerified ? "/profile-setup" : "/age-verification");
-      } else {
-        router.replace("/categories");
-      }
+      router.replace("/onboarding");
     }
-  }, [
-    hydrated,
-    state.userDetails?.mobile,
-    state.userDetails?.ageVerified,
-    isOtpVerified,
-    digilockerDone,
-    profileDone,
-    router,
-  ]);
+  }, [hydrated, state.userDetails?.mobile, isOtpVerified, router]);
 
   if (!hydrated || !state.userDetails?.mobile || isOtpVerified) {
     return <AuthPageSkeleton />;

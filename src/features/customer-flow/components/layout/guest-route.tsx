@@ -1,6 +1,6 @@
 "use client";
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 import { AuthPageSkeleton } from "@/features/customer-flow/components/ui/skeleton";
 import {
@@ -11,6 +11,7 @@ import {
 
 export function GuestRoute({ children }: { children: React.ReactNode }) {
   const router = useRouter();
+  const pathname = usePathname();
   const { state, hydrated } = useCustomerFlow();
 
   const loggedIn = isSessionLoggedIn(state.userDetails);
@@ -21,8 +22,13 @@ export function GuestRoute({ children }: { children: React.ReactNode }) {
     if (!hydrated) return;
 
     if (loggedIn) {
+      if (pathname === "/login-here") {
+        router.replace("/onboarding");
+        return;
+      }
+
       if (!digilockerDone) {
-        router.replace("/digilocker");
+        router.replace("/onboarding");
       } else if (!profileDone) {
         if (state.userDetails?.ageVerified) {
           router.replace("/profile-setup");
@@ -33,7 +39,15 @@ export function GuestRoute({ children }: { children: React.ReactNode }) {
         router.replace("/categories");
       }
     }
-  }, [hydrated, loggedIn, digilockerDone, profileDone, state.userDetails?.ageVerified, router]);
+  }, [
+    hydrated,
+    loggedIn,
+    digilockerDone,
+    profileDone,
+    pathname,
+    state.userDetails?.ageVerified,
+    router,
+  ]);
 
   if (!hydrated || loggedIn) return <AuthPageSkeleton />;
   return <>{children}</>;

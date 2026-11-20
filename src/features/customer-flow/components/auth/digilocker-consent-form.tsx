@@ -4,9 +4,13 @@ import { useState } from "react";
 import { startDigilockerKyc } from "@/features/customer-flow/services/digilocker-api";
 import { FlowNavButtons } from "@/features/customer-flow/components/auth/flow-nav-buttons";
 
+interface DigilockerConsentFormProps {
+  onComplete?: () => void;
+}
+
 const UNAVAILABLE_MESSAGE = "KYC is temporarily unavailable. Please try again later.";
 
-export function DigilockerConsentForm() {
+export function DigilockerConsentForm({ onComplete }: DigilockerConsentFormProps) {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -19,6 +23,13 @@ export function DigilockerConsentForm() {
         documents: ["aadhaar"],
       });
       sessionStorage.setItem("digilockerAttemptId", result.attemptId);
+
+      // Trigger callback for onboarding flow
+      if (onComplete) {
+        onComplete();
+      }
+
+      // Redirect to DigiLocker
       window.location.assign(result.redirectUrl);
     } catch (requestError) {
       const message = requestError instanceof Error ? requestError.message : "";

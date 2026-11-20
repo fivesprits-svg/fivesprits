@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
+import { useRouter } from "next/navigation";
 import {
   getDigilockerKycStatus,
   getNextKycPollDelay,
@@ -12,21 +12,8 @@ import {
 type ViewState =
   "unavailable" | "loading" | "error" | "verified" | "pending" | "failed" | "restart";
 
-function calculateAge(dob: string): number {
-  if (!dob) return 0;
-  const birthDate = new Date(dob);
-  if (isNaN(birthDate.getTime())) return 0;
-  const today = new Date();
-  let age = today.getFullYear() - birthDate.getFullYear();
-  const monthDiff = today.getMonth() - birthDate.getMonth();
-  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-    age--;
-  }
-  return age;
-}
-
 export function DigilockerStatusCard() {
-  const { userDetails } = useCustomerFlow();
+  const router = useRouter();
   const [status, setStatus] = useState<DigilockerKycStatus | null>(null);
   const [view, setView] = useState<ViewState>(() =>
     typeof window === "undefined" || sessionStorage.getItem("digilockerAttemptId")
@@ -40,21 +27,10 @@ export function DigilockerStatusCard() {
     if (!attemptId) return setView("unavailable");
     try {
       const next = await getDigilockerKycStatus(attemptId);
-      console.log("Digilocker status::", next);
       setStatus(next);
       if (isKycVerifiedForDocuments(next, ["aadhaar"])) {
-        // Clear the attempt ID from session storage
         sessionStorage.removeItem("digilockerAttemptId");
-
-        // Check age from user details - 25+ goes to profile, otherwise age-verification
-        const dob = userDetails?.dob || "";
-        const age = calculateAge(dob);
-
-        if (age >= 25) {
-          window.location.href = "/profile-setup";
-        } else {
-          window.location.href = "/age-verification";
-        }
+        window.location.href = "/onboarding";
         return;
       } else if (["FAILED"].includes(next.status)) setView("failed");
       else if (["EXPIRED", "CANCELLED"].includes(next.status)) setView("restart");
@@ -62,8 +38,7 @@ export function DigilockerStatusCard() {
     } catch {
       setView("error");
     }
-  }, [userDetails]);
-  console.log("status::", status);
+  }, []);
 
   useEffect(() => {
     const timer = window.setTimeout(() => void refresh(), 0);
@@ -103,7 +78,10 @@ export function DigilockerStatusCard() {
       title: "Start a fresh verification",
       text: "This DigiLocker attempt is no longer active.",
     },
-    error: { title: "KYC is temporarily unavailable", text: "Please try again later." },
+    error: {
+      title: "KYC is temporarily unavailable",
+      text: "Please try again later.",
+    },
   };
   const current = content[view];
   return (
@@ -120,7 +98,7 @@ export function DigilockerStatusCard() {
           {["unavailable", "failed", "restart"].includes(view) && (
             <button
               type="button"
-              onClick={() => router.push("/digilocker")}
+              onClick={() => router.push("/onboarding")}
               className="customer-form-nav-submit"
             >
               Start again

@@ -49,7 +49,8 @@ export function OtpForm() {
 
       verifyOtp(user, accessToken);
       success("Mobile number verified. Welcome to The Five Spirits!");
-      router.replace("/digilocker");
+      // Redirect to onboarding - it will check completion status
+      router.replace("/onboarding");
     } catch (err: unknown) {
       const message =
         err instanceof Error

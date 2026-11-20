@@ -40,8 +40,8 @@ export function DigilockerCallback() {
         sessionStorage.setItem("digilockerAttemptId", attemptId);
 
         // Update Redux state with user details from DigiLocker
-        if (user && user.dob) {
-          const age = calculateAge(user.dob);
+        if (user) {
+          const age = calculateAge(user.dob || "");
           const isAgeVerified = age >= 25;
 
           setUserDetails({
@@ -51,16 +51,12 @@ export function DigilockerCallback() {
             digilockerStatus: user.digilockerStatus || "VERIFIED",
           });
 
-          // Redirect based on age: 25+ goes directly to profile, otherwise age-verification
-          if (isAgeVerified) {
-            router.replace("/profile-setup");
-          } else {
-            router.replace("/age-verification");
-          }
+          // Redirect to onboarding which will check and move to next step
+          router.replace("/onboarding");
           return;
         }
 
-        router.replace("/digilocker/verification");
+        router.replace("/onboarding");
       })
       .catch(() => {
         setMessage(COMPLETION_ERROR_MESSAGE);

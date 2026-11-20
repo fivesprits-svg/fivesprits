@@ -1,15 +1,15 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 
-import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
-import { useToast } from "@/features/customer-flow/components/ui/toast";
 import { AuthRequestError } from "@/features/customer-flow/components/auth/auth-request-error";
+import { useToast } from "@/features/customer-flow/components/ui/toast";
 import { customerLoginApi } from "@/features/customer-flow/services/auth-api";
+import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
 
 type CountryData = {
   countryCode: string;
@@ -23,7 +23,7 @@ type FormErrors = {
 
 export function LoginFormHere() {
   const router = useRouter();
-  const { state, loginHere, updateFormDraft } = useCustomerFlow();
+  const { state, loginAsGuest, loginHere, updateFormDraft } = useCustomerFlow();
   const { success } = useToast();
 
   const draft = state.userDetails?.formDrafts?.loginHere;
@@ -148,6 +148,9 @@ export function LoginFormHere() {
 
       const accessToken = response?.data?.accessToken;
       const user = response?.data?.user;
+      console.log("Login response::", response);
+      console.log("user::", user);
+      console.log("isProfileComplete::", user?.profileComplete);
 
       if (!accessToken) {
         throw new Error("The server did not return a valid sign-in session. Please try again.");
@@ -155,9 +158,7 @@ export function LoginFormHere() {
 
       if (typeof window !== "undefined" && accessToken) {
         localStorage.setItem("customer_access_token", accessToken);
-
         localStorage.setItem("customer_user", JSON.stringify(user));
-
         document.cookie = [
           `customer_access_token=${accessToken}`,
           "path=/",
@@ -167,15 +168,25 @@ export function LoginFormHere() {
       }
 
       loginHere(fullPhone, password, user, accessToken);
-
       success("Logged in successfully.");
-      router.replace("/digilocker");
+      router.replace("/onboarding");
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : "Invalid mobile number or password.";
       setApiError(message);
     } finally {
       setLoading(false);
     }
+  }
+
+  function continueAsGuest() {
+    const guestToken = process.env.NEXT_PUBLIC_API_GUEST_TOKEN;
+    if (!guestToken) {
+      setApiError("Guest access is not configured. Please sign in instead.");
+      return;
+    }
+
+    loginAsGuest(guestToken);
+    router.push("/categories");
   }
 
   return (
@@ -292,17 +303,27 @@ export function LoginFormHere() {
         )}
       </button>
 
-      <p className="font-geist text-common-gray text-center text-sm md:text-base">
-        Don&apos;t have an account?{" "}
+      <div className="space-y-3 pt-1 text-center">
+        <p className="font-geist text-common-gray text-sm md:text-base">
+          Don&apos;t have an account?{" "}
+          <button
+            type="button"
+            onClick={() => router.push("/")}
+            className="text-common-black cursor-pointer font-semibold underline"
+            disabled={loading}
+          >
+            Register
+          </button>
+        </p>
         <button
           type="button"
-          onClick={() => router.push("/")}
-          className="text-common-black cursor-pointer font-semibold underline"
+          onClick={continueAsGuest}
+          className="text-common-black block w-full cursor-pointer text-center text-sm font-semibold underline disabled:opacity-60 md:text-base"
           disabled={loading}
         >
-          Register
+          Continue as guest
         </button>
-      </p>
+      </div>
     </form>
   );
 }
