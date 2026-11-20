@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { AadhaarForm } from "@/features/customer-flow/components/auth/aadhaar-form";
+import { DigilockerConsentForm } from "@/features/customer-flow/components/auth/digilocker-consent-form";
 import { DesktopAuthPageLayout } from "@/features/customer-flow/components/ui/auth-page-layout";
 import { IconCircle } from "@/features/customer-flow/components/ui/icon-circle";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
@@ -66,7 +66,7 @@ export function DesktopDigilockerSection() {
         </div>
 
         <div className="mt-5">
-          <AadhaarForm />
+          <DigilockerConsentForm />
         </div>
       </div>
     </DesktopAuthPageLayout>

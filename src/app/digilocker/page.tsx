@@ -13,6 +13,7 @@ export default function DigilockerPage() {
 
   const loggedIn = isSessionLoggedIn(state.userDetails);
   const profileDone = isProfileCompleted(state.userDetails);
+  console.log(state.userDetails, "state.userDetails");
 
   useEffect(() => {
     if (!hydrated) return;

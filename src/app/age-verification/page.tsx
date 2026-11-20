@@ -14,10 +14,10 @@ import { DesktopAgeVerificationSection } from "@/features/customer-flow/sections
 export default function AgeVerificationPage() {
   const router = useRouter();
   const { state, hydrated } = useCustomerFlow();
-
   const loggedIn = isSessionLoggedIn(state.userDetails);
   const digilockerDone = isDigilockerCompleted(state.userDetails);
   const profileDone = isProfileCompleted(state.userDetails);
+  const ageVerified = Boolean(state.userDetails?.ageVerified);
 
   useEffect(() => {
     if (!hydrated) return;
@@ -32,13 +32,18 @@ export default function AgeVerificationPage() {
       return;
     }
 
+    if (ageVerified) {
+      router.replace("/profile-setup");
+      return;
+    }
+
     if (profileDone) {
       router.replace("/categories");
       return;
     }
-  }, [hydrated, loggedIn, digilockerDone, profileDone, router]);
+  }, [hydrated, loggedIn, digilockerDone, ageVerified, profileDone, router]);
 
-  if (!hydrated || !loggedIn || !digilockerDone || profileDone) {
+  if (!hydrated || !loggedIn || !digilockerDone || ageVerified || profileDone) {
     return <AuthPageSkeleton />;
   }
 

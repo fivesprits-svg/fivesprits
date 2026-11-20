@@ -5,20 +5,26 @@ import Image from "next/image";
 import { TermsOfServiceModal } from "@/features/customer-flow/components/auth/terms-of-service-modal";
 import { FlowNavButtons } from "@/features/customer-flow/components/auth/flow-nav-buttons";
 import { useCustomerFlow } from "@/features/customer-flow/state/customer-flow-context";
+import { updateProfileApi } from "@/features/customer-flow/services/profile-api";
 
 export function AgeVerificationForm() {
   const router = useRouter();
-  const { state, updateFormDraft } = useCustomerFlow();
+  const { state, setUserDetails, updateFormDraft } = useCustomerFlow();
   const draft = state.userDetails?.formDrafts?.ageVerification;
   const [confirmed, setConfirmed] = useState(draft?.confirmed ?? false);
   const [showTerms, setShowTerms] = useState(false);
   const [loading, setloading] = useState(false);
 
-  function submit(event: React.FormEvent) {
+  async function submit(event: React.FormEvent) {
     event.preventDefault();
+    if (!confirmed) return;
     setloading(true);
-    if (confirmed) {
+    try {
+      const profile = await updateProfileApi({ ageVerified: true });
+      setUserDetails({ ...profile, ageVerified: true });
       router.push("/profile-setup");
+    } finally {
+      setloading(false);
     }
   }
 

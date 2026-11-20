@@ -16,6 +16,7 @@ export interface CustomerProfile {
   pincode?: string;
   googleMapsLocation?: string;
   userType?: string;
+  ageVerified?: boolean;
   createdAt?: string;
   profileImageUrl?: string | null;
   permitDocumentUrl?: string | null;

@@ -130,13 +130,6 @@ export async function apiFetch<T>(
 
   const fetchPromise = (async () => {
     try {
-      console.log("REQUEST:", {
-        url,
-        method: options?.method || "GET",
-        headers,
-        body: options?.body,
-      });
-
       const res = await fetch(url, {
         ...options,
         headers,

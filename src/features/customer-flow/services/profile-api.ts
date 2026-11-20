@@ -14,6 +14,7 @@ export interface UpdateProfilePayload {
   permitDocumentUrl?: string | null;
   profileFileId?: string | null;
   permitDocumentFileId?: string | null;
+  ageVerified?: boolean;
 }
 
 export interface ProfileUpdateResponse {
@@ -32,6 +33,7 @@ export interface ProfileUpdateResponse {
   permitDocumentUrl?: string | null;
   profileFileId?: string | null;
   permitDocumentFileId?: string | null;
+  ageVerified?: boolean;
 }
 
 export async function updateProfileApi(

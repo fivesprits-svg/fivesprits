@@ -10,13 +10,21 @@ export function isDigilockerCompleted(userDetails: UserDetails | null): boolean 
   return Boolean(
     userDetails.verificationComplete ||
     userDetails.verificationSkipped ||
-    userDetails.profileComplete,
+    userDetails.profileComplete ||
+    userDetails.digilockerStatus === "VERIFIED" ||
+    userDetails.digilockerStatus?.toLowerCase() === "verified",
   );
 }
 
 export function isProfileCompleted(userDetails: UserDetails | null): boolean {
   if (!userDetails) return false;
-  return Boolean(userDetails.profileComplete);
+  return Boolean(
+    userDetails.profileComplete ||
+    (userDetails.name?.trim() &&
+      userDetails.permitNumber?.trim() &&
+      userDetails.address?.trim() &&
+      userDetails.pincode?.trim()),
+  );
 }
 
 export function canGuestViewPath(pathname: string): boolean {
