@@ -12,6 +12,7 @@ import { updateProfileApi } from "@/features/customer-flow/services/profile-api"
 import { logoutApi } from "@/features/customer-flow/services/auth-api";
 import { ButtonSpinner } from "@/features/customer-flow/components/ui/skeleton";
 import { DatePickerField } from "@/features/customer-flow/components/ui/date-picker-field";
+import { getDigilockerStatus } from "@/features/customer-flow/utils/digilocker-status";
 
 export function DesktopProfileSection() {
   const router = useRouter();
@@ -46,6 +47,7 @@ export function DesktopProfileSection() {
     address: "",
     pincode: "",
     mapsLocation: "",
+    digilockerStatus: state.userDetails?.digilockerStatus,
   });
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState("");
@@ -72,6 +74,7 @@ export function DesktopProfileSection() {
           address: user.address || prev.address,
           pincode: user.pincode || prev.pincode,
           mapsLocation: user.googleMapsLocation || prev.mapsLocation,
+          digilockerStatus: user.digilockerStatus || prev.digilockerStatus,
         }));
         if (user.profileImageUrl) {
           setProfilePhoto(user.profileImageUrl);
@@ -93,6 +96,8 @@ export function DesktopProfileSection() {
       isMounted = false;
     };
   }, [isGuest, state.userDetails?.mobile]);
+
+  const digilockerStatus = getDigilockerStatus(profileData.digilockerStatus);
 
   function handleEditField(field: string, currentValue: string) {
     setEditingField(field);
@@ -335,7 +340,13 @@ export function DesktopProfileSection() {
                 <div className="mt-4 w-full divide-y divide-gray-100 rounded-xl border border-gray-100 bg-gray-50/70 p-3 text-xs">
                   <div className="flex items-center justify-between pb-2">
                     <span className="text-gray-500">DigiLocker Status</span>
-                    <span className="font-semibold text-emerald-700">--</span>
+                    <span
+                      className={`font-semibold ${
+                        digilockerStatus.verified ? "text-emerald-700" : "text-gray-500"
+                      }`}
+                    >
+                      {digilockerStatus.label}
+                    </span>
                   </div>
                   <div className="flex items-center justify-between pt-2">
                     <span className="text-gray-500">Permit Status</span>

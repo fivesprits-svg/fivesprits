@@ -13,6 +13,7 @@ import { updateProfileApi } from "@/features/customer-flow/services/profile-api"
 import { logoutApi } from "@/features/customer-flow/services/auth-api";
 import { ButtonSpinner } from "@/features/customer-flow/components/ui/skeleton";
 import { DatePickerField } from "@/features/customer-flow/components/ui/date-picker-field";
+import { getDigilockerStatus } from "@/features/customer-flow/utils/digilocker-status";
 
 export function MobileProfileSection() {
   const router = useRouter();
@@ -44,6 +45,7 @@ export function MobileProfileSection() {
     address: "",
     pincode: "",
     mapsLocation: "",
+    digilockerStatus: state.userDetails?.digilockerStatus,
   });
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState("");
@@ -68,6 +70,7 @@ export function MobileProfileSection() {
           address: user.address || prev.address,
           pincode: user.pincode || prev.pincode,
           mapsLocation: user.googleMapsLocation || prev.mapsLocation,
+          digilockerStatus: user.digilockerStatus || prev.digilockerStatus,
         }));
         if (user.profileImageUrl) {
           setProfilePhoto(user.profileImageUrl);
@@ -89,6 +92,8 @@ export function MobileProfileSection() {
       isMounted = false;
     };
   }, [isGuest, state.userDetails?.mobile]);
+
+  const digilockerStatus = getDigilockerStatus(profileData.digilockerStatus);
 
   function handleEditField(field: string, currentValue: string) {
     setEditingField(field);
@@ -321,6 +326,19 @@ export function MobileProfileSection() {
               </div>
             </div>
           )}
+
+          <div>
+            <span className="profile-field-label mb-2 block">DigiLocker Status</span>
+            <div className="profile-field-value">
+              <span
+                className={`flex-1 truncate font-semibold ${
+                  digilockerStatus.verified ? "text-emerald-700" : "text-gray-500"
+                }`}
+              >
+                {digilockerStatus.label}
+              </span>
+            </div>
+          </div>
 
           <DatePickerField
             label="Date of Birth"
